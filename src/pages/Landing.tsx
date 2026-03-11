@@ -386,7 +386,6 @@ export default function Landing() {
               <rect fill="url(#glass-highlight)" x="471.74" y="0" width="28.37" height="93.2"/>
             </svg>
           </motion.div>
-          </motion.div>
 
           <motion.p
             className="text-cnx-black mt-6 text-center"
