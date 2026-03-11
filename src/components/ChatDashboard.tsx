@@ -154,8 +154,7 @@ export default function ChatDashboard() {
     textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion);
+  const handleSuggestionClick = () => {
     setIsFocused(true);
     textareaRef.current?.focus();
   };
