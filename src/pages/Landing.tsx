@@ -195,7 +195,7 @@ export default function Landing() {
 
             
             <motion.p
-              className="text-[20px] mb-10 max-w-lg leading-relaxed md:text-7xl text-black"
+              className="text-[20px] mb-10 max-w-lg leading-relaxed md:text-7xl text-black font-sans"
               style={{ fontFamily: "'Georgia', serif", fontStyle: 'italic' }}
               initial={{ opacity: 0, y: 16 }}
               animate={heroInView ? { opacity: 1, y: 0 } : {}}
