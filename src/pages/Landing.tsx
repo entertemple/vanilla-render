@@ -241,7 +241,7 @@ export default function Landing() {
             initial={{ opacity: 0, y: 30 }}
             animate={aboutInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.3 }}>
-            is a beautifully designed AI for people who need to think something through.
+            A beautifully designed AI for people who need to think something through.
           </motion.p>
 
           <motion.p
