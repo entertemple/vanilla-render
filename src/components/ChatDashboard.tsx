@@ -207,7 +207,7 @@ export default function ChatDashboard() {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -24, opacity: 0 }}
                   transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-                  className={`${placeholderColor} text-[16px] leading-[1.6] font-['Inter',_sans-serif] cursor-text whitespace-nowrap`}
+                  className={`text-[#e8e8e8] text-[16px] leading-[1.6] font-['Inter',_sans-serif] cursor-text whitespace-nowrap`}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSuggestionClick();
