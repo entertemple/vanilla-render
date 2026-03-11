@@ -29,6 +29,7 @@ const MOCK_RESPONSES = [
 ];
 
 const SUGGESTED_QUESTIONS = [
+  "Hey temple...",
   "I've been 'about to start' for three weeks now...",
   "my body said no but I said sure, absolutely, sounds great...",
   "I have a vision board and an overdraft. explain...",
@@ -153,8 +154,7 @@ export default function ChatDashboard() {
     textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion);
+  const handleSuggestionClick = () => {
     setIsFocused(true);
     textareaRef.current?.focus();
   };
@@ -210,7 +210,7 @@ export default function ChatDashboard() {
                   className={`${placeholderColor} text-[16px] leading-[1.6] font-['Inter',_sans-serif] cursor-text whitespace-nowrap`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSuggestionClick(SUGGESTED_QUESTIONS[currentSuggestionIndex]);
+                    handleSuggestionClick();
                   }}
                 >
                   {SUGGESTED_QUESTIONS[currentSuggestionIndex]}
