@@ -256,7 +256,9 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={aboutInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.6 }}>
-            A decision you're circling. A message you can't land. A conversation you've been avoiding.
+            A decision you're circling. <br />
+            A message you can't land. <br />
+            A conversation you've been avoiding.
           </motion.p>
         </section>
 
