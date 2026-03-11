@@ -54,7 +54,7 @@ export default function Landing() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: containerRef });
 
-  // Parallax transforms — dramatic translate3d range
+  // Parallax transforms
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -400]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 300]);
   const y3 = useTransform(scrollYProgress, [0, 1], [0, -500]);
@@ -68,17 +68,13 @@ export default function Landing() {
   // Section refs
   const heroRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
-  const howRef = useRef<HTMLDivElement>(null);
-  const themesRef = useRef<HTMLDivElement>(null);
-  const typeRef = useRef<HTMLDivElement>(null);
+  const pricingRef = useRef<HTMLDivElement>(null);
   const finalRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
   const heroInView = useInView(heroRef, { once: true, amount: 0.3 });
   const aboutInView = useInView(aboutRef, { once: true, amount: 0.2 });
-  const howInView = useInView(howRef, { once: true, amount: 0.2 });
-  const themesInView = useInView(themesRef, { once: true, amount: 0.3 });
-  const typeInView = useInView(typeRef, { once: true, amount: 0.3 });
+  const pricingInView = useInView(pricingRef, { once: true, amount: 0.3 });
   const finalInView = useInView(finalRef, { once: true, amount: 0.3 });
   const ctaInView = useInView(ctaRef, { once: true, amount: 0.3 });
 
@@ -111,18 +107,11 @@ export default function Landing() {
             <WordmarkLight className="h-5" />
           </button>
           <button
-            onClick={() => howRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-5 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap"
-            style={{ fontSize: '14px', fontWeight: 400 }}>
-            How It Works
-          </button>
-          <button
-            onClick={() => navigate('/upgrade')}
+            onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })}
             className="px-5 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors"
             style={{ fontSize: '14px', fontWeight: 400 }}>
             Pricing
           </button>
-          {/* Get Started with its own border */}
           <button
             onClick={() => navigate('/login')}
             className="px-5 py-2 text-cnx-black rounded-[100px] border border-cnx-border hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap"
@@ -137,8 +126,7 @@ export default function Landing() {
           <button onClick={() => navigate('/landing')} className="px-3 py-2 rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors">
             <WordmarkLight className="h-4" />
           </button>
-          <button onClick={() => howRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap" style={{ fontSize: '12px' }}>How It Works</button>
-          <button onClick={() => navigate('/upgrade')} className="px-3 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors" style={{ fontSize: '12px' }}>Pricing</button>
+          <button onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors" style={{ fontSize: '12px' }}>Pricing</button>
           <button onClick={() => navigate('/login')} className="px-3 py-2 text-cnx-black rounded-[100px] border border-cnx-border hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap" style={{ fontSize: '12px' }}>Get Started</button>
         </div>
       </nav>
@@ -181,7 +169,6 @@ export default function Landing() {
             You just can't see what you're actually saying yet.
           </motion.p>
 
-          {/* Scroll indicator */}
           <motion.div
             className="absolute bottom-10 left-1/2 -translate-x-1/2"
             animate={{ y: [0, 8, 0] }}
@@ -212,10 +199,8 @@ export default function Landing() {
                 y: parallaxValues[i],
                 willChange: 'transform'
               }} />
-
             )}
           </div>
-          {/* Mobile: simple grid */}
           <div className="grid grid-cols-2 gap-4 md:hidden">
             {GRID_PLACEMENTS.map((_, i) =>
             <div key={i} className="rounded-[24px] bg-cnx-light-grey" style={{ minHeight: '180px' }} />
@@ -225,10 +210,6 @@ export default function Landing() {
 
         {/* ═══ ABOUT — Temple introduction ═══ */}
         <section className="px-6 md:px-12 py-48 max-w-[1200px] mx-auto" ref={aboutRef}>
-          <div className="mb-20">
-            <ShadowTextRow text="" inView={aboutInView} delay={0} />
-          </div>
-
           <motion.p
             className="text-cnx-grey"
             style={{
@@ -240,200 +221,77 @@ export default function Landing() {
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={aboutInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.3 }}>A beautifully designed AI for people who need to think something through
-
-          </motion.p>
-
-          <motion.p
-            className="text-cnx-black mt-16"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(20px, 3vw, 32px)',
-              fontWeight: 400,
-              lineHeight: 1.4,
-              fontStyle: 'italic'
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={aboutInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.6 }}>A decision you're circling
-A message you can't land
-A conversation you've been avoiding<br />
-            A message you can't land. <br />
-            A conversation you've been avoiding.
+            transition={{ duration: 0.9, delay: 0.3 }}>
+            A beautifully designed AI for people who need to think something through.
           </motion.p>
         </section>
 
-        {/* ═══ HOW IT WORKS ═══ */}
-        <section className="py-48 px-6 md:px-12 max-w-[1200px] mx-auto" ref={howRef}>
-          <motion.h2 className="text-cnx-black text-center mb-20"
-          style={{
-            fontFamily: FONT_FAMILY,
-            fontSize: 'clamp(40px, 8vw, 128px)',
-            fontWeight: 400,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em'
-          }}
-          initial={{ opacity: 0, y: 30 }}
-          animate={howInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}>
-            How it works
+        {/* ═══ PRICING ═══ */}
+        <section className="py-48 px-6 md:px-12 max-w-[1200px] mx-auto" ref={pricingRef}>
+          <motion.h2
+            className="text-cnx-black text-center mb-24"
+            style={{
+              fontFamily: FONT_FAMILY,
+              fontSize: 'clamp(40px, 8vw, 128px)',
+              fontWeight: 400,
+              lineHeight: 1.1,
+              letterSpacing: '-0.02em'
+            }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={pricingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8 }}>
+            Pricing
           </motion.h2>
 
-          <motion.p
-            className="text-cnx-black max-w-[720px] text-4xl text-left"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: '16px',
-              fontWeight: 400,
-              lineHeight: '1.8'
-            }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={howInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.2 }}>
-            Write anything. Temple reads it and surfaces what you said but didn't quite see.
-          </motion.p>
+          <div className="grid md:grid-cols-2 gap-6 max-w-[900px] mx-auto">
+            {/* Free */}
+            <motion.div
+              className="rounded-[24px] border border-cnx-border bg-cnx-white p-10 flex flex-col"
+              initial={{ opacity: 0, y: 24 }}
+              animate={pricingInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 }}>
+              <p className="text-cnx-grey uppercase tracking-[0.12em] mb-6" style={{ fontFamily: FONT_FAMILY, fontSize: '12px', fontWeight: 500 }}>Free</p>
+              <p className="text-cnx-black mb-2" style={{ fontFamily: FONT_FAMILY, fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: 400, lineHeight: 1 }}>$0</p>
+              <p className="text-cnx-grey mb-10" style={{ fontFamily: FONT_FAMILY, fontSize: '14px' }}>Forever</p>
+              <ul className="space-y-4 flex-1 mb-10">
+                {['Basic reflections', 'Light & dark themes', 'Limited daily messages'].map((f) => (
+                  <li key={f} className="text-cnx-black flex items-start gap-3" style={{ fontFamily: FONT_FAMILY, fontSize: '15px', lineHeight: '1.5' }}>
+                    <span className="text-cnx-grey mt-0.5">—</span>{f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => navigate('/login')}
+                className="w-full py-4 rounded-[100px] border border-cnx-border text-cnx-black hover:bg-cnx-light-grey transition-colors"
+                style={{ fontFamily: FONT_FAMILY, fontSize: '15px', fontWeight: 400 }}>
+                Get Started
+              </button>
+            </motion.div>
 
-          <div className="mt-12 space-y-2">
-            <motion.h3
-              className="text-cnx-black text-left text-3xl font-light"
-              style={{
-                fontFamily: FONT_FAMILY,
-                fontSize: 'clamp(18px, 2.5vw, 24px)',
-                fontWeight: 400,
-                lineHeight: 1.4
-              }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={howInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 }}>
-              The assumption underneath the logic.
-            </motion.h3>
-            <motion.h3
-              className="text-cnx-black text-left text-3xl font-light"
-              style={{
-                fontFamily: FONT_FAMILY,
-                fontSize: 'clamp(18px, 2.5vw, 24px)',
-                fontWeight: 400,
-                lineHeight: 1.4
-              }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={howInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.5 }}>
-              The truth buried in the last sentence.
-            </motion.h3>
-            <motion.h3
-              className="text-cnx-black text-3xl font-light"
-              style={{
-                fontFamily: FONT_FAMILY,
-                fontSize: 'clamp(18px, 2.5vw, 24px)',
-                fontWeight: 400,
-                lineHeight: 1.4
-              }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={howInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.6 }}>
-              The weight you're carrying into the decision.
-            </motion.h3>
+            {/* Pro */}
+            <motion.div
+              className="rounded-[24px] border border-cnx-black bg-cnx-black p-10 flex flex-col"
+              initial={{ opacity: 0, y: 24 }}
+              animate={pricingInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.35 }}>
+              <p className="text-cnx-grey uppercase tracking-[0.12em] mb-6" style={{ fontFamily: FONT_FAMILY, fontSize: '12px', fontWeight: 500 }}>Pro</p>
+              <p className="text-cnx-white mb-2" style={{ fontFamily: FONT_FAMILY, fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: 400, lineHeight: 1 }}>$20</p>
+              <p className="text-cnx-grey mb-10" style={{ fontFamily: FONT_FAMILY, fontSize: '14px' }}>per month</p>
+              <ul className="space-y-4 flex-1 mb-10">
+                {['Unlimited reflections', 'All typeface pairings', 'Unlimited messages', 'Priority processing'].map((f) => (
+                  <li key={f} className="text-cnx-white flex items-start gap-3" style={{ fontFamily: FONT_FAMILY, fontSize: '15px', lineHeight: '1.5' }}>
+                    <span className="text-cnx-grey mt-0.5">—</span>{f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => navigate('/login')}
+                className="w-full py-4 rounded-[100px] bg-cnx-white text-cnx-black hover:bg-cnx-light-grey transition-colors"
+                style={{ fontFamily: FONT_FAMILY, fontSize: '15px', fontWeight: 400 }}>
+                Upgrade to Pro
+              </button>
+            </motion.div>
           </div>
-
-          <motion.p
-            className="text-cnx-black mt-20 max-w-[720px] font-light text-3xl"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(16px, 2vw, 20px)',
-              fontWeight: 400,
-              lineHeight: '1.6'
-            }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={howInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.8 }}>
-            Then it responds — briefly, deliberately, in a layout designed to be felt before it's read.
-          </motion.p>
-        </section>
-
-        {/* ═══ TWO WAYS TO ARRIVE ═══ */}
-        <section className="py-48 px-6 md:px-12 max-w-[1200px] mx-auto" ref={themesRef}>
-          <div className="mb-16">
-            <ShadowTextRow text="Two ways" inView={themesInView} delay={0} />
-            <ShadowTextRow text="to arrive" inView={themesInView} delay={0.15} />
-          </div>
-
-          <motion.p
-            className="text-cnx-black max-w-[640px] text-3xl"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: '16px',
-              fontWeight: 400,
-              lineHeight: '1.8'
-            }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={themesInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.4 }}>
-            Light theme for clear-desk thinking. Dark theme for late-night clarity.
-          </motion.p>
-
-          <motion.p
-            className="text-cnx-black mt-6 max-w-[640px] text-3xl font-light"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: '16px',
-              fontWeight: 400,
-              lineHeight: '1.8'
-            }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={themesInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.55 }}>
-            Same product. Completely different feeling. You'll know which one you need when you open it.
-          </motion.p>
-        </section>
-
-        {/* ═══ TYPE IS PERSONAL ═══ */}
-        <section className="py-48 px-6 md:px-12 max-w-[1200px] mx-auto" ref={typeRef}>
-          <div className="mb-16">
-            <ShadowTextRow text="Type is" inView={typeInView} delay={0} />
-            <ShadowTextRow text="personal" inView={typeInView} delay={0.15} />
-          </div>
-
-          <motion.p
-            className="text-cnx-black max-w-[640px] text-2xl"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: '16px',
-              fontWeight: 400,
-              lineHeight: '1.8'
-            }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={typeInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.4 }}>Choose how Temple speaks to you visually. 
-Four typeface pairings.
-          </motion.p>
-
-          <motion.h3
-            className="text-cnx-black mt-10"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(20px, 3vw, 32px)',
-              fontWeight: 400,
-              lineHeight: 1.4
-            }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={typeInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.55 }}>
-            Each one a different register — editorial, minimal, warm, high contrast.
-          </motion.h3>
-
-          <motion.p
-            className="text-cnx-black mt-16 text-center max-w-[640px] mx-auto"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(16px, 2vw, 20px)',
-              fontWeight: 400,
-              lineHeight: '1.6'
-            }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={typeInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.7 }}>
-            Because how something looks changes how it lands.
-          </motion.p>
         </section>
 
         {/* ═══ FINAL STATEMENT ═══ */}
@@ -486,5 +344,6 @@ Four typeface pairings.
         </footer>
       </div>
     </div>);
+}
 
 }
