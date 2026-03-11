@@ -386,7 +386,7 @@ export default function Landing() {
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 2.5 }}>
             
-            <div className="w-[56px] h-[56px] rounded-full border border-cnx-border flex items-center justify-center bg-cnx-white">
+            <div className="w-[56px] h-[56px] rounded-full border border-cnx-border flex items-center justify-center bg-cnx-white mx-auto">
               <ArrowDown size={20} className="text-cnx-black" />
             </div>
           </motion.div>
