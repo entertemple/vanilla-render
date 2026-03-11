@@ -387,20 +387,16 @@ export default function Landing() {
             }}
           >
             {GRID_GRADIENTS.map((gradient, i) => (
-              <ImageFrame
+              <motion.div
                 key={i}
-                gradient={gradient}
-                parallaxY={parallaxValues[i]}
-                className="w-full"
-                // @ts-ignore - inline grid placement
-                {...{
-                  style: {
-                    ...gridPlacements[i],
-                    background: gradient,
-                    y: parallaxValues[i],
-                    willChange: 'transform',
-                    minHeight: gridPlacements[i].minHeight,
-                  },
+                className="rounded-[24px] w-full"
+                style={{
+                  gridColumn: gridPlacements[i].gridColumn,
+                  gridRow: gridPlacements[i].gridRow,
+                  minHeight: gridPlacements[i].minHeight,
+                  background: gradient,
+                  y: parallaxValues[i],
+                  willChange: 'transform',
                 }}
               />
             ))}
