@@ -49,7 +49,7 @@ function AppContent() {
 
   return (
     <div className="w-full h-screen overflow-hidden fixed inset-0">
-      <ErrorBoundary fallback={<div className="fixed inset-0 bg-black" />}>
+      <ErrorBoundary fallback={<div className="fixed inset-0 bg-black pointer-events-none" />}>
         <ShaderBackground
           width={dimensions.width}
           height={dimensions.height}
