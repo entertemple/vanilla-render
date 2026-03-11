@@ -386,9 +386,15 @@ export default function Landing() {
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 2.5 }}>
             
-            <div className="w-[56px] h-[56px] rounded-full border border-cnx-border flex items-center justify-center bg-cnx-white mx-auto">
+            <div className="w-[56px] h-[56px] rounded-full border border-cnx-border flex items-center justify-center bg-cnx-white">
               <ArrowDown size={20} className="text-cnx-black" />
             </div>
+            <span
+              className="text-cnx-grey"
+              style={{ fontFamily: FONT_FAMILY, fontSize: '14px', fontWeight: 400 }}>
+              
+              Scroll Down
+            </span>
           </motion.div>
         </section>
 
@@ -436,7 +442,7 @@ export default function Landing() {
         <section className="px-6 md:px-12 py-32 max-w-[1200px] mx-auto">
           <div ref={aboutRef} className="mb-16">
             <ShadowTextRow text="We've built Temple for" inView={aboutInView} delay={0} />
-            <ShadowTextRow text="people who believe" inView={aboutInView} delay={0.1} />
+            
             <ShadowTextRow text="clear thinking should" inView={aboutInView} delay={0.2} />
             <ShadowTextRow text="just work." inView={aboutInView} delay={0.3} />
           </div>
