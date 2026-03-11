@@ -1,0 +1,16 @@
+import { useTheme } from '../contexts/ThemeContext';
+
+export default function About() {
+  const { theme } = useTheme();
+  const textColor = theme === 'light' ? 'text-gray-900' : 'text-white';
+  const textSecondary = theme === 'light' ? 'text-gray-600' : 'text-[rgba(255,255,255,0.6)]';
+
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center p-8">
+      <h1 className={`text-2xl font-semibold ${textColor} font-['Inter',_sans-serif] mb-2`}>About Temple</h1>
+      <p className={`${textSecondary} font-['Inter',_sans-serif] text-sm text-center`}>
+        A spiritual AI companion for exploration and growth
+      </p>
+    </div>
+  );
+}
