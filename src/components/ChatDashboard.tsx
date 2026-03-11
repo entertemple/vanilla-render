@@ -225,7 +225,7 @@ export default function ChatDashboard() {
             onKeyDown={handleKeyDown}
             onFocus={() => setIsFocused(true)}
             onBlur={() => { if (!input) setIsFocused(false); }}
-            placeholder={isFocused && !hasConversation ? "Enter temple…" : (hasConversation ? "Type your message..." : "")}
+            placeholder="Enter temple…"
             rows={1}
             className={`
               w-full bg-transparent border-none resize-none
