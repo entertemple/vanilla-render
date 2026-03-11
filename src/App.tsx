@@ -1,4 +1,4 @@
-import { RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { router } from './routes';
 import ShaderBackground from './components/ShaderBackground';
@@ -12,17 +12,14 @@ function AppContent() {
     height: typeof window !== 'undefined' ? window.innerHeight : 1080
   });
 
-  // Debounced resize handler to prevent rapid updates
   useEffect(() => {
     let timeoutId: number;
 
     const handleResize = () => {
-      // Clear existing timeout
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
 
-      // Set new timeout - only update after 150ms of no resizing
       timeoutId = window.setTimeout(() => {
         setDimensions({
           width: window.innerWidth,
@@ -41,13 +38,9 @@ function AppContent() {
     };
   }, []);
 
-  // Dark theme colors - soft pastels
   const darkShaderColors: [string, string, string] = ['#B8A4C9', '#A5C4D4', '#FFD4B8'];
-
-  // Light theme colors - lighter pastels
   const lightShaderColors: [string, string, string] = ['#E6D9F0', '#D4E6EE', '#FFF0E6'];
 
-  // Determine active colors
   const activeShaderColors = shaderColors[0] === '#0000ff' && theme === 'dark'
     ? darkShaderColors
     : shaderColors[0] === '#0000ff' && theme === 'light'
@@ -56,7 +49,6 @@ function AppContent() {
 
   return (
     <div className="w-full h-screen overflow-hidden fixed inset-0">
-      {/* Shader background layer with error boundary */}
       <ErrorBoundary fallback={<div className="fixed inset-0 bg-black" />}>
         <ShaderBackground
           width={dimensions.width}
@@ -66,7 +58,6 @@ function AppContent() {
         />
       </ErrorBoundary>
 
-      {/* Content layer */}
       <div className="relative z-10 w-full h-full">
         <RouterProvider router={router} />
       </div>

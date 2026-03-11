@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, Outlet } from "react-router";
+import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import Layout from "./components/Layout";
 import MainChat from "./pages/MainChat";
 import DiscoverFeed from "./pages/DiscoverFeed";
