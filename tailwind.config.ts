@@ -57,6 +57,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        cnx: {
+          black: "hsl(var(--cnx-black))",
+          grey: "hsl(var(--cnx-grey))",
+          "light-grey": "hsl(var(--cnx-light-grey))",
+          white: "hsl(var(--cnx-white))",
+          border: "hsl(var(--cnx-border))",
+          "dark-grey": "hsl(var(--cnx-dark-grey))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
