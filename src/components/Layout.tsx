@@ -5,8 +5,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import SettingsModal from './SettingsModal';
 import ProfileModal from './ProfileModal';
 import ProfilePopup from './ProfilePopup';
-const logoImage = '';
-const logoBlack = '';
+import WordmarkDark from './WordmarkDark';
+import WordmarkLight from './WordmarkLight';
 
 interface Conversation {
   id: string;
