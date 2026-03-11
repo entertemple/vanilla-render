@@ -177,7 +177,8 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={heroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}>
-            You know what you want to say. You just can't see what you're actually saying yet.
+            You know what you want to say. <br />
+            You just can't see what you're actually saying yet.
           </motion.p>
 
           {/* Scroll indicator */}
