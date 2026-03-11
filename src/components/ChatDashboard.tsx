@@ -231,7 +231,7 @@ export default function ChatDashboard() {
               w-full bg-transparent border-none resize-none
               ${textColor} text-[16px] leading-[1.6] font-['Inter',_sans-serif]
               focus:outline-none focus:ring-0
-              ${!isFocused && !input && !hasConversation ? 'text-transparent caret-transparent' : ''}
+              
             `}
             style={{
               maxHeight: '180px',
