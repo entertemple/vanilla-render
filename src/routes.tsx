@@ -11,11 +11,16 @@ import UsagePolicy from "./pages/UsagePolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Upgrade from "./pages/Upgrade";
 import Login from "./pages/Login";
+import Landing from "./pages/Landing";
 
 export const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/landing",
+    element: <Landing />,
   },
   {
     path: "/",
