@@ -101,7 +101,7 @@ export default function ChatDashboard() {
 
   // Suggestion carousel timer
   useEffect(() => {
-    if (input || hasConversation) return;
+    if (isFocused || input || hasConversation) return;
     const interval = setInterval(() => {
       setCurrentSuggestionIndex((prev) => (prev + 1) % SUGGESTED_QUESTIONS.length);
     }, 3000);
