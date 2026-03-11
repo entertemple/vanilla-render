@@ -226,7 +226,7 @@ export default function Landing() {
         {/* ═══ ABOUT — Temple introduction ═══ */}
         <section className="px-6 md:px-12 py-48 max-w-[1200px] mx-auto" ref={aboutRef}>
           <div className="mb-20">
-            <ShadowTextRow text="Temple" inView={aboutInView} delay={0} />
+            <ShadowTextRow text="" inView={aboutInView} delay={0} />
           </div>
 
           <motion.p
