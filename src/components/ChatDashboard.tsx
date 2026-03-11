@@ -236,6 +236,7 @@ export default function ChatDashboard() {
             style={{
               maxHeight: '180px',
               overflow: 'auto',
+              caretColor: '#666666',
             }}
           />
         </div>
