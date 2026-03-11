@@ -236,15 +236,15 @@ export default function Layout({ children }: LayoutProps) {
               </button>
               
               <div className="flex-1 flex items-center justify-center">
-                <button
+              <button
                   onClick={() => navigate('/')}
-                  className={`${hoverBg} rounded-[12px] p-2 transition-colors`}
+                  className="rounded-[12px] p-2 outline-none focus:outline-none focus:ring-0 border-none"
                 >
-                  <img 
-                    src={theme === 'light' ? logoBlack : logoImage} 
-                    alt="Temple" 
-                    className="w-auto h-8 object-contain"
-                  />
+                  {theme === 'light' ? (
+                    <WordmarkLight className="w-auto h-8 object-contain" />
+                  ) : (
+                    <WordmarkDark className="w-auto h-8 object-contain" />
+                  )}
                 </button>
               </div>
 
