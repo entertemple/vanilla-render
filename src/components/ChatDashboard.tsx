@@ -192,7 +192,7 @@ export default function ChatDashboard() {
         {/* Text Input Area with Carousel */}
         <div className="flex-1 relative min-h-[26px]">
           {/* Sliding placeholder carousel - only on welcome state when not focused and no input */}
-          {!hasConversation && !isFocused && !input && (
+          {!hasConversation && !input && (
             <div
               className="absolute inset-0 flex items-center overflow-hidden cursor-text"
               onClick={() => {
