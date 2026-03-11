@@ -389,12 +389,6 @@ export default function Landing() {
             <div className="w-[56px] h-[56px] rounded-full border border-cnx-border flex items-center justify-center bg-cnx-white">
               <ArrowDown size={20} className="text-cnx-black" />
             </div>
-            <span
-              className="text-cnx-grey"
-              style={{ fontFamily: FONT_FAMILY, fontSize: '14px', fontWeight: 400 }}>
-              
-              Scroll Down
-            </span>
           </motion.div>
         </section>
 
