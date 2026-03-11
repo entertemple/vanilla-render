@@ -8,7 +8,7 @@ import ShaderBackground from '@/components/ShaderBackground';
 function useTypingEffect(text: string, speed = 40, startTyping = false) {
   const [displayed, setDisplayed] = useState('');
   useEffect(() => {
-    if (!startTyping) { setDisplayed(''); return; }
+    if (!startTyping) {setDisplayed('');return;}
     let i = 0;
     const id = setInterval(() => {
       i++;
@@ -21,30 +21,30 @@ function useTypingEffect(text: string, speed = 40, startTyping = false) {
 }
 
 // ─── Glassmorphic Card ───
-function GlassCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function GlassCard({ children, className = '' }: {children: React.ReactNode;className?: string;}) {
   return (
     <div className={`backdrop-blur-[64px] bg-[rgba(255,255,255,0.75)] border border-[rgba(255,255,255,0.6)] rounded-[32px] ${className}`}>
       {children}
-    </div>
-  );
+    </div>);
+
 }
 
 // ─── iPhone Frame ───
-function IPhoneFrame({ children, caption, inView, delay = 0 }: {
-  children: React.ReactNode; caption: string; inView: boolean; delay?: number;
-}) {
+function IPhoneFrame({ children, caption, inView, delay = 0
+
+}: {children: React.ReactNode;caption: string;inView: boolean;delay?: number;}) {
   return (
     <motion.div
       className="flex flex-col items-center"
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay }}
-    >
+      transition={{ duration: 0.7, delay }}>
+      
       <motion.div
         className="relative w-[280px] sm:w-[320px] md:w-[340px] rounded-[36px] border-[5px] border-[#1a1a1a] bg-[#fafafa] shadow-[0_40px_100px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.04)] overflow-hidden"
         style={{ aspectRatio: '375/812' }}
-        whileHover={{ y: -4, transition: { duration: 0.3 } }}
-      >
+        whileHover={{ y: -4, transition: { duration: 0.3 } }}>
+        
         {/* Notch */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[100px] h-[24px] bg-[#1a1a1a] rounded-b-xl z-10" />
         {/* Screen glare */}
@@ -57,23 +57,23 @@ function IPhoneFrame({ children, caption, inView, delay = 0 }: {
         className="mt-5 text-[14px] text-gray-500 italic font-light text-center max-w-[300px]"
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
-        transition={{ duration: 0.5, delay: delay + 0.3 }}
-      >
+        transition={{ duration: 0.5, delay: delay + 0.3 }}>
+        
         {caption}
       </motion.p>
-    </motion.div>
-  );
+    </motion.div>);
+
 }
 
 // ─── Color Legend Item ───
-function ColorItem({ color, word, label, inView, delay }: {
-  color: string; word: string; label: string; inView: boolean; delay: number;
-}) {
-  const styles: Record<string, { bg: string; text: string; dot: string }> = {
+function ColorItem({ color, word, label, inView, delay
+
+}: {color: string;word: string;label: string;inView: boolean;delay: number;}) {
+  const styles: Record<string, {bg: string;text: string;dot: string;}> = {
     red: { bg: 'bg-red-50', text: 'text-red-700', dot: 'bg-red-500' },
     yellow: { bg: 'bg-yellow-50', text: 'text-yellow-700', dot: 'bg-yellow-500' },
     green: { bg: 'bg-green-50', text: 'text-green-700', dot: 'bg-green-500' },
-    blue: { bg: 'bg-blue-50', text: 'text-blue-700', dot: 'bg-blue-500' },
+    blue: { bg: 'bg-blue-50', text: 'text-blue-700', dot: 'bg-blue-500' }
   };
   const s = styles[color];
   return (
@@ -81,8 +81,8 @@ function ColorItem({ color, word, label, inView, delay }: {
       className="flex items-start gap-3"
       initial={{ opacity: 0, x: -10 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.5, delay }}
-    >
+      transition={{ duration: 0.5, delay }}>
+      
       <div className={`w-3 h-3 rounded-full ${s.dot} mt-1.5 shrink-0`} />
       <div>
         <span className={`inline-block px-2 py-0.5 rounded-md ${s.bg} ${s.text} text-[14px] font-semibold mr-2`}>
@@ -90,8 +90,8 @@ function ColorItem({ color, word, label, inView, delay }: {
         </span>
         <span className="text-[15px] text-gray-600">— {label}</span>
       </div>
-    </motion.div>
-  );
+    </motion.div>);
+
 }
 
 // ─── Viewport size hook ───
@@ -145,8 +145,8 @@ export default function Landing() {
         width={width}
         height={height}
         colors={['#FFB347', '#FF6B81', '#FFC107']}
-        theme="light"
-      />
+        theme="light" />
+      
 
       {/* Scrollable content over shader */}
       <div
@@ -154,30 +154,30 @@ export default function Landing() {
         className="relative z-10 w-full h-full overflow-y-auto overflow-x-hidden"
         style={{
           scrollbarWidth: 'thin',
-          scrollbarColor: 'rgba(0,0,0,0.15) transparent',
-        }}
-      >
+          scrollbarColor: 'rgba(0,0,0,0.15) transparent'
+        }}>
+        
         {/* ═══ FIXED NAV ═══ */}
         <nav className={`fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-6 md:px-12 transition-all duration-300 ${
-          scrolled
-            ? 'h-[64px] backdrop-blur-[64px] bg-[rgba(255,255,255,0.6)] shadow-[0_1px_0_rgba(0,0,0,0.06)]'
-            : 'h-[80px] bg-transparent'
-        }`}>
+        scrolled ?
+        'h-[64px] backdrop-blur-[64px] bg-[rgba(255,255,255,0.6)] shadow-[0_1px_0_rgba(0,0,0,0.06)]' :
+        'h-[80px] bg-transparent'}`
+        }>
           <button onClick={() => navigate('/landing')} className="outline-none focus:outline-none">
             <WordmarkLight className="h-5 md:h-6" />
           </button>
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/login')}
-              className="px-5 py-2 text-[13px] font-medium text-gray-900 border border-[rgba(0,0,0,0.12)] rounded-full backdrop-blur-xl bg-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.6)] transition-colors"
-            >
+              className="px-5 py-2 text-[13px] font-medium text-gray-900 border border-[rgba(0,0,0,0.12)] rounded-full backdrop-blur-xl bg-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.6)] transition-colors">
+              
               Log in
             </button>
             <button
               onClick={() => navigate('/login')}
               className="px-5 py-2 text-[13px] font-medium text-gray-900 rounded-full transition-all hover:shadow-md backdrop-blur-xl"
-              style={{ background: 'linear-gradient(135deg, rgba(255,228,214,0.8), rgba(255,212,196,0.8))' }}
-            >
+              style={{ background: 'linear-gradient(135deg, rgba(255,228,214,0.8), rgba(255,212,196,0.8))' }}>
+              
               Sign up
             </button>
           </div>
@@ -186,29 +186,29 @@ export default function Landing() {
         {/* ═══ HERO ═══ */}
         <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-[100px] pb-24">
           <div ref={heroRef} className="flex flex-col items-center text-center max-w-3xl mx-auto">
-            <motion.h1
-              className="text-[48px] md:text-[72px] font-bold text-gray-900 leading-[1.05] mb-4"
-              initial={{ opacity: 0, y: 24 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8 }}
-            >
-              Temple
-            </motion.h1>
+            
+
+
+
+
+
+
+            
             <motion.p
-              className="text-[20px] md:text-[26px] text-gray-600 mb-10 max-w-lg leading-relaxed"
+              className="text-[20px] mb-10 max-w-lg leading-relaxed md:text-7xl text-black"
               style={{ fontFamily: "'Georgia', serif", fontStyle: 'italic' }}
               initial={{ opacity: 0, y: 16 }}
               animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.2 }}
-            >
-              Built for clarity.
+              transition={{ duration: 0.7, delay: 0.2 }}>Built for clarity
+
+
             </motion.p>
             <motion.div
               className="max-w-[600px] text-[16px] md:text-[18px] text-gray-600 font-light leading-[1.8] text-center space-y-6"
               initial={{ opacity: 0, y: 16 }}
               animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.35 }}
-            >
+              transition={{ duration: 0.7, delay: 0.35 }}>
+              
               <GlassCard className="p-8 md:p-10 text-left">
                 <p className="mb-6">
                   We've been here before. You know what you want to say, but can't see what you're actually saying. Somewhere along the way, AI got complicated—endless chats, feature bloat, engagement traps. We think it's time to get back to basics.
@@ -223,9 +223,9 @@ export default function Landing() {
           <motion.div
             className="absolute bottom-10 left-1/2 -translate-x-1/2"
             animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2.5 }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            transition={{ repeat: Infinity, duration: 2.5 }}>
+            
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
           </motion.div>
         </section>
 
@@ -238,7 +238,7 @@ export default function Landing() {
                   <div className="flex justify-between items-center mb-8 text-[10px] text-gray-400">
                     <span>9:41</span>
                     <span className="flex gap-1">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" /></svg>
                     </span>
                   </div>
                   <p className="text-[18px] font-semibold text-gray-900 mb-1">Temple</p>
@@ -247,13 +247,13 @@ export default function Landing() {
                   <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-gray-200 px-4 py-3 mb-6 shadow-sm">
                     <p className="text-[13px] text-gray-900 leading-relaxed">
                       {typedInput}
-                      {typedInput.length < 44 && card1InView && (
-                        <motion.span
-                          className="inline-block w-[2px] h-[14px] bg-gray-900/40 ml-0.5 align-text-bottom"
-                          animate={{ opacity: [1, 0] }}
-                          transition={{ repeat: Infinity, duration: 0.8 }}
-                        />
-                      )}
+                      {typedInput.length < 44 && card1InView &&
+                      <motion.span
+                        className="inline-block w-[2px] h-[14px] bg-gray-900/40 ml-0.5 align-text-bottom"
+                        animate={{ opacity: [1, 0] }}
+                        transition={{ repeat: Infinity, duration: 0.8 }} />
+
+                      }
                     </p>
                   </div>
                 </div>
@@ -270,27 +270,27 @@ export default function Landing() {
           <div ref={howRef} className="max-w-[720px] mx-auto">
             <GlassCard className="p-8 md:p-12">
               <motion.h2
-                className="text-[28px] md:text-[40px] font-bold text-gray-900 mb-6 text-center"
+                className="text-[28px] mb-6 text-center font-sans font-normal md:text-5xl text-black"
                 initial={{ opacity: 0, y: 20 }}
                 animate={howInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7 }}
-              >
+                transition={{ duration: 0.7 }}>
+                
                 How Temple Works
               </motion.h2>
               <motion.p
                 className="text-[16px] md:text-[18px] text-gray-600 font-light leading-[1.8] text-center mb-4"
                 initial={{ opacity: 0 }}
                 animate={howInView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
+                transition={{ duration: 0.6, delay: 0.2 }}>
+                
                 Clarity doesn't need complexity. Temple reads it and highlights what matters.
               </motion.p>
               <motion.p
                 className="text-[16px] md:text-[18px] text-gray-600 font-light leading-[1.8] text-center mb-10"
                 initial={{ opacity: 0 }}
                 animate={howInView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
+                transition={{ duration: 0.6, delay: 0.3 }}>
+                
                 Here's the core concept: every input becomes a mirror. Temple surfaces:
               </motion.p>
 
@@ -351,8 +351,8 @@ export default function Landing() {
                 className="text-[16px] md:text-[18px] text-gray-600 font-light leading-[1.9] text-center"
                 initial={{ opacity: 0, y: 16 }}
                 animate={synthesisInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7 }}
-              >
+                transition={{ duration: 0.7 }}>
+                
                 Each color opens its own path. Weave it together and hit "Synthesis" to merge all paths into one clear statement:
               </motion.p>
               <motion.blockquote
@@ -360,8 +360,8 @@ export default function Landing() {
                 style={{ fontFamily: "'Georgia', serif", fontStyle: 'italic' }}
                 initial={{ opacity: 0, x: -20 }}
                 animate={synthesisInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.3 }}
-              >
+                transition={{ duration: 0.8, delay: 0.3 }}>
+                
                 "You're ready to quit because it feels empty, even though the paychecks scare you into staying. Change matters more than stability right now."
               </motion.blockquote>
             </GlassCard>
@@ -408,19 +408,19 @@ export default function Landing() {
           <div ref={canvasRef} className="max-w-[680px] mx-auto">
             <GlassCard className="p-8 md:p-12">
               <motion.h2
-                className="text-[28px] md:text-[40px] font-bold text-gray-900 mb-8 text-center"
+                className="text-[28px] mb-8 text-center font-normal md:text-5xl text-black"
                 initial={{ opacity: 0, y: 20 }}
                 animate={canvasInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7 }}
-              >
+                transition={{ duration: 0.7 }}>
+                
                 A Canvas, Not a Chatbot
               </motion.h2>
               <motion.div
                 className="text-[16px] md:text-[18px] text-gray-600 font-light leading-[1.9] text-center space-y-6"
                 initial={{ opacity: 0 }}
                 animate={canvasInView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.7, delay: 0.2 }}
-              >
+                transition={{ duration: 0.7, delay: 0.2 }}>
+                
                 <p>
                   Temple has a single job: show you your own thinking. No lengthy threads. No endless suggestions. Every interaction earns its place by getting out of your way.
                 </p>
@@ -433,8 +433,8 @@ export default function Landing() {
                 className="mt-14 space-y-8"
                 initial={{ opacity: 0 }}
                 animate={canvasInView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.7, delay: 0.4 }}
-              >
+                transition={{ duration: 0.7, delay: 0.4 }}>
+                
                 <div className="text-center">
                   <h3 className="text-[18px] md:text-[22px] font-semibold text-gray-900 mb-2">The Backend</h3>
                   <p className="text-[15px] md:text-[16px] text-gray-500 font-light leading-[1.8]">
@@ -457,11 +457,11 @@ export default function Landing() {
           <div ref={ctaRef} className="text-center max-w-[600px]">
             <GlassCard className="p-10 md:p-14">
               <motion.h2
-                className="text-[32px] md:text-[48px] font-bold text-gray-900 mb-5"
+                className="text-[32px] mb-5 text-black md:text-5xl font-sans font-normal"
                 initial={{ opacity: 0, y: 20 }}
                 animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7 }}
-              >
+                transition={{ duration: 0.7 }}>
+                
                 Start reflecting
               </motion.h2>
               <motion.p
@@ -469,8 +469,8 @@ export default function Landing() {
                 style={{ fontFamily: "'Georgia', serif", fontStyle: 'italic' }}
                 initial={{ opacity: 0 }}
                 animate={ctaInView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
+                transition={{ duration: 0.6, delay: 0.2 }}>
+                
                 Your words. Your clarity. Nothing else.
               </motion.p>
               <motion.button
@@ -479,8 +479,8 @@ export default function Landing() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={ctaInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                onClick={() => navigate('/chat')}
-              >
+                onClick={() => navigate('/chat')}>
+                
                 Start reflecting
               </motion.button>
             </GlassCard>
@@ -495,6 +495,6 @@ export default function Landing() {
           </p>
         </footer>
       </div>
-    </div>
-  );
+    </div>);
+
 }
