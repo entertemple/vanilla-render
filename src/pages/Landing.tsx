@@ -107,6 +107,12 @@ export default function Landing() {
             <WordmarkLight className="h-5" />
           </button>
           <button
+            onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            className="px-5 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors"
+            style={{ fontSize: '14px', fontWeight: 400 }}>
+            How It Works
+          </button>
+          <button
             onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })}
             className="px-5 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors"
             style={{ fontSize: '14px', fontWeight: 400 }}>
