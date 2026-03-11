@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Plus, MessageSquare, Trash2, Menu, X, Settings, User, Sparkles, BookOpen, History, Compass, Zap } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import SettingsModal from './SettingsModal';
