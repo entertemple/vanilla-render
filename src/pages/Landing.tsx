@@ -177,7 +177,8 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={heroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}>
-            You know what you want to say. You just can't see what you're actually saying yet.
+            You know what you want to say. <br />
+            You just can't see what you're actually saying yet.
           </motion.p>
 
           {/* Scroll indicator */}
@@ -240,7 +241,7 @@ export default function Landing() {
             initial={{ opacity: 0, y: 30 }}
             animate={aboutInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.3 }}>
-            is a beautifully designed AI for people who need to think something through.
+            A beautifully designed AI for people who need to think something through.
           </motion.p>
 
           <motion.p
@@ -255,7 +256,9 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={aboutInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.6 }}>
-            A decision you're circling. A message you can't land. A conversation you've been avoiding.
+            A decision you're circling. <br />
+            A message you can't land. <br />
+            A conversation you've been avoiding.
           </motion.p>
         </section>
 
