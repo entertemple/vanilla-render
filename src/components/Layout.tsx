@@ -5,8 +5,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import SettingsModal from './SettingsModal';
 import ProfileModal from './ProfileModal';
 import ProfilePopup from './ProfilePopup';
-import logoImage from 'figma:asset/2b01a5db4c6d427d3ceac3ea512249cf5facfc9f.png';
-import logoBlack from 'figma:asset/16e314852087eb38f195dd5d8648293ff08d8953.png';
+const logoImage = '';
+const logoBlack = '';
 
 interface Conversation {
   id: string;

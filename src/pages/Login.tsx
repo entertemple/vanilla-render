@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import LoginBackground from '../components/LoginBackground';
 import { useTheme } from '../contexts/ThemeContext';
 

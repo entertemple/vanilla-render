@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { Settings, User, LogOut, Info, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfilePopupProps {
   onSettingsClick?: () => void;
