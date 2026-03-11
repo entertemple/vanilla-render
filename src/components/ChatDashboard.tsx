@@ -29,6 +29,7 @@ const MOCK_RESPONSES = [
 ];
 
 const SUGGESTED_QUESTIONS = [
+  "Hey temple...",
   "I've been 'about to start' for three weeks now...",
   "my body said no but I said sure, absolutely, sounds great...",
   "I have a vision board and an overdraft. explain...",
