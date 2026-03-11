@@ -349,21 +349,56 @@ export default function Landing() {
       >
         {/* ═══ HERO (Createnix: 160px title, centered, full viewport) ═══ */}
         <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-[80px]">
-          <motion.h1
-            className="text-cnx-black text-center"
+          <motion.div
+            className="relative text-center"
             style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(64px, 12vw, 160px)',
-              fontWeight: 400,
-              lineHeight: 1,
-              letterSpacing: 'normal',
+              filter: 'drop-shadow(0 0 40px rgba(255,255,255,0.06))',
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            Temple
-          </motion.h1>
+            {/* Backdrop blur layer — clipped to text shape via SVG */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+              <defs>
+                <filter id="glass-blur">
+                  <feGaussianBlur in="BackgroundImage" stdDeviation="12" />
+                </filter>
+              </defs>
+              <text
+                x="50%"
+                y="78%"
+                textAnchor="middle"
+                style={{
+                  fontFamily: FONT_FAMILY,
+                  fontSize: 'clamp(64px, 12vw, 160px)',
+                  fontWeight: 400,
+                }}
+                fill="rgba(255,255,255,0.08)"
+                filter="url(#glass-blur)"
+              >
+                Temple
+              </text>
+            </svg>
+            {/* Visible glassmorphic text */}
+            <h1
+              style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: 'clamp(64px, 12vw, 160px)',
+                fontWeight: 400,
+                lineHeight: 1,
+                letterSpacing: 'normal',
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.03) 100%)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+                WebkitTextStroke: '1px rgba(255,255,255,0.15)',
+                position: 'relative',
+              }}
+            >
+              Temple
+            </h1>
+          </motion.div>
 
           <motion.p
             className="text-cnx-black mt-6 text-center"
