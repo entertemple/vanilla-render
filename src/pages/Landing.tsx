@@ -278,43 +278,93 @@ export default function Landing() {
 
   return (
     <div className="fixed inset-0 z-50 bg-cnx-light-grey">
-      {/* ═══ FIXED NAV (Createnix: pill buttons, 100px radius) ═══ */}
+      {/* ═══ FIXED NAV ═══ */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-6 md:px-12 transition-all duration-300 ${
-          scrolled
-            ? 'h-[64px] bg-cnx-white/80 backdrop-blur-xl shadow-[0_1px_0_hsl(var(--cnx-border))]'
-            : 'h-[80px] bg-transparent'
-        }`}
+        className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-center px-6 md:px-12 h-[80px]"
         style={{ fontFamily: FONT_FAMILY }}
       >
-        {/* Left: Temple wordmark */}
-        <button onClick={() => navigate('/landing')} className="outline-none focus:outline-none">
-          <WordmarkLight className="h-5 md:h-6" />
-        </button>
-
-        {/* Right: Log in / Sign up (100px pill radius per spec) */}
-        <div className="flex items-center gap-3">
+        {/* Glassmorphic pill container around nav buttons */}
+        <motion.div
+          className="flex items-center gap-0 rounded-[100px] transition-all duration-500"
+          animate={scrolled ? {
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            background: 'rgba(247, 247, 247, 0.2)',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 8px 32px rgba(34, 34, 34, 0.1)',
+          } : {
+            backdropFilter: 'blur(0px)',
+            WebkitBackdropFilter: 'blur(0px)',
+            background: 'rgba(255, 255, 255, 0)',
+            borderColor: 'rgba(255, 255, 255, 0)',
+            boxShadow: '0 0px 0px rgba(34, 34, 34, 0)',
+          }}
+          style={{
+            border: '1px solid rgba(255, 255, 255, 0)',
+            padding: '6px 8px',
+          }}
+        >
+          {/* Logo */}
           <button
-            onClick={() => navigate('/login')}
-            className="px-5 py-2 text-cnx-black border border-cnx-border rounded-[100px] bg-cnx-white hover:bg-cnx-light-grey transition-colors"
+            onClick={() => navigate('/landing')}
+            className="px-5 py-2 outline-none focus:outline-none rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors"
+          >
+            <WordmarkLight className="h-5" />
+          </button>
+
+          {/* How It Works */}
+          <button
+            onClick={() => howRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            className="px-5 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap"
             style={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px', fontFamily: FONT_FAMILY }}
           >
-            Log in
+            How It Works
           </button>
+
+          {/* Pricing */}
+          <button
+            onClick={() => navigate('/upgrade')}
+            className="px-5 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors"
+            style={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px', fontFamily: FONT_FAMILY }}
+          >
+            Pricing
+          </button>
+
+          {/* Get Started */}
           <button
             onClick={() => navigate('/login')}
-            className="px-5 py-2 text-cnx-black rounded-[100px] transition-all hover:shadow-md"
-            style={{
-              fontSize: '14px',
-              fontWeight: 400,
-              lineHeight: '20px',
-              fontFamily: FONT_FAMILY,
-              background: 'linear-gradient(135deg, #FFE8D6, #FFD4C4)',
-            }}
+            className="px-5 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap"
+            style={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px', fontFamily: FONT_FAMILY }}
           >
-            Sign up
+            Get Started
           </button>
-        </div>
+        </motion.div>
+
+        {/* Mobile nav - hidden on desktop, shown on mobile */}
+        <motion.div
+          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 rounded-[100px] p-2 transition-all duration-500"
+          animate={scrolled ? {
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            background: 'rgba(247, 247, 247, 0.2)',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 8px 32px rgba(34, 34, 34, 0.1)',
+          } : {
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            background: 'rgba(247, 247, 247, 0.6)',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 8px 32px rgba(34, 34, 34, 0.1)',
+          }}
+          style={{ border: '1px solid rgba(255, 255, 255, 0.3)' }}
+        >
+          <button onClick={() => navigate('/landing')} className="px-4 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors" style={{ fontSize: '13px', fontFamily: FONT_FAMILY }}>
+            <WordmarkLight className="h-4" />
+          </button>
+          <button onClick={() => howRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-4 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap" style={{ fontSize: '13px', fontFamily: FONT_FAMILY }}>How It Works</button>
+          <button onClick={() => navigate('/upgrade')} className="px-4 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors" style={{ fontSize: '13px', fontFamily: FONT_FAMILY }}>Pricing</button>
+          <button onClick={() => navigate('/login')} className="px-4 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap" style={{ fontSize: '13px', fontFamily: FONT_FAMILY }}>Get Started</button>
+        </motion.div>
       </nav>
 
       {/* ═══ SCROLLABLE CONTENT ═══ */}
