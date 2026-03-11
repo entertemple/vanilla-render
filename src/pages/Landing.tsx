@@ -326,25 +326,11 @@ export default function Landing() {
           >
             Get Started
           </button>
-        </motion.div>
+        </div>
 
-        {/* Mobile nav - hidden on desktop, shown on mobile */}
-        <motion.div
-          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 rounded-[100px] p-2 transition-all duration-500"
-          animate={scrolled ? {
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            background: 'rgba(247, 247, 247, 0.2)',
-            borderColor: 'rgba(255, 255, 255, 0.3)',
-            boxShadow: '0 8px 32px rgba(34, 34, 34, 0.1)',
-          } : {
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            background: 'rgba(247, 247, 247, 0.6)',
-            borderColor: 'rgba(255, 255, 255, 0.3)',
-            boxShadow: '0 8px 32px rgba(34, 34, 34, 0.1)',
-          }}
-          style={{ border: '1px solid rgba(255, 255, 255, 0.3)' }}
+        {/* Mobile nav - shown on mobile only */}
+        <div
+          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 rounded-[100px] p-2 backdrop-blur-[10px] bg-[rgba(247,247,247,0.6)] border border-[rgba(255,255,255,0.3)] shadow-[0_8px_32px_rgba(34,34,34,0.1)]"
         >
           <button onClick={() => navigate('/landing')} className="px-4 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors" style={{ fontSize: '13px', fontFamily: FONT_FAMILY }}>
             <WordmarkLight className="h-4" />
@@ -352,7 +338,7 @@ export default function Landing() {
           <button onClick={() => howRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-4 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap" style={{ fontSize: '13px', fontFamily: FONT_FAMILY }}>How It Works</button>
           <button onClick={() => navigate('/upgrade')} className="px-4 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors" style={{ fontSize: '13px', fontFamily: FONT_FAMILY }}>Pricing</button>
           <button onClick={() => navigate('/login')} className="px-4 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap" style={{ fontSize: '13px', fontFamily: FONT_FAMILY }}>Get Started</button>
-        </motion.div>
+        </div>
       </nav>
 
       {/* ═══ SCROLLABLE CONTENT ═══ */}
