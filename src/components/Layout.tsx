@@ -241,9 +241,9 @@ export default function Layout({ children }: LayoutProps) {
                   className="rounded-[12px] p-2 outline-none focus:outline-none focus:ring-0 border-none"
                 >
                   {theme === 'light' ? (
-                    <WordmarkLight className="w-auto h-8 object-contain" />
+                    <WordmarkLight className="w-auto h-5 object-contain" />
                   ) : (
-                    <WordmarkDark className="w-auto h-8 object-contain" />
+                    <WordmarkDark className="w-auto h-5 object-contain" />
                   )}
                 </button>
               </div>
