@@ -7,7 +7,7 @@ import WordmarkLight from '@/components/WordmarkLight';
 const FONT_FAMILY = "'DM Sans', Arial, sans-serif";
 
 // ─── Shadow Text Row (Createnix double-text reveal) ───
-function ShadowTextRow({ text, inView, delay = 0, className = '' }: { text: string; inView: boolean; delay?: number; className?: string }) {
+function ShadowTextRow({ text, inView, delay = 0, className = '' }: {text: string;inView: boolean;delay?: number;className?: string;}) {
   return (
     <div className={`relative overflow-hidden ${className}`}>
       <h2
@@ -16,38 +16,38 @@ function ShadowTextRow({ text, inView, delay = 0, className = '' }: { text: stri
           fontFamily: FONT_FAMILY,
           fontSize: 'clamp(32px, 6vw, 80px)',
           fontWeight: 400,
-          lineHeight: 1.15,
+          lineHeight: 1.15
         }}>
         {text}
       </h2>
       <motion.h2
-        className="absolute inset-0 text-cnx-black"
+        className="absolute inset-0 text-cnx-black text-lg"
         style={{
           fontFamily: FONT_FAMILY,
           fontSize: 'clamp(32px, 6vw, 80px)',
           fontWeight: 400,
-          lineHeight: 1.15,
+          lineHeight: 1.15
         }}
         initial={{ y: '100%' }}
         animate={inView ? { y: '0%' } : {}}
         transition={{ duration: 0.8, delay, ease: [0.25, 0.46, 0.45, 0.94] }}>
         {text}
       </motion.h2>
-    </div>
-  );
+    </div>);
+
 }
 
 // ─── Parallax blank cards ───
 const GRID_PLACEMENTS = [
-  { gridColumn: '1 / 3', gridRow: '1 / 4', minHeight: '400px' },
-  { gridColumn: '3 / 5', gridRow: '2 / 5', minHeight: '380px' },
-  { gridColumn: '5 / 7', gridRow: '1 / 3', minHeight: '280px' },
-  { gridColumn: '7 / 9', gridRow: '2 / 5', minHeight: '400px' },
-  { gridColumn: '2 / 4', gridRow: '5 / 8', minHeight: '380px' },
-  { gridColumn: '5 / 8', gridRow: '4 / 7', minHeight: '350px' },
-  { gridColumn: '1 / 3', gridRow: '8 / 10', minHeight: '300px' },
-  { gridColumn: '6 / 9', gridRow: '7 / 10', minHeight: '340px' },
-];
+{ gridColumn: '1 / 3', gridRow: '1 / 4', minHeight: '400px' },
+{ gridColumn: '3 / 5', gridRow: '2 / 5', minHeight: '380px' },
+{ gridColumn: '5 / 7', gridRow: '1 / 3', minHeight: '280px' },
+{ gridColumn: '7 / 9', gridRow: '2 / 5', minHeight: '400px' },
+{ gridColumn: '2 / 4', gridRow: '5 / 8', minHeight: '380px' },
+{ gridColumn: '5 / 8', gridRow: '4 / 7', minHeight: '350px' },
+{ gridColumn: '1 / 3', gridRow: '8 / 10', minHeight: '300px' },
+{ gridColumn: '6 / 9', gridRow: '7 / 10', minHeight: '340px' }];
+
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -100,10 +100,10 @@ export default function Landing() {
         style={{ fontFamily: FONT_FAMILY }}>
         <div
           className={`hidden md:flex items-center gap-0 rounded-[100px] transition-all duration-500 ${
-            scrolled
-              ? 'backdrop-blur-[10px] bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.3)] shadow-[0_8px_32px_rgba(34,34,34,0.08)]'
-              : 'bg-transparent border border-transparent'
-          }`}
+          scrolled ?
+          'backdrop-blur-[10px] bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.3)] shadow-[0_8px_32px_rgba(34,34,34,0.08)]' :
+          'bg-transparent border border-transparent'}`
+          }
           style={{ padding: '6px 8px' }}>
           <button
             onClick={() => navigate('/landing')}
@@ -158,7 +158,7 @@ export default function Landing() {
               fontSize: 'clamp(56px, 12vw, 160px)',
               fontWeight: 400,
               lineHeight: 0.95,
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.02em'
             }}
             initial={{ opacity: 0, y: 40 }}
             animate={heroInView ? { opacity: 1, y: 0 } : {}}
@@ -172,7 +172,7 @@ export default function Landing() {
               fontFamily: FONT_FAMILY,
               fontSize: 'clamp(16px, 2vw, 20px)',
               fontWeight: 400,
-              lineHeight: '1.6',
+              lineHeight: '1.6'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={heroInView ? { opacity: 1, y: 0 } : {}}
@@ -199,27 +199,27 @@ export default function Landing() {
             style={{
               gridTemplateColumns: 'repeat(8, 1fr)',
               gridTemplateRows: 'repeat(10, auto)',
-              gap: '16px',
+              gap: '16px'
             }}>
-            {GRID_PLACEMENTS.map((placement, i) => (
-              <motion.div
-                key={i}
-                className="rounded-[24px] bg-cnx-light-grey w-full"
-                style={{
-                  gridColumn: placement.gridColumn,
-                  gridRow: placement.gridRow,
-                  minHeight: placement.minHeight,
-                  y: parallaxValues[i],
-                  willChange: 'transform',
-                }}
-              />
-            ))}
+            {GRID_PLACEMENTS.map((placement, i) =>
+            <motion.div
+              key={i}
+              className="rounded-[24px] bg-cnx-light-grey w-full"
+              style={{
+                gridColumn: placement.gridColumn,
+                gridRow: placement.gridRow,
+                minHeight: placement.minHeight,
+                y: parallaxValues[i],
+                willChange: 'transform'
+              }} />
+
+            )}
           </div>
           {/* Mobile: simple grid */}
           <div className="grid grid-cols-2 gap-4 md:hidden">
-            {GRID_PLACEMENTS.map((_, i) => (
-              <div key={i} className="rounded-[24px] bg-cnx-light-grey" style={{ minHeight: '180px' }} />
-            ))}
+            {GRID_PLACEMENTS.map((_, i) =>
+            <div key={i} className="rounded-[24px] bg-cnx-light-grey" style={{ minHeight: '180px' }} />
+            )}
           </div>
         </section>
 
@@ -236,12 +236,12 @@ export default function Landing() {
               fontSize: 'clamp(40px, 8vw, 128px)',
               fontWeight: 400,
               lineHeight: 1.1,
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.02em'
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={aboutInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.3 }}>
-            A beautifully designed AI for people who need to think something through.
+            transition={{ duration: 0.9, delay: 0.3 }}>A beautifully designed AI for people who need to think something through
+
           </motion.p>
 
           <motion.p
@@ -251,12 +251,13 @@ export default function Landing() {
               fontSize: 'clamp(20px, 3vw, 32px)',
               fontWeight: 400,
               lineHeight: 1.4,
-              fontStyle: 'italic',
+              fontStyle: 'italic'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={aboutInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.6 }}>
-            A decision you're circling. <br />
+            transition={{ duration: 0.7, delay: 0.6 }}>A decision you're circling
+A message you can't land
+A conversation you've been avoiding<br />
             A message you can't land. <br />
             A conversation you've been avoiding.
           </motion.p>
@@ -264,28 +265,27 @@ export default function Landing() {
 
         {/* ═══ HOW IT WORKS ═══ */}
         <section className="py-48 px-6 md:px-12 max-w-[1200px] mx-auto" ref={howRef}>
-          <motion.h2
-            className="text-cnx-black text-center mb-20"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(40px, 8vw, 128px)',
-              fontWeight: 400,
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em',
-            }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={howInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}>
+          <motion.h2 className="text-cnx-black text-center mb-20"
+          style={{
+            fontFamily: FONT_FAMILY,
+            fontSize: 'clamp(40px, 8vw, 128px)',
+            fontWeight: 400,
+            lineHeight: 1.1,
+            letterSpacing: '-0.02em'
+          }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={howInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}>
             How it works
           </motion.h2>
 
           <motion.p
-            className="text-cnx-black max-w-[720px]"
+            className="text-cnx-black max-w-[720px] text-4xl text-left"
             style={{
               fontFamily: FONT_FAMILY,
               fontSize: '16px',
               fontWeight: 400,
-              lineHeight: '1.8',
+              lineHeight: '1.8'
             }}
             initial={{ opacity: 0, y: 16 }}
             animate={howInView ? { opacity: 1, y: 0 } : {}}
@@ -295,12 +295,12 @@ export default function Landing() {
 
           <div className="mt-12 space-y-2">
             <motion.h3
-              className="text-cnx-black"
+              className="text-cnx-black text-left text-3xl font-light"
               style={{
                 fontFamily: FONT_FAMILY,
                 fontSize: 'clamp(18px, 2.5vw, 24px)',
                 fontWeight: 400,
-                lineHeight: 1.4,
+                lineHeight: 1.4
               }}
               initial={{ opacity: 0, x: -20 }}
               animate={howInView ? { opacity: 1, x: 0 } : {}}
@@ -308,12 +308,12 @@ export default function Landing() {
               The assumption underneath the logic.
             </motion.h3>
             <motion.h3
-              className="text-cnx-black"
+              className="text-cnx-black text-left text-3xl font-light"
               style={{
                 fontFamily: FONT_FAMILY,
                 fontSize: 'clamp(18px, 2.5vw, 24px)',
                 fontWeight: 400,
-                lineHeight: 1.4,
+                lineHeight: 1.4
               }}
               initial={{ opacity: 0, x: -20 }}
               animate={howInView ? { opacity: 1, x: 0 } : {}}
@@ -321,12 +321,12 @@ export default function Landing() {
               The truth buried in the last sentence.
             </motion.h3>
             <motion.h3
-              className="text-cnx-black"
+              className="text-cnx-black text-3xl font-light"
               style={{
                 fontFamily: FONT_FAMILY,
                 fontSize: 'clamp(18px, 2.5vw, 24px)',
                 fontWeight: 400,
-                lineHeight: 1.4,
+                lineHeight: 1.4
               }}
               initial={{ opacity: 0, x: -20 }}
               animate={howInView ? { opacity: 1, x: 0 } : {}}
@@ -336,12 +336,12 @@ export default function Landing() {
           </div>
 
           <motion.p
-            className="text-cnx-black mt-20 max-w-[720px]"
+            className="text-cnx-black mt-20 max-w-[720px] font-light text-3xl"
             style={{
               fontFamily: FONT_FAMILY,
               fontSize: 'clamp(16px, 2vw, 20px)',
               fontWeight: 400,
-              lineHeight: '1.6',
+              lineHeight: '1.6'
             }}
             initial={{ opacity: 0, y: 16 }}
             animate={howInView ? { opacity: 1, y: 0 } : {}}
@@ -358,12 +358,12 @@ export default function Landing() {
           </div>
 
           <motion.p
-            className="text-cnx-black max-w-[640px]"
+            className="text-cnx-black max-w-[640px] text-3xl"
             style={{
               fontFamily: FONT_FAMILY,
               fontSize: '16px',
               fontWeight: 400,
-              lineHeight: '1.8',
+              lineHeight: '1.8'
             }}
             initial={{ opacity: 0, y: 16 }}
             animate={themesInView ? { opacity: 1, y: 0 } : {}}
@@ -372,12 +372,12 @@ export default function Landing() {
           </motion.p>
 
           <motion.p
-            className="text-cnx-black mt-6 max-w-[640px]"
+            className="text-cnx-black mt-6 max-w-[640px] text-3xl font-light"
             style={{
               fontFamily: FONT_FAMILY,
               fontSize: '16px',
               fontWeight: 400,
-              lineHeight: '1.8',
+              lineHeight: '1.8'
             }}
             initial={{ opacity: 0, y: 16 }}
             animate={themesInView ? { opacity: 1, y: 0 } : {}}
@@ -394,17 +394,17 @@ export default function Landing() {
           </div>
 
           <motion.p
-            className="text-cnx-black max-w-[640px]"
+            className="text-cnx-black max-w-[640px] text-2xl"
             style={{
               fontFamily: FONT_FAMILY,
               fontSize: '16px',
               fontWeight: 400,
-              lineHeight: '1.8',
+              lineHeight: '1.8'
             }}
             initial={{ opacity: 0, y: 16 }}
             animate={typeInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.4 }}>
-            Choose how Temple speaks to you visually. Four typeface pairings.
+            transition={{ duration: 0.7, delay: 0.4 }}>Choose how Temple speaks to you visually. 
+Four typeface pairings.
           </motion.p>
 
           <motion.h3
@@ -413,7 +413,7 @@ export default function Landing() {
               fontFamily: FONT_FAMILY,
               fontSize: 'clamp(20px, 3vw, 32px)',
               fontWeight: 400,
-              lineHeight: 1.4,
+              lineHeight: 1.4
             }}
             initial={{ opacity: 0, y: 16 }}
             animate={typeInView ? { opacity: 1, y: 0 } : {}}
@@ -427,7 +427,7 @@ export default function Landing() {
               fontFamily: FONT_FAMILY,
               fontSize: 'clamp(16px, 2vw, 20px)',
               fontWeight: 400,
-              lineHeight: '1.6',
+              lineHeight: '1.6'
             }}
             initial={{ opacity: 0, y: 16 }}
             animate={typeInView ? { opacity: 1, y: 0 } : {}}
@@ -445,7 +445,7 @@ export default function Landing() {
               fontSize: 'clamp(56px, 12vw, 160px)',
               fontWeight: 400,
               lineHeight: 0.95,
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.02em'
             }}
             initial={{ opacity: 0, y: 40 }}
             animate={finalInView ? { opacity: 1, y: 0 } : {}}
@@ -463,7 +463,7 @@ export default function Landing() {
               fontFamily: FONT_FAMILY,
               fontSize: '16px',
               fontWeight: 400,
-              letterSpacing: '0.02em',
+              letterSpacing: '0.02em'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={ctaInView ? { opacity: 1, y: 0 } : {}}
@@ -485,6 +485,6 @@ export default function Landing() {
           </div>
         </footer>
       </div>
-    </div>
-  );
+    </div>);
+
 }
