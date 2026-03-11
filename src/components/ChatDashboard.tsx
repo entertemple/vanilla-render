@@ -210,7 +210,7 @@ export default function ChatDashboard() {
                   className={`${placeholderColor} text-[16px] leading-[1.6] font-['Inter',_sans-serif] cursor-text whitespace-nowrap`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSuggestionClick(SUGGESTED_QUESTIONS[currentSuggestionIndex]);
+                    handleSuggestionClick();
                   }}
                 >
                   {SUGGESTED_QUESTIONS[currentSuggestionIndex]}
