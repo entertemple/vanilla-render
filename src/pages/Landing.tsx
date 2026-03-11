@@ -284,25 +284,13 @@ export default function Landing() {
         style={{ fontFamily: FONT_FAMILY }}
       >
         {/* Glassmorphic pill container around nav buttons */}
-        <motion.div
-          className="flex items-center gap-0 rounded-[100px] transition-all duration-500"
-          animate={scrolled ? {
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            background: 'rgba(247, 247, 247, 0.2)',
-            borderColor: 'rgba(255, 255, 255, 0.3)',
-            boxShadow: '0 8px 32px rgba(34, 34, 34, 0.1)',
-          } : {
-            backdropFilter: 'blur(0px)',
-            WebkitBackdropFilter: 'blur(0px)',
-            background: 'rgba(255, 255, 255, 0)',
-            borderColor: 'rgba(255, 255, 255, 0)',
-            boxShadow: '0 0px 0px rgba(34, 34, 34, 0)',
-          }}
-          style={{
-            border: '1px solid rgba(255, 255, 255, 0)',
-            padding: '6px 8px',
-          }}
+        <div
+          className={`hidden md:flex items-center gap-0 rounded-[100px] transition-all duration-500 ${
+            scrolled
+              ? 'backdrop-blur-[10px] bg-[rgba(247,247,247,0.2)] border border-[rgba(255,255,255,0.3)] shadow-[0_8px_32px_rgba(34,34,34,0.1)]'
+              : 'bg-transparent border border-transparent'
+          }`}
+          style={{ padding: '6px 8px' }}
         >
           {/* Logo */}
           <button
