@@ -42,6 +42,14 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Createnix design tokens */
+    --cnx-black: 0 0% 5.5%;
+    --cnx-grey: 0 0% 70.6%;
+    --cnx-light-grey: 0 0% 96.9%;
+    --cnx-white: 0 0% 100%;
+    --cnx-border: 0 0% 90.2%;
+    --cnx-dark-grey: 0 0% 13.3%;
   }
 
   .dark {
