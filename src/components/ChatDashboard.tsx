@@ -101,7 +101,7 @@ export default function ChatDashboard() {
 
   // Suggestion carousel timer
   useEffect(() => {
-    if (isFocused || input || hasConversation) return;
+    if (input || hasConversation) return;
     const interval = setInterval(() => {
       setCurrentSuggestionIndex((prev) => (prev + 1) % SUGGESTED_QUESTIONS.length);
     }, 3000);
@@ -192,7 +192,7 @@ export default function ChatDashboard() {
         {/* Text Input Area with Carousel */}
         <div className="flex-1 relative min-h-[26px]">
           {/* Sliding placeholder carousel - only on welcome state when not focused and no input */}
-          {!hasConversation && !isFocused && !input && (
+          {!hasConversation && !input && (
             <div
               className="absolute inset-0 flex items-center overflow-hidden cursor-text"
               onClick={() => {
@@ -231,7 +231,7 @@ export default function ChatDashboard() {
               w-full bg-transparent border-none resize-none
               ${textColor} text-[16px] leading-[1.6] font-['Inter',_sans-serif]
               focus:outline-none focus:ring-0
-              ${!isFocused && !input && !hasConversation ? 'text-transparent caret-transparent' : ''}
+              ${!input && !hasConversation ? 'text-transparent caret-current' : ''}
             `}
             style={{
               maxHeight: '180px',
