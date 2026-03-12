@@ -98,15 +98,17 @@ export default function Layout({ children }: LayoutProps) {
     ? 'bg-[rgba(255,255,255,0.1)]' 
     : 'bg-[rgba(255,255,255,0.05)]';
 
-  const createNewChat = () => {
-    const newConversation: Conversation = {
-      id: Date.now().toString(),
-      title: 'New Conversation',
-      createdAt: new Date()
-    };
+  const createNewChat = async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from('conversations')
+      .insert({ user_id: user.id, title: 'New Conversation' })
+      .select()
+      .single();
 
-    setConversations([newConversation, ...conversations]);
-    navigate(`/chat/${newConversation.id}`);
+    if (data && !error) {
+      navigate(`/chat/${data.id}`);
+    }
   };
 
   const deleteConversation = (id: string, e: React.MouseEvent) => {
