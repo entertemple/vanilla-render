@@ -300,7 +300,7 @@ function AssistantMessage({
         >
           <p style={labelStyle}>GO DEEPER</p>
           <a
-            href={buildSearchUrl(parsed.goDeeper.title)}
+            href={parsed.goDeeper.url || buildSearchUrl(parsed.goDeeper.title)}
             target="_blank"
             rel="noopener noreferrer"
             style={goDeeperCardStyle}
