@@ -132,6 +132,14 @@ serve(async (req) => {
       systemPrompt += `\n\n${beatContext}`;
     }
 
+    // Perplexity requires last message to be role "user"
+    // When beatContext is provided (phrase click), the last message may be "assistant"
+    // Append a synthetic user message to satisfy the API requirement
+    const finalMessages = [...normalizedMessages];
+    if (finalMessages.length > 0 && finalMessages[finalMessages.length - 1].role !== "user") {
+      finalMessages.push({ role: "user", content: "Go deeper into this thread." });
+    }
+
     const response = await fetch("https://api.perplexity.ai/chat/completions", {
       method: "POST",
       headers: {
@@ -142,7 +150,7 @@ serve(async (req) => {
         model: "sonar-pro",
         messages: [
           { role: "system", content: systemPrompt },
-          ...normalizedMessages,
+          ...finalMessages,
         ],
         max_tokens: 1500,
         stream: false,
