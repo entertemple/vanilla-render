@@ -126,7 +126,7 @@ function GoDeeperCard({
   animDelay: number;
 }) {
   const labelColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
-  const dimColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
+  const dimColor = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)';
   const activeColor = isDark ? '#ffffff' : '#0e0e0e';
   const bg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
   const border = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)';
@@ -166,7 +166,7 @@ function GoDeeperCard({
     for (const seg of segments) {
       if (seg.start > lastIdx) {
         parts.push(
-          <span key={`dim-${lastIdx}`} style={{ color: dimColor, opacity: 0.2 }}>
+          <span key={`dim-${lastIdx}`} style={{ color: dimColor }}>
             {userMessage.slice(lastIdx, seg.start)}
           </span>
         );
@@ -199,7 +199,7 @@ function GoDeeperCard({
 
     if (lastIdx < userMessage.length) {
       parts.push(
-        <span key={`dim-${lastIdx}`} style={{ color: dimColor, opacity: 0.2 }}>
+        <span key={`dim-${lastIdx}`} style={{ color: dimColor }}>
           {userMessage.slice(lastIdx)}
         </span>
       );
@@ -260,10 +260,12 @@ function ADoorCard({
   goDeeper,
   isDark,
   isNew,
+  label = 'A DOOR',
 }: {
   goDeeper: ParsedResponse['goDeeper'];
   isDark: boolean;
   isNew: boolean;
+  label?: string;
 }) {
   const labelColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
   const titleColor = isDark ? '#ffffff' : '#0e0e0e';
@@ -307,7 +309,7 @@ function ADoorCard({
         marginBottom: '0.75rem',
         fontWeight: 500,
       }}>
-        A DOOR
+        {label}
       </p>
       <p style={{
         fontSize: '1.1rem',
@@ -417,8 +419,10 @@ function AssistantMessage({
     };
   };
 
-  // Show GO DEEPER card only on Beat 1
+  // Show interactive GO DEEPER reflection card only on Beat 1
   const showGoDeeperCard = beat === 1 && userMessage && phrases && phrases.length > 0 && onPhraseClick;
+  // Show cultural reference GO DEEPER card on Beat 1
+  const showGoDeeperReference = beat === 1 && parsed.goDeeper.title;
   // Show A DOOR card only on Beat 2
   const showADoor = beat === 2 && parsed.goDeeper.title;
   // Show sharp question on Beat 5+
@@ -448,6 +452,10 @@ function AssistantMessage({
             isNew={false}
             animDelay={0}
           />
+        )}
+
+        {showGoDeeperReference && (
+          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="GO DEEPER" />
         )}
 
         {showADoor && (
@@ -545,6 +553,10 @@ function AssistantMessage({
           isNew={true}
           animDelay={cardDelay}
         />
+      )}
+
+      {showGoDeeperReference && (
+        <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={true} label="GO DEEPER" />
       )}
 
       {showADoor && (
