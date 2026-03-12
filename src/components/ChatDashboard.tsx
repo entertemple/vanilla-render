@@ -279,7 +279,7 @@ function ADoorCard({
         display: 'block',
         background: bg,
         border: `1px solid ${border}`,
-        borderRadius: '4px',
+        borderRadius: '15px',
         padding: '1.25rem',
         marginTop: '2rem',
         textDecoration: 'none',
