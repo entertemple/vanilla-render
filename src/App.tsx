@@ -1,5 +1,6 @@
 import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { AuthProvider } from './contexts/AuthContext';
 import { router } from './routes';
 import ShaderBackground from './components/ShaderBackground';
 import ErrorBoundary from './components/ErrorBoundary';
