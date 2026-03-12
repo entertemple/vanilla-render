@@ -95,14 +95,13 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className={`
-              absolute bottom-full left-0 mb-3 w-[220px]
-              ${popupBg} backdrop-blur-[120px] border ${borderColor} rounded-[16px]
-              shadow-[0_8px_32px_rgba(0,0,0,0.2)]
-              overflow-hidden z-[200]
-            `}
+            className="absolute bottom-full left-0 mb-3 w-[220px] z-[200]"
             style={{ transformOrigin: 'bottom left' }}
           >
+            <LiquidGlass
+              className={`border ${borderColor} shadow-[0_8px_32px_rgba(0,0,0,0.2)]`}
+              borderRadius="16px"
+            >
             {/* Profile Header */}
             <div className={`px-4 py-4 border-b ${borderColor}`}>
               <div className="flex items-center gap-3">
