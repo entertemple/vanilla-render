@@ -13,14 +13,9 @@ interface Message {
   timestamp: Date;
 }
 
-const MOCK_RESPONSES = [
-  "Stillness.\nYou're not stuck. You're waiting for permission you already have.\nThe thing you keep circling isn't complicated — it's just yours to decide.\nNothing changes until you let it be simple.\nYou already know.",
-  "The weight.\nYou've been carrying this longer than you realize.\nIt's not the decision that's heavy — it's the delay.\nSay it out loud once and notice what shifts.\nSometimes the answer is just the exhale.",
-  "Clarity.\nThe noise isn't outside you — it's the version of you still arguing with last week.\nLet that conversation end.\nWhat remains is the only thing that matters.\nStart there.",
-  "Tension.\nYou're holding two truths at once and calling it confusion.\nIt's not confusion. It's growth refusing to simplify itself.\nSit with both a little longer.\nThe integration is closer than you think.",
-  "Momentum.\nYou've already started — you just haven't named it yet.\nEvery thought you've had about this is evidence of motion.\nStop measuring and start trusting the trajectory.\nIt's working.",
-  "Honesty.\nThe version of this you keep presenting isn't the real one.\nUnderneath the logic there's something simpler and harder.\nYou don't need a strategy. You need a sentence.\nSay the true thing.",
-];
+const TEMPLE_CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/temple-chat`;
+
+const ERROR_RESPONSE = "something went quiet. try again.";
 
 const SUGGESTED_QUESTIONS = [
   "Hey temple...",
@@ -201,10 +196,12 @@ export default function ChatDashboard() {
       navigate(`/chat/${conv.id}`, { replace: true });
     }
 
+    const userContent = input.trim();
+
     // Save user message
     const { data: savedUserMsg } = await supabase
       .from('messages')
-      .insert({ conversation_id: activeConversationId, role: 'user', content: input.trim() })
+      .insert({ conversation_id: activeConversationId, role: 'user', content: userContent })
       .select()
       .single();
 
@@ -216,12 +213,56 @@ export default function ChatDashboard() {
     setIsWaiting(true);
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
-    // Simulate AI response then save
-    setTimeout(async () => {
-      const aiContent = MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)];
+    try {
+      // Build conversation history for API
+      const history = messages.map(m => ({ role: m.role, content: m.content }));
+      history.push({ role: 'user', content: userContent });
+
+      const resp = await fetch(TEMPLE_CHAT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: history }),
+      });
+
+      if (!resp.ok || !resp.body) throw new Error('API error');
+
+      // Buffer the full streamed response
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let fullContent = '';
+      let textBuffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (!line.startsWith('data: ')) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') break;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) fullContent += content;
+          } catch { /* partial json, skip */ }
+        }
+      }
+
+      // Clean up any markdown italic markers for the return line
+      const cleanedContent = fullContent.replace(/\*([^*]+)\*/g, '$1');
+
+      // Save AI response to DB
       const { data: savedAiMsg } = await supabase
         .from('messages')
-        .insert({ conversation_id: activeConversationId!, role: 'assistant', content: aiContent })
+        .insert({ conversation_id: activeConversationId!, role: 'assistant', content: cleanedContent })
         .select()
         .single();
 
@@ -229,8 +270,15 @@ export default function ChatDashboard() {
         setNewestMessageId(savedAiMsg.id);
         setMessages(prev => [...prev, { id: savedAiMsg.id, role: 'assistant', content: savedAiMsg.content, timestamp: new Date(savedAiMsg.created_at) }]);
       }
-      setIsWaiting(false);
-    }, 800 + Math.random() * 600);
+    } catch (err) {
+      console.error('Temple chat error:', err);
+      // Show error in Temple voice
+      const errorId = Date.now().toString();
+      setNewestMessageId(errorId);
+      setMessages(prev => [...prev, { id: errorId, role: 'assistant', content: ERROR_RESPONSE, timestamp: new Date() }]);
+    }
+
+    setIsWaiting(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
