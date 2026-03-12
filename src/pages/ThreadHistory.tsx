@@ -167,48 +167,34 @@ export default function ThreadHistory() {
   return (
     <div className="flex-1 flex flex-col p-6 md:p-8">
       <div style={{ maxWidth: 680 }}>
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1
+        {/* Search Bar — full width */}
+        <div
+          style={{
+            border: `1px solid ${borderBtn}`,
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0.5rem 0.75rem',
+            gap: '0.5rem',
+            marginBottom: '2rem',
+          }}
+        >
+          <Search size={13} style={{ color: textColor, opacity: 0.35, flexShrink: 0 }} strokeWidth={1.5} />
+          <input
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search conversations"
             style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: '1.1rem',
-              fontWeight: 400,
+              background: 'none',
+              border: 'none',
+              outline: 'none',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '0.75rem',
+              letterSpacing: '0.04em',
               color: textColor,
+              width: '100%',
+              padding: 0,
             }}
-          >
-            History
-          </h1>
-          <div
-            style={{
-              position: 'relative',
-              border: `1px solid ${borderBtn}`,
-              display: 'flex',
-              alignItems: 'center',
-              padding: '0.4rem 0.7rem',
-              gap: '0.5rem',
-              minWidth: 200,
-              maxWidth: 260,
-            }}
-          >
-            <Search size={13} style={{ color: textColor, opacity: 0.35, flexShrink: 0 }} strokeWidth={1.5} />
-            <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search conversations"
-              style={{
-                background: 'none',
-                border: 'none',
-                outline: 'none',
-                fontFamily: "'Inter', sans-serif",
-                fontSize: '0.7rem',
-                letterSpacing: '0.04em',
-                color: textColor,
-                width: '100%',
-                padding: 0,
-              }}
-            />
-          </div>
+          />
         </div>
 
         {/* Conversation List */}
