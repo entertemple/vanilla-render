@@ -682,13 +682,69 @@ export default function ChatDashboard() {
     }
   }, [messages, isWaiting]);
 
-  useEffect(() => {
-    if (isFocused || input || hasConversation) return;
-    const interval = setInterval(() => {
-      setCurrentSuggestionIndex((prev) => (prev + 1) % SUGGESTED_QUESTIONS.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [isFocused, input, hasConversation]);
+  // Mouse tracking for specular highlight
+  const handleGlassMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!specularRef.current || !glassRef.current) return;
+    const rect = glassRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    specularRef.current.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(255,255,255,0.15), transparent)`;
+  }, []);
+
+  const handleGlassMouseLeave = useCallback(() => {
+    if (specularRef.current) {
+      specularRef.current.style.background = 'none';
+    }
+  }, []);
+
+  // Voice input handler
+  const handleVoiceInput = useCallback(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setVoiceUnsupported(true);
+      setTimeout(() => setVoiceUnsupported(false), VOICE_UNSUPPORTED_TIMEOUT);
+      return;
+    }
+
+    if (isRecording && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(prev => prev + transcript);
+      setIsRecording(false);
+    };
+
+    recognition.onerror = () => {
+      setIsRecording(false);
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsRecording(true);
+  }, [isRecording]);
+
+  // File upload handler
+  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAttachedFile(file);
+    }
+    // Reset input so same file can be re-selected
+    e.target.value = '';
+  }, []);
 
   const fetchPhrases = async (userMsg: string) => {
     try {
