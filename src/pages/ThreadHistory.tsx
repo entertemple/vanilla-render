@@ -157,6 +157,13 @@ export default function ThreadHistory() {
     setDeletingId(null);
   };
 
+  const q = searchQuery.toLowerCase().trim();
+  const filteredConversations = q
+    ? conversations.filter(c =>
+        c.title.toLowerCase().includes(q) || c.preview.toLowerCase().includes(q)
+      )
+    : conversations;
+
   return (
     <div className="flex-1 flex flex-col p-6 md:p-8">
       <div style={{ maxWidth: 680 }}>
