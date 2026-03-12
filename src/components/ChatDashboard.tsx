@@ -112,7 +112,7 @@ function AssistantMessage({
   const parsed = parseStructuredResponse(content);
   const isDark = theme !== 'light';
 
-  const keywordsColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)';
+  const keywordsColor = isDark ? '#ffffff' : '#0e0e0e';
   const bodyColor = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.7)';
   const invitationColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)';
   const labelColor = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
