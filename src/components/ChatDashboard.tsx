@@ -250,12 +250,12 @@ function GoDeeperCard({
   return cardContent;
 }
 
-// --- A DOOR Cultural Reference Card (Beat 2) ---
+// --- TO PONDER Cultural Reference Card (Beat 2) ---
 function ADoorCard({
   goDeeper,
   isDark,
   isNew,
-  label = 'A DOOR',
+  label = 'TO PONDER',
 }: {
   goDeeper: ParsedResponse['goDeeper'];
   isDark: boolean;
