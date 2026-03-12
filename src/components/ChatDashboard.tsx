@@ -417,8 +417,10 @@ function AssistantMessage({
     };
   };
 
-  // Show GO DEEPER card only on Beat 1
+  // Show interactive GO DEEPER reflection card only on Beat 1
   const showGoDeeperCard = beat === 1 && userMessage && phrases && phrases.length > 0 && onPhraseClick;
+  // Show cultural reference GO DEEPER card on Beat 1
+  const showGoDeeperReference = beat === 1 && parsed.goDeeper.title;
   // Show A DOOR card only on Beat 2
   const showADoor = beat === 2 && parsed.goDeeper.title;
   // Show sharp question on Beat 5+
