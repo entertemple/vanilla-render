@@ -667,8 +667,8 @@ export default function ChatDashboard() {
   const buttonBg = isDark ? 'bg-white' : 'bg-gray-900';
   const buttonText = isDark ? 'text-gray-900' : 'text-white';
 
-  const userBubbleBg = isDark ? 'rgba(40,40,40,0.75)' : 'rgba(255,255,255,0.55)';
-  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(200,200,200,0.4)';
+  const userBubbleBg = isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.55)';
+  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
   const userTextColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)';
 
   // Get current beat number (count of assistant messages)
