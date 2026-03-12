@@ -241,3 +241,12 @@
 .light .search-input {
   caret-color: #000000;
 }
+
+/* Liquid Glass Panel (for sidebar, modals, popups) */
+.glass-panel-overlay {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.dark .glass-panel-overlay {
+  background: rgba(0, 0, 0, 0.25);
+}
