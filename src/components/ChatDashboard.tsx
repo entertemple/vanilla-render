@@ -243,12 +243,12 @@ function AssistantMessage({
       {keywordWords.length > 0 && (
         <div style={{ marginTop: '0.75rem', marginBottom: '2rem', display: 'flex', gap: '0.5em', alignItems: 'center' }}>
           {keywordWords.map((word, i) => (
-            <motion.span
+           <motion.span
               key={i}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: keywordsStartDelay + i * 0.1, ease: oracleEasing }}
-              style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, fontWeight: 500 }}
+              style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase' as const, color: keywordsColor, fontWeight: 500 }}
             >
               {i > 0 && <span style={{ marginRight: '0.5em' }}>·</span>}
               {word.trim()}
