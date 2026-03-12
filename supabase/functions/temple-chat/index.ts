@@ -19,13 +19,53 @@ Third — one closing line in italics. The thing that stays after the conversati
 
 You never use bullet points. You never use headers. You never bold text. You never say "great question" or "I understand" or "it sounds like." You never summarize what the person said. You never offer to help with something else. You speak in plain language. You are unhurried. You say the thing other AIs avoid.`;
 
+type ChatMessage = {
+  role: "user" | "assistant" | "system";
+  content: string;
+};
+
+function normalizeMessages(input: unknown): Array<{ role: "user" | "assistant"; content: string }> {
+  if (!Array.isArray(input)) return [];
+
+  const cleaned = input
+    .map((msg) => {
+      if (!msg || typeof msg !== "object") return null;
+      const role = (msg as { role?: unknown }).role;
+      const content = (msg as { content?: unknown }).content;
+      if ((role !== "user" && role !== "assistant") || typeof content !== "string" || !content.trim()) {
+        return null;
+      }
+      return { role, content: content.trim() } as { role: "user" | "assistant"; content: string };
+    })
+    .filter((msg): msg is { role: "user" | "assistant"; content: string } => Boolean(msg));
+
+  const normalized: Array<{ role: "user" | "assistant"; content: string }> = [];
+
+  for (const msg of cleaned) {
+    if (normalized.length === 0) {
+      if (msg.role !== "user") continue;
+      normalized.push(msg);
+      continue;
+    }
+
+    const last = normalized[normalized.length - 1];
+    if (last.role === msg.role) {
+      last.content = `${last.content}\n${msg.content}`.trim();
+    } else {
+      normalized.push(msg);
+    }
+  }
+
+  return normalized;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages } = await req.json() as { messages?: ChatMessage[] };
     const perplexityApiKey = Deno.env.get("PERPLEXITY_API_KEY");
 
     if (!perplexityApiKey) {
@@ -33,6 +73,14 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ error: "API key missing" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const normalizedMessages = normalizeMessages(messages);
+    if (normalizedMessages.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "ai_error" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -46,9 +94,10 @@ serve(async (req) => {
         model: "sonar-pro",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          ...messages,
+          ...normalizedMessages,
         ],
         max_tokens: 1000,
+        stream: false,
       }),
     });
 
