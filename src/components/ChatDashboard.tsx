@@ -76,11 +76,19 @@ function parseStructuredResponse(content: string): ParsedResponse {
   if (invitationMatch) defaults.invitation = stripCitations(invitationMatch[1].trim());
   if (goDeeperMatch) {
     const raw = stripCitations(goDeeperMatch[1].trim());
-    const dashIndex = raw.indexOf(' — ');
+    // Try to extract URL from format: [URL] Title — Reason  or  URL Title — Reason
+    const urlMatch = raw.match(/^(https?:\/\/\S+)\s+(.+)/);
+    let rest = raw;
+    let url = '';
+    if (urlMatch) {
+      url = urlMatch[1];
+      rest = urlMatch[2];
+    }
+    const dashIndex = rest.indexOf(' — ');
     if (dashIndex > -1) {
-      defaults.goDeeper = { title: raw.slice(0, dashIndex).trim(), reason: raw.slice(dashIndex + 3).trim() };
+      defaults.goDeeper = { title: rest.slice(0, dashIndex).trim(), reason: rest.slice(dashIndex + 3).trim(), url };
     } else {
-      defaults.goDeeper = { title: raw, reason: '' };
+      defaults.goDeeper = { title: rest, reason: '', url };
     }
   }
 
