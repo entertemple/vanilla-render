@@ -22,6 +22,7 @@ export default function ThreadHistory() {
   const isDark = theme !== 'light';
 
   const [conversations, setConversations] = useState<ConversationRow[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
