@@ -567,15 +567,16 @@ function AssistantMessage({
 
       {showSharpQuestion && (
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: cardDelay + 0.5, ease: oracleEasing }}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            fontSize: '1rem',
+            fontSize: '1.5rem',
+            fontFamily: "'DM Serif Display', Georgia, serif",
+            fontWeight: 400,
             color: isDark ? '#ffffff' : '#0e0e0e',
-            marginTop: '1.5rem',
+            marginTop: '2.5rem',
             textAlign: 'center',
-            fontFamily: "'DM Sans', 'Inter', sans-serif",
           }}
         >
           {beat2Question}
