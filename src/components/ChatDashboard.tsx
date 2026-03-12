@@ -115,7 +115,7 @@ function AssistantMessage({
   const keywordsColor = isDark ? '#ffffff' : '#0e0e0e';
   const bodyColor = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.7)';
   const invitationColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)';
-  const labelColor = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
+  const labelColor = isDark ? '#ffffff' : '#0e0e0e';
   const anchorColor = isDark ? '#ffffff' : '#0e0e0e';
   const goDeeperTitleColor = isDark ? '#ffffff' : '#0e0e0e';
 
