@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { X, Sun, Moon, User, Bell, Globe, Key, Database, HelpCircle, FileText, Download, Trash2, Zap, Sliders, Palette } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import LiquidGlass from './LiquidGlass';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface SettingsModalProps {
   isOpen: boolean;
