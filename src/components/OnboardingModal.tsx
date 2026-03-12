@@ -1,7 +1,6 @@
 import { X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
-import LiquidGlass from './LiquidGlass';
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -38,11 +37,7 @@ export default function OnboardingModal({ isOpen, onClose }: OnboardingModalProp
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="w-full max-w-[500px]"
-          >
-          <LiquidGlass
-            className={`border ${borderColor} w-full shadow-2xl`}
-            borderRadius="32px"
+            className={`relative ${bgColor} backdrop-blur-[64px] rounded-[32px] border ${borderColor} w-full max-w-[500px] overflow-hidden shadow-2xl`}
           >
             {/* Header */}
             <div className={`flex items-center justify-between px-6 py-4 border-b ${borderColor}`}>
@@ -131,7 +126,6 @@ export default function OnboardingModal({ isOpen, onClose }: OnboardingModalProp
                 By continuing, you agree to our Terms of Service and Privacy Policy
               </p>
             </div>
-          </LiquidGlass>
           </motion.div>
         </motion.div>
       )}

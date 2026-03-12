@@ -9,7 +9,6 @@ import ProfileModal from './ProfileModal';
 import ProfilePopup from './ProfilePopup';
 import WordmarkDark from './WordmarkDark';
 import WordmarkLight from './WordmarkLight';
-import LiquidGlass from './LiquidGlass';
 
 interface Conversation {
   id: string;
@@ -46,6 +45,7 @@ export default function Layout({ children }: LayoutProps) {
     };
     loadConversations();
 
+    // Subscribe to realtime changes
     const channel = supabase
       .channel('conversations-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'conversations', filter: `user_id=eq.${user.id}` }, () => {
@@ -66,16 +66,25 @@ export default function Layout({ children }: LayoutProps) {
       }
     };
 
-    handleResize();
+    handleResize(); // Check on mount
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Theme-based colors
+  const bgPrimary = theme === 'light' 
+    ? 'bg-[rgba(255,255,255,0.75)]'  // More opaque for light theme
+    : 'bg-[rgba(81,81,81,0.08)]';    // Almost transparent glassmorphism
+  
+  const bgSecondary = theme === 'light' 
+    ? 'bg-[rgba(255,255,255,0.75)]'  // More opaque for light theme
+    : 'bg-[rgba(81,81,81,0.08)]';    // Almost transparent glassmorphism
+  
   const textColor = theme === 'light' ? 'text-gray-900' : 'text-white';
   const textSecondary = theme === 'light' ? 'text-gray-600' : 'text-[rgba(255,255,255,0.6)]';
   const borderColor = theme === 'light' 
-    ? 'border-[rgba(255,255,255,0.6)]' 
-    : 'border-[rgba(255,255,255,0.18)]';
+    ? 'border-[rgba(255,255,255,0.6)]'  // Lighter border for glass effect
+    : 'border-[rgba(255,255,255,0.18)]'; // Lighter border for glass effect
   
   const hoverBg = theme === 'light' 
     ? 'hover:bg-[rgba(255,255,255,0.15)]' 
@@ -131,106 +140,101 @@ export default function Layout({ children }: LayoutProps) {
         <div 
           className={`relative flex rounded-[32px] md:rounded-[48px] border ${borderColor} overflow-hidden w-full h-full max-w-[1600px]`}
         >
-          {/* Sidebar — Liquid Glass */}
-          <div
+          {/* Sidebar */}
+          <div 
             className={`
-              flex flex-col transition-all duration-300 ease-in-out
+              backdrop-blur-[64px] backdrop-filter ${bgPrimary}
+              border-r ${borderColor} flex flex-col
+              transition-all duration-300 ease-in-out
               ${sidebarOpen ? 'w-[200px] md:w-[240px] lg:w-[280px]' : 'w-0'}
             `}
             style={{ overflow: 'hidden' }}
           >
-            <LiquidGlass
-              className={`h-full border-r ${borderColor}`}
-              borderRadius="0px"
-            >
-              {/* Sidebar Header */}
-              <div className={`flex-shrink-0 p-4 border-b ${borderColor} space-y-3`}>
-                <button
-                  onClick={createNewChat}
-                  className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] ${inputBg} border ${borderColor} ${hoverBg} transition-colors`}
-                >
-                  <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
-                  <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[11px] tracking-[-0.22px] uppercase`}>
-                    New Chat
-                  </span>
-                </button>
-              </div>
-
-              {/* Navigation Links */}
-              <div className={`flex-shrink-0 p-2 border-b ${borderColor}`}>
-                {navigationItems.map((item) => {
-                  const Icon = item.icon;
-                  const active = isActive(item.path);
-                  return (
-                    <button
-                      key={item.path}
-                      onClick={() => navigate(item.path)}
-                      className={`
-                        w-full flex items-center gap-2 px-3 py-2 mb-1 rounded-[12px] 
-                        transition-all duration-200 ease-out
-                        ${active ? `${activeBg} border ${borderColor}` : hoverBg}
-                      `}
-                    >
-                      <Icon className={`w-3.5 h-3.5 ${textColor}`} strokeWidth={1.5} />
-                      <span className={`font-['Inter',_sans-serif] ${textColor} text-[11px]`}>
-                        {item.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Conversations List */}
-              <div 
-                className="flex-1 overflow-y-auto p-2"
-                style={{
-                  scrollbarWidth: 'thin',
-                  scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent'
-                }}
+            {/* Sidebar Header */}
+            <div className={`flex-shrink-0 p-4 border-b ${borderColor} space-y-3`}>
+              <button
+                onClick={createNewChat}
+                className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] ${inputBg} border ${borderColor} ${hoverBg} transition-colors`}
               >
-                <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[9px] tracking-[0.1em] uppercase px-3 py-2`}>
-                  Recent Chats
-                </div>
-                {conversations.map((conv) => (
-                  <div
-                    key={conv.id}
-                    onClick={() => navigate(`/chat/${conv.id}`)}
+                <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
+                <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[11px] tracking-[-0.22px] uppercase`}>
+                  New Chat
+                </span>
+              </button>
+            </div>
+
+            {/* Navigation Links */}
+            <div className={`flex-shrink-0 p-2 border-b ${borderColor}`}>
+              {navigationItems.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.path);
+                return (
+                  <button
+                    key={item.path}
+                    onClick={() => navigate(item.path)}
                     className={`
-                      group relative flex items-center gap-2 px-3 py-2.5 mb-1 rounded-[12px] cursor-pointer transition-colors
-                      ${location.pathname === `/chat/${conv.id}`
-                        ? `${activeBg} border ${borderColor}` 
-                        : hoverBg
-                      }
+                      w-full flex items-center gap-2 px-3 py-2 mb-1 rounded-[12px] 
+                      transition-all duration-200 ease-out
+                      ${active ? `${activeBg} border ${borderColor}` : hoverBg}
                     `}
                   >
-                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[11px] truncate flex-1`}>
-                      {conv.title}
+                    <Icon className={`w-3.5 h-3.5 ${textColor}`} strokeWidth={1.5} />
+                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[11px]`}>
+                      {item.label}
                     </span>
-                    <button
-                      onClick={(e) => deleteConversation(conv.id, e)}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Trash2 className={`w-3 h-3 ${textSecondary} hover:text-red-400`} strokeWidth={1.5} />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                  </button>
+                );
+              })}
+            </div>
 
-              {/* Sidebar Footer */}
-              <div className={`flex-shrink-0 p-4 border-t ${borderColor}`}>
-                <ProfilePopup 
-                  onSettingsClick={() => setSettingsOpen(true)}
-                  onProfileClick={() => setProfileOpen(true)}
-                />
+            {/* Conversations List */}
+            <div 
+              className="flex-1 overflow-y-auto p-2"
+              style={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent'
+              }}
+            >
+              <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[9px] tracking-[0.1em] uppercase px-3 py-2`}>
+                Recent Chats
               </div>
-            </LiquidGlass>
+              {conversations.map((conv) => (
+                <div
+                  key={conv.id}
+                  onClick={() => navigate(`/chat/${conv.id}`)}
+                  className={`
+                    group relative flex items-center gap-2 px-3 py-2.5 mb-1 rounded-[12px] cursor-pointer transition-colors
+                    ${location.pathname === `/chat/${conv.id}`
+                      ? `${activeBg} border ${borderColor}` 
+                      : hoverBg
+                    }
+                  `}
+                >
+                  <span className={`font-['Inter',_sans-serif] ${textColor} text-[11px] truncate flex-1`}>
+                    {conv.title}
+                  </span>
+                  <button
+                    onClick={(e) => deleteConversation(conv.id, e)}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <Trash2 className={`w-3 h-3 ${textSecondary} hover:text-red-400`} strokeWidth={1.5} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Sidebar Footer */}
+            <div className={`flex-shrink-0 p-4 border-t ${borderColor}`}>
+              {/* Profile Popup with Avatar + Username */}
+              <ProfilePopup 
+                onSettingsClick={() => setSettingsOpen(true)}
+                onProfileClick={() => setProfileOpen(true)}
+              />
+            </div>
           </div>
 
-          {/* Main Content Area — Liquid Glass */}
-          <LiquidGlass
-            className="flex-1 flex flex-col"
-            borderRadius="0px"
-          >
+          {/* Main Content Area */}
+          <div className={`flex-1 flex flex-col backdrop-blur-[64px] backdrop-filter ${bgSecondary}`}>
             {/* Header */}
             <div className={`flex-shrink-0 px-4 md:px-6 py-4 border-b ${borderColor} flex items-center justify-between`}>
               <button
@@ -250,7 +254,7 @@ export default function Layout({ children }: LayoutProps) {
               </button>
               
               <div className="flex-1 flex items-center justify-center">
-                <button
+              <button
                   onClick={() => navigate('/')}
                   className="rounded-[12px] p-2 outline-none focus:outline-none focus:ring-0 border-none"
                 >
@@ -262,7 +266,7 @@ export default function Layout({ children }: LayoutProps) {
                 </button>
               </div>
 
-              <div className="w-8" />
+              <div className="w-8" /> {/* Spacer for centering */}
             </div>
 
             {/* Scrollable Content Area */}
@@ -275,7 +279,7 @@ export default function Layout({ children }: LayoutProps) {
             >
               {children}
             </div>
-          </LiquidGlass>
+          </div>
         </div>
       </div>
 

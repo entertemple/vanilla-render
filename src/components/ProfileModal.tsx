@@ -1,6 +1,5 @@
 import { X, User, Mail, Calendar, Crown, LogOut } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
-import LiquidGlass from './LiquidGlass';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -31,9 +30,8 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       
-      <LiquidGlass
-        className={`border ${borderColor} w-full max-w-[450px] shadow-2xl`}
-        borderRadius="32px"
+      <div 
+        className={`relative ${bgColor} backdrop-blur-[64px] rounded-[32px] border ${borderColor} w-full max-w-[450px] overflow-hidden shadow-2xl`}
       >
         {/* Header */}
         <div className={`flex items-center justify-between px-6 py-4 border-b ${borderColor}`}>
@@ -137,7 +135,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </button>
           </div>
         </div>
-      </LiquidGlass>
+      </div>
     </div>
   );
 }

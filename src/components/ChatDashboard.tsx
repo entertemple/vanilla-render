@@ -868,7 +868,7 @@ export default function ChatDashboard() {
 
     setInput('');
     setIsWaiting(true);
-    
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
     try {
       const history = messages.map(m => ({ role: m.role, content: m.content }));
@@ -945,21 +945,6 @@ export default function ChatDashboard() {
     ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
   };
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
-
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') { e.preventDefault(); handleSend(); }
-  };
-
-  const handleClear = () => {
-    setInput('');
-    inputRef.current?.focus();
-  };
-
   const renderChatInput = () => (
     <div className="w-full flex flex-col items-center">
       {/* Attached file pill */}
@@ -991,7 +976,13 @@ export default function ChatDashboard() {
         )}
       </AnimatePresence>
 
-      {/* SVG Filter is now global in App.tsx */}
+      {/* SVG Filter */}
+      <svg style={{ display: 'none' }}>
+        <filter id="glass-distortion">
+          <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves={2} result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={77} />
+        </filter>
+      </svg>
 
       {/* Glass container */}
       <div
@@ -1004,12 +995,12 @@ export default function ChatDashboard() {
         <div className="glass-overlay" />
         <div className="glass-specular" ref={specularRef} />
         <div className="glass-content">
-          <div className="search-container">
+          <div className="flex items-center gap-4 px-6 py-4">
             {/* File Attachment */}
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex-shrink-0"
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: isDark ? '#ffffff' : '#000000', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32 }}
+              className="w-8 h-8 flex items-center justify-center flex-shrink-0 rounded-full transition-all duration-200 hover:scale-105"
+              style={{ color: isDark ? '#ffffff' : '#000000' }}
               aria-label="Attach file"
             >
               <Plus className="w-5 h-5" strokeWidth={2.5} />
@@ -1023,58 +1014,55 @@ export default function ChatDashboard() {
             />
 
             {/* Text Input */}
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={handleInputChange}
-              onKeyDown={handleInputKeyDown}
-              placeholder="Enter temple…"
-              className="search-input"
-            />
-
-            {/* Clear button */}
-            {input && (
-              <button
-                className="search-clear"
-                onClick={handleClear}
-                style={{ opacity: 0.7 }}
-                aria-label="Clear input"
-              >
-                ×
-              </button>
-            )}
+            <div className="flex-1 relative min-h-[26px]">
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={handleTextareaChange}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter temple…"
+                rows={1}
+                className="w-full bg-transparent border-none resize-none text-[16px] leading-[1.6] font-['Inter',_sans-serif] focus:outline-none focus:ring-0"
+                style={{
+                  maxHeight: '180px',
+                  overflow: 'auto',
+                  caretColor: isDark ? '#ffffff' : '#000000',
+                  color: isDark ? '#ffffff' : '#000000',
+                }}
+              />
+            </div>
 
             {/* Right controls */}
-            {input.trim() ? (
-              <motion.button
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                onClick={handleSend}
-                className={`w-9 h-9 flex items-center justify-center flex-shrink-0 rounded-full ${buttonBg} transition-all duration-200 hover:scale-110 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]`}
-                aria-label="Send message"
-              >
-                <ArrowUp className={`w-5 h-5 ${buttonText}`} strokeWidth={2.5} />
-              </motion.button>
-            ) : (
-              <button
-                onClick={handleVoiceInput}
-                className="w-9 h-9 flex items-center justify-center flex-shrink-0 rounded-full transition-all duration-200 hover:scale-105"
-                style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                aria-label="Voice input"
-              >
-                {isRecording ? (
-                  <motion.div
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-                  >
-                    <WaveformIcon className="text-red-500" />
-                  </motion.div>
-                ) : (
-                  <WaveformIcon className={isDark ? 'text-white' : 'text-black'} />
-                )}
-              </button>
-            )}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {input.trim() ? (
+                <motion.button
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  onClick={handleSend}
+                  className={`w-9 h-9 flex items-center justify-center flex-shrink-0 rounded-full ${buttonBg} transition-all duration-200 hover:scale-110 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]`}
+                  aria-label="Send message"
+                >
+                  <ArrowUp className={`w-5 h-5 ${buttonText}`} strokeWidth={2.5} />
+                </motion.button>
+              ) : (
+                <button
+                  onClick={handleVoiceInput}
+                  className="w-9 h-9 flex items-center justify-center flex-shrink-0 rounded-full transition-all duration-200 hover:scale-105"
+                  aria-label="Voice input"
+                >
+                  {isRecording ? (
+                    <motion.div
+                      animate={{ opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
+                    >
+                      <WaveformIcon className="text-red-500" />
+                    </motion.div>
+                  ) : (
+                    <WaveformIcon className={isDark ? 'text-white' : 'text-black'} />
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

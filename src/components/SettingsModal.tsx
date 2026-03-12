@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Sun, Moon, User, Bell, Globe, Key, Database, HelpCircle, FileText, Download, Trash2, Zap, Sliders, Palette } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
-import LiquidGlass from './LiquidGlass';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -57,9 +56,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       
-      <LiquidGlass
-        className={`border ${borderColor} w-full max-w-[700px] max-h-[600px] flex shadow-2xl`}
-        borderRadius="32px"
+      <div 
+        className={`relative ${bgColor} backdrop-blur-[64px] rounded-[32px] border ${borderColor} w-full max-w-[700px] max-h-[600px] flex overflow-hidden shadow-2xl`}
       >
         {/* Sidebar */}
         <div className={`w-48 border-r ${borderColor} p-4`}>
@@ -487,7 +485,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             )}
           </div>
         </div>
-      </LiquidGlass>
+      </div>
     </div>
   );
 }
