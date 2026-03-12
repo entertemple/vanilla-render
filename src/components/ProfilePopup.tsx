@@ -4,7 +4,6 @@ import { Settings, User, LogOut, Info, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import LiquidGlass from './LiquidGlass';
-import { useNavigate } from 'react-router-dom';
 
 interface ProfilePopupProps {
   onSettingsClick?: () => void;
