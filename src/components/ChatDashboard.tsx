@@ -309,7 +309,7 @@ function ADoorCard({
         marginBottom: '0.75rem',
         fontWeight: 500,
       }}>
-        A DOOR
+        {label}
       </p>
       <p style={{
         fontSize: '1.1rem',
