@@ -79,7 +79,6 @@ function parseStructuredResponse(content: string): ParsedResponse {
   }
   if (toPonderMatch) defaults.toPonder = toPonderMatch[1].trim();
 
-  // Fallback for unstructured responses
   if (!defaults.anchor && !defaults.keywords) {
     const lines = content.split('\n').map(l => l.trim()).filter(Boolean);
     defaults.anchor = lines[0] || content;
@@ -89,8 +88,7 @@ function parseStructuredResponse(content: string): ParsedResponse {
   return defaults;
 }
 
-const customEasing = [0.16, 1, 0.3, 1] as const;
-const FADE_DURATION = 0.5;
+const oracleEasing = [0.16, 1, 0.3, 1] as const;
 
 function AssistantMessage({
   content,
@@ -108,52 +106,74 @@ function AssistantMessage({
   const parsed = parseStructuredResponse(content);
   const isDark = theme !== 'light';
 
-  const anchorColor = isDark ? '#ffffff' : '#000000';
-  const keywordsColor = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)';
-  const bodyColor = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.7)';
-  const invitationColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)';
-  const toPonderColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
-  const labelColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)';
-  const cardBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
-  const cardBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)';
-  const sourcesBtnBorder = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
-  const sourcesBtnColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
+  const anchorColor = isDark ? '#ffffff' : '#0e0e0e';
+  const keywordsColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)';
+  const bodyColor = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.65)';
+  const invitationColor = isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.45)';
+  const toPonderColor = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)';
+  const labelColor = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
+  const sourcesBtnBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+  const sourcesBtnColor = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)';
+
+  // Liquid Glass card styles
+  const liquidGlass: React.CSSProperties = isDark
+    ? {
+        backdropFilter: 'saturate(180%) blur(20px)',
+        WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+        background: 'rgba(255,255,255,0.06)',
+        border: '1px solid rgba(255,255,255,0.12)',
+        boxShadow: '0 8px 32px rgba(31,38,135,0.25), inset 0 1px 0 rgba(255,255,255,0.15)',
+        padding: '1.25rem',
+      }
+    : {
+        backdropFilter: 'saturate(180%) blur(20px)',
+        WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+        background: 'rgba(255,255,255,0.32)',
+        border: '1px solid rgba(255,255,255,0.18)',
+        boxShadow: '0 8px 32px rgba(31,38,135,0.12), inset 0 1px 0 rgba(255,255,255,0.25)',
+        padding: '1.25rem',
+      };
 
   const labelStyle: React.CSSProperties = {
     fontSize: '0.6rem',
     fontFamily: "'Geist Mono', monospace",
     letterSpacing: '0.15em',
-    textTransform: 'uppercase' as const,
+    textTransform: 'uppercase',
     color: labelColor,
     marginBottom: '0.5rem',
   };
 
+  // Split keywords for staggered reveal
+  const keywordWords = parsed.keywords ? parsed.keywords.split(/\s*·\s*/) : [];
+
   if (!isNew) {
     return (
       <div className="max-w-[680px]">
+        {parsed.anchor && (
+          <p style={{ fontSize: '2.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: anchorColor, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: '0.75rem' }}>
+            {parsed.anchor}
+          </p>
+        )}
         {parsed.keywords && (
-          <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginBottom: '2rem' }}>
+          <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginBottom: '2.5rem' }}>
             {parsed.keywords}
           </p>
         )}
-        <p style={{ fontSize: '2.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: anchorColor, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: '2rem' }}>
-          {parsed.anchor}
-        </p>
         {parsed.body.map((sentence, i) => (
           <p key={i} style={{ fontSize: '1rem', fontFamily: "'DM Sans', 'Inter', sans-serif", fontWeight: 300, color: bodyColor, lineHeight: 1.9, marginBottom: '0.75rem' }}>
             {sentence}
           </p>
         ))}
         {parsed.invitation && (
-          <p style={{ fontSize: '1.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: invitationColor, marginTop: '2rem', lineHeight: 1.4 }}>
+          <p style={{ fontSize: '1.15rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: invitationColor, marginTop: '2.5rem', lineHeight: 1.5 }}>
             {parsed.invitation}
           </p>
         )}
         {parsed.goDeeper.title && (
-          <div style={{ marginTop: '2rem' }}>
+          <div style={{ marginTop: '2.5rem' }}>
             <p style={labelStyle}>GO DEEPER</p>
-            <div style={{ background: cardBg, border: `1px solid ${cardBorder}`, padding: '1rem' }}>
-              <p style={{ fontSize: '0.95rem', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: anchorColor, marginBottom: '0.25rem' }}>{parsed.goDeeper.title}</p>
+            <div style={liquidGlass}>
+              <p style={{ fontSize: '0.95rem', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: anchorColor, marginBottom: '0.3rem' }}>{parsed.goDeeper.title}</p>
               {parsed.goDeeper.reason && (
                 <p style={{ fontSize: '0.85rem', fontFamily: "'DM Sans', sans-serif", fontStyle: 'italic', fontWeight: 300, color: bodyColor }}>{parsed.goDeeper.reason}</p>
               )}
@@ -161,7 +181,7 @@ function AssistantMessage({
           </div>
         )}
         {parsed.toPonder && (
-          <div style={{ marginTop: '2rem' }}>
+          <div style={{ marginTop: '2.5rem' }}>
             <p style={labelStyle}>TO PONDER</p>
             <p style={{ fontSize: '1rem', fontFamily: "'DM Serif Display', Georgia, serif", fontStyle: 'italic', fontWeight: 300, color: toPonderColor, lineHeight: 1.6 }}>
               {parsed.toPonder}
@@ -180,85 +200,107 @@ function AssistantMessage({
     );
   }
 
-  // Animated render
-  let delay = 0.6;
-  const keywordsDelay = delay;
-  delay += 0.5;
+  // === Animated (new message) render — Oracle Terminal ===
+  let delay = 1.5; // deliberate pause before anchor arrives
   const anchorDelay = delay;
-  delay += 0.8;
-  const bodyStartDelay = delay;
-  delay += parsed.body.length * 0.3;
+  delay += 1.6; // anchor duration
+  const keywordsStartDelay = delay;
+  delay += 0.3 + keywordWords.length * 0.1;
+  const bodyStartDelay = delay + 0.2;
+  delay += parsed.body.length * 0.2 + 0.4;
   const invitationDelay = delay + 0.3;
-  delay += 0.6;
-  const goDeeperDelay = delay + 0.3;
   delay += 0.5;
+  const goDeeperDelay = delay + 0.3;
+  delay += 0.6;
   const toPonderDelay = delay + 0.3;
   delay += 0.5;
   const sourcesDelay = delay + 0.3;
 
   return (
     <div className="max-w-[680px]">
-      {parsed.keywords && (
+      {/* ANCHOR — materializes first with parallax depth */}
+      {parsed.anchor && (
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: keywordsDelay, ease: customEasing }}
-          style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginBottom: '2rem' }}
+          initial={{ opacity: 0, y: 6, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 1.6, delay: anchorDelay, ease: oracleEasing }}
+          style={{ fontSize: '2.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: anchorColor, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: '0.75rem' }}
         >
-          {parsed.keywords}
+          {parsed.anchor}
         </motion.p>
       )}
-      <motion.p
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: FADE_DURATION, delay: anchorDelay, ease: customEasing }}
-        style={{ fontSize: '2.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: anchorColor, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: '2rem' }}
-      >
-        {parsed.anchor}
-      </motion.p>
+
+      {/* KEYWORDS — staggered word-by-word */}
+      {keywordWords.length > 0 && (
+        <div style={{ marginBottom: '2.5rem', display: 'flex', gap: '0.5em', alignItems: 'center' }}>
+          {keywordWords.map((word, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: keywordsStartDelay + i * 0.1, ease: oracleEasing }}
+              style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor }}
+            >
+              {i > 0 && <span style={{ marginRight: '0.5em' }}>·</span>}
+              {word.trim()}
+            </motion.span>
+          ))}
+        </div>
+      )}
+
+      {/* BODY — typewriter stagger per line */}
       {parsed.body.map((sentence, i) => (
         <motion.p
           key={i}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: FADE_DURATION, delay: bodyStartDelay + i * 0.3, ease: customEasing }}
+          initial={{ opacity: 0, x: -4 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: bodyStartDelay + i * 0.2, ease: oracleEasing }}
           style={{ fontSize: '1rem', fontFamily: "'DM Sans', 'Inter', sans-serif", fontWeight: 300, color: bodyColor, lineHeight: 1.9, marginBottom: '0.75rem' }}
         >
           {sentence}
         </motion.p>
       ))}
+
+      {/* INVITATION */}
       {parsed.invitation && (
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: invitationDelay, ease: customEasing }}
-          style={{ fontSize: '1.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: invitationColor, marginTop: '2rem', lineHeight: 1.4 }}
+          transition={{ duration: 0.6, delay: invitationDelay, ease: oracleEasing }}
+          style={{ fontSize: '1.15rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: invitationColor, marginTop: '2.5rem', lineHeight: 1.5 }}
         >
           {parsed.invitation}
         </motion.p>
       )}
+
+      {/* GO DEEPER — Liquid Glass card */}
       {parsed.goDeeper.title && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: goDeeperDelay, ease: customEasing }}
-          style={{ marginTop: '2rem' }}
+          initial={{ opacity: 0, y: 8, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, delay: goDeeperDelay, ease: oracleEasing }}
+          style={{ marginTop: '2.5rem' }}
         >
           <p style={labelStyle}>GO DEEPER</p>
-          <div style={{ background: cardBg, border: `1px solid ${cardBorder}`, padding: '1rem' }}>
-            <p style={{ fontSize: '0.95rem', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: anchorColor, marginBottom: '0.25rem' }}>{parsed.goDeeper.title}</p>
+          <div
+            style={liquidGlass}
+            className="transition-all duration-300 hover:shadow-[0_12px_40px_rgba(31,38,135,0.35)]"
+          >
+            <p style={{ fontSize: '0.95rem', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: anchorColor, marginBottom: '0.3rem' }}>{parsed.goDeeper.title}</p>
             {parsed.goDeeper.reason && (
               <p style={{ fontSize: '0.85rem', fontFamily: "'DM Sans', sans-serif", fontStyle: 'italic', fontWeight: 300, color: bodyColor }}>{parsed.goDeeper.reason}</p>
             )}
           </div>
         </motion.div>
       )}
+
+      {/* TO PONDER */}
       {parsed.toPonder && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: toPonderDelay, ease: customEasing }}
-          style={{ marginTop: '2rem' }}
+          transition={{ duration: 0.5, delay: toPonderDelay, ease: oracleEasing }}
+          style={{ marginTop: '2.5rem' }}
         >
           <p style={labelStyle}>TO PONDER</p>
           <p style={{ fontSize: '1rem', fontFamily: "'DM Serif Display', Georgia, serif", fontStyle: 'italic', fontWeight: 300, color: toPonderColor, lineHeight: 1.6 }}>
@@ -266,11 +308,13 @@ function AssistantMessage({
           </p>
         </motion.div>
       )}
+
+      {/* SOURCES */}
       {citations && citations.length > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: FADE_DURATION, delay: sourcesDelay, ease: customEasing }}
+          transition={{ duration: 0.4, delay: sourcesDelay, ease: oracleEasing }}
         >
           <button
             onClick={() => onOpenSources(citations, parsed.anchor || 'this response')}
@@ -298,11 +342,13 @@ function SourcesPanel({
   theme: string;
 }) {
   const isDark = theme !== 'light';
-  const bg = isDark ? 'rgba(10,10,10,0.7)' : 'rgba(255,255,255,0.7)';
-  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
-  const textColor = isDark ? '#ffffff' : '#000000';
-  const mutedColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
-  const dividerColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+  // Liquid Glass panel
+  const panelBg = isDark ? 'rgba(10,10,10,0.65)' : 'rgba(255,255,255,0.65)';
+  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const textColor = isDark ? '#ffffff' : '#0e0e0e';
+  const mutedColor = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)';
+  const dividerColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
 
   useEffect(() => {
     if (!isOpen) return;
@@ -329,9 +375,13 @@ function SourcesPanel({
             right: 0,
             width: 340,
             height: '100vh',
-            background: bg,
-            backdropFilter: 'blur(20px)',
+            background: panelBg,
+            backdropFilter: 'saturate(180%) blur(20px)',
+            WebkitBackdropFilter: 'saturate(180%) blur(20px)',
             borderLeft: `1px solid ${borderColor}`,
+            boxShadow: isDark
+              ? '0 0 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)'
+              : '0 0 60px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5)',
             zIndex: 50,
             display: 'flex',
             flexDirection: 'column',
@@ -426,9 +476,10 @@ export default function ChatDashboard() {
   const buttonBg = isDark ? 'bg-white' : 'bg-gray-900';
   const buttonText = isDark ? 'text-gray-900' : 'text-white';
 
-  const userBubbleBg = isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)';
-  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
-  const userTextColor = isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.8)';
+  // User bubble — mirrors ProfilePopup glassmorphism exactly
+  const userBubbleBg = isDark ? 'rgba(40,40,40,0.75)' : 'rgba(255,255,255,0.55)';
+  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(200,200,200,0.4)';
+  const userTextColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)';
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -627,7 +678,12 @@ export default function ChatDashboard() {
                     style={{
                       background: userBubbleBg,
                       border: `1px solid ${userBubbleBorder}`,
-                      backdropFilter: 'blur(8px)',
+                      backdropFilter: 'saturate(180%) blur(20px)',
+                      WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+                      boxShadow: isDark
+                        ? '0 8px 32px rgba(0,0,0,0.2)'
+                        : '0 8px 32px rgba(0,0,0,0.06)',
+                      borderRadius: '16px',
                       padding: '1rem 1.25rem',
                       maxWidth: '75%',
                     }}
@@ -655,7 +711,7 @@ export default function ChatDashboard() {
             <div className="mb-16 max-w-[680px]">
               <TextShimmer
                 duration={2.5}
-                className="font-['Playfair_Display'] italic text-base [--base-color:rgba(255,255,255,0.25)] [--base-gradient-color:rgba(255,255,255,0.7)] dark:[--base-color:rgba(255,255,255,0.25)] dark:[--base-gradient-color:rgba(255,255,255,0.85)]"
+                className="font-['DM_Serif_Display',_Georgia,_serif] italic text-base [--base-color:rgba(255,255,255,0.2)] [--base-gradient-color:rgba(255,255,255,0.65)] dark:[--base-color:rgba(255,255,255,0.2)] dark:[--base-gradient-color:rgba(255,255,255,0.8)]"
               >
                 Contemplating...
               </TextShimmer>
