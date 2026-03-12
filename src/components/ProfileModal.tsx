@@ -1,5 +1,6 @@
 import { X, User, Mail, Calendar, Crown, LogOut } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import LiquidGlass from './LiquidGlass';
 
 interface ProfileModalProps {
   isOpen: boolean;
