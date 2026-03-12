@@ -155,9 +155,6 @@ serve(async (req) => {
         max_tokens: 1500,
         stream: false,
       }),
-        max_tokens: 1500,
-        stream: false,
-      }),
     });
 
     if (!response.ok) {
