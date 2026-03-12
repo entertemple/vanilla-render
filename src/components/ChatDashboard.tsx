@@ -207,10 +207,11 @@ function GoDeeperCard({
       style={{
         background: bg,
         border: `1px solid ${border}`,
-        borderRadius: '4px',
+        borderRadius: '15px',
         padding: '1.25rem',
         marginTop: '2rem',
       }}
+      className="go-deeper-card"
     >
       <p style={{
         fontSize: '0.65rem',
@@ -221,7 +222,7 @@ function GoDeeperCard({
         marginBottom: '1rem',
         fontWeight: 500,
       }}>
-        GO DEEPER
+        TO PONDER
       </p>
       <p style={{
         fontFamily: "'DM Sans', 'Inter', sans-serif",
@@ -249,12 +250,12 @@ function GoDeeperCard({
   return cardContent;
 }
 
-// --- A DOOR Cultural Reference Card (Beat 2) ---
+// --- TO PONDER Cultural Reference Card (Beat 2) ---
 function ADoorCard({
   goDeeper,
   isDark,
   isNew,
-  label = 'A DOOR',
+  label = 'TO PONDER',
 }: {
   goDeeper: ParsedResponse['goDeeper'];
   isDark: boolean;
@@ -278,7 +279,7 @@ function ADoorCard({
         display: 'block',
         background: bg,
         border: `1px solid ${border}`,
-        borderRadius: '4px',
+        borderRadius: '15px',
         padding: '1.25rem',
         marginTop: '2rem',
         textDecoration: 'none',
@@ -448,8 +449,8 @@ function AssistantMessage({
           />
         )}
 
-        {showGoDeeperReference && (
-          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="GO DEEPER" />
+      {showGoDeeperReference && (
+          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
         )}
 
         {showADoor && (
@@ -490,7 +491,7 @@ function AssistantMessage({
       <div style={getBlurStyle()}>
         {parsed.anchor && (
           <motion.p
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.4, delay: anchorDelay, ease: oracleEasing }}
             style={anchorStyle}
@@ -552,7 +553,7 @@ function AssistantMessage({
       )}
 
       {showGoDeeperReference && (
-        <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={true} label="GO DEEPER" />
+        <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={true} label="TO PONDER" />
       )}
 
       {showADoor && (
@@ -666,8 +667,8 @@ export default function ChatDashboard() {
   const buttonBg = isDark ? 'bg-white' : 'bg-gray-900';
   const buttonText = isDark ? 'text-gray-900' : 'text-white';
 
-  const userBubbleBg = isDark ? 'rgba(40,40,40,0.75)' : 'rgba(255,255,255,0.55)';
-  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(200,200,200,0.4)';
+  const userBubbleBg = isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.55)';
+  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
   const userTextColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)';
 
   // Get current beat number (count of assistant messages)
@@ -1127,8 +1128,8 @@ export default function ChatDashboard() {
                     style={{
                       background: userBubbleBg,
                       border: `1px solid ${userBubbleBorder}`,
-                      backdropFilter: 'saturate(180%) blur(20px)',
-                      WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+                      backdropFilter: isDark ? 'blur(12px)' : 'saturate(180%) blur(20px)',
+                      WebkitBackdropFilter: isDark ? 'blur(12px)' : 'saturate(180%) blur(20px)',
                       boxShadow: isDark
                         ? '0 8px 32px rgba(0,0,0,0.2)'
                         : '0 8px 32px rgba(0,0,0,0.06)',
