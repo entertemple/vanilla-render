@@ -13,14 +13,9 @@ interface Message {
   timestamp: Date;
 }
 
-const MOCK_RESPONSES = [
-  "Stillness.\nYou're not stuck. You're waiting for permission you already have.\nThe thing you keep circling isn't complicated — it's just yours to decide.\nNothing changes until you let it be simple.\nYou already know.",
-  "The weight.\nYou've been carrying this longer than you realize.\nIt's not the decision that's heavy — it's the delay.\nSay it out loud once and notice what shifts.\nSometimes the answer is just the exhale.",
-  "Clarity.\nThe noise isn't outside you — it's the version of you still arguing with last week.\nLet that conversation end.\nWhat remains is the only thing that matters.\nStart there.",
-  "Tension.\nYou're holding two truths at once and calling it confusion.\nIt's not confusion. It's growth refusing to simplify itself.\nSit with both a little longer.\nThe integration is closer than you think.",
-  "Momentum.\nYou've already started — you just haven't named it yet.\nEvery thought you've had about this is evidence of motion.\nStop measuring and start trusting the trajectory.\nIt's working.",
-  "Honesty.\nThe version of this you keep presenting isn't the real one.\nUnderneath the logic there's something simpler and harder.\nYou don't need a strategy. You need a sentence.\nSay the true thing.",
-];
+const TEMPLE_CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/temple-chat`;
+
+const ERROR_RESPONSE = "something went quiet. try again.";
 
 const SUGGESTED_QUESTIONS = [
   "Hey temple...",
