@@ -111,10 +111,9 @@ export default function Layout({ children }: LayoutProps) {
     }
   };
 
-  const deleteConversation = (id: string, e: React.MouseEvent) => {
+  const deleteConversation = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const filtered = conversations.filter(c => c.id !== id);
-    setConversations(filtered);
+    await supabase.from('conversations').delete().eq('id', id);
     
     if (location.pathname === `/chat/${id}`) {
       navigate('/chat');
