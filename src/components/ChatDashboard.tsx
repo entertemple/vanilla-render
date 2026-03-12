@@ -260,10 +260,12 @@ function ADoorCard({
   goDeeper,
   isDark,
   isNew,
+  label = 'A DOOR',
 }: {
   goDeeper: ParsedResponse['goDeeper'];
   isDark: boolean;
   isNew: boolean;
+  label?: string;
 }) {
   const labelColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
   const titleColor = isDark ? '#ffffff' : '#0e0e0e';
