@@ -125,15 +125,39 @@ function AssistantMessage({ content, theme, isNew }: { content: string; theme: s
 
 export default function ChatDashboard() {
   const { theme } = useTheme();
+  const { user } = useAuth();
+  const { id: conversationId } = useParams();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isWaiting, setIsWaiting] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0);
   const [newestMessageId, setNewestMessageId] = useState<string | null>(null);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(conversationId || null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Load messages when conversation changes
+  useEffect(() => {
+    setCurrentConversationId(conversationId || null);
+    if (!conversationId) {
+      setMessages([]);
+      return;
+    }
+    const loadMessages = async () => {
+      const { data } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('conversation_id', conversationId)
+        .order('created_at', { ascending: true });
+      if (data) {
+        setMessages(data.map(m => ({ id: m.id, role: m.role as 'user' | 'assistant', content: m.content, timestamp: new Date(m.created_at) })));
+      }
+    };
+    loadMessages();
+  }, [conversationId]);
 
   const hasConversation = messages.length > 0;
 
