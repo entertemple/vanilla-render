@@ -1,1 +1,4 @@
 project_id = "bgnoclpweenvkzyuxchy"
+
+[functions.temple-chat]
+verify_jwt = false
