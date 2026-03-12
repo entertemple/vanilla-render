@@ -140,7 +140,7 @@ function AssistantMessage({
     letterSpacing: '-0.02em',
     lineHeight: 1.1,
     marginBottom: '0.75rem',
-    mixBlendMode: 'difference',
+    
   };
 
   const bodyStyle: React.CSSProperties = {
