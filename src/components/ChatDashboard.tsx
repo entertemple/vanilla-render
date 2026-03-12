@@ -589,14 +589,17 @@ export default function ChatDashboard() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isWaiting, setIsWaiting] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0);
   const [newestMessageId, setNewestMessageId] = useState<string | null>(null);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(conversationId || null);
   // Beat system state
   const [phrases, setPhrases] = useState<string[]>([]);
   const [firstUserMessage, setFirstUserMessage] = useState<string>('');
   const [beat2Question, setBeat2Question] = useState<string>('');
+  // File upload state
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  // Voice input state
+  const [isRecording, setIsRecording] = useState(false);
+  const [voiceUnsupported, setVoiceUnsupported] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
