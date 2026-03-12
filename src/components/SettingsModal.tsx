@@ -488,7 +488,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             )}
           </div>
         </div>
-      </div>
+      </LiquidGlass>
     </div>
   );
 }

@@ -137,7 +137,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </button>
           </div>
         </div>
-      </div>
+      </LiquidGlass>
     </div>
   );
 }

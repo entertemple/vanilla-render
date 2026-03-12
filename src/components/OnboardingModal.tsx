@@ -131,8 +131,8 @@ export default function OnboardingModal({ isOpen, onClose }: OnboardingModalProp
                 By continuing, you agree to our Terms of Service and Privacy Policy
               </p>
             </div>
+          </LiquidGlass>
           </motion.div>
-        </motion.div>
       )}
     </AnimatePresence>
   );

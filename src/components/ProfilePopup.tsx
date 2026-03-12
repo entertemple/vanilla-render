@@ -180,9 +180,8 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
                 <span className="flex-1">Log out</span>
               </button>
             </div>
+            </LiquidGlass>
           </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Avatar + Username Trigger Button */}
       <button
