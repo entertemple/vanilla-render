@@ -38,7 +38,11 @@ export default function OnboardingModal({ isOpen, onClose }: OnboardingModalProp
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className={`relative ${bgColor} backdrop-blur-[64px] rounded-[32px] border ${borderColor} w-full max-w-[500px] overflow-hidden shadow-2xl`}
+            className="w-full max-w-[500px]"
+          >
+          <LiquidGlass
+            className={`border ${borderColor} w-full shadow-2xl`}
+            borderRadius="32px"
           >
             {/* Header */}
             <div className={`flex items-center justify-between px-6 py-4 border-b ${borderColor}`}>
