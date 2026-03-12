@@ -449,8 +449,8 @@ function AssistantMessage({
           />
         )}
 
-        {showGoDeeperReference && (
-          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="GO DEEPER" />
+      {showGoDeeperReference && (
+          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
         )}
 
         {showADoor && (
