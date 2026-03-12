@@ -126,7 +126,7 @@ function GoDeeperCard({
   animDelay: number;
 }) {
   const labelColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
-  const dimColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
+  const dimColor = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)';
   const activeColor = isDark ? '#ffffff' : '#0e0e0e';
   const bg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
   const border = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)';
