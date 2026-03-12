@@ -491,7 +491,7 @@ function AssistantMessage({
       <div style={getBlurStyle()}>
         {parsed.anchor && (
           <motion.p
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.4, delay: anchorDelay, ease: oracleEasing }}
             style={anchorStyle}
