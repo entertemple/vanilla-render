@@ -1128,8 +1128,8 @@ export default function ChatDashboard() {
                     style={{
                       background: userBubbleBg,
                       border: `1px solid ${userBubbleBorder}`,
-                      backdropFilter: 'saturate(180%) blur(20px)',
-                      WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+                      backdropFilter: isDark ? 'blur(12px)' : 'saturate(180%) blur(20px)',
+                      WebkitBackdropFilter: isDark ? 'blur(12px)' : 'saturate(180%) blur(20px)',
                       boxShadow: isDark
                         ? '0 8px 32px rgba(0,0,0,0.2)'
                         : '0 8px 32px rgba(0,0,0,0.06)',
