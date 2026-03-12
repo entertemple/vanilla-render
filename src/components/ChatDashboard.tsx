@@ -1,21 +1,31 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plus, ArrowUp } from 'lucide-react';
+import { Plus, ArrowUp, X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'motion/react';
+import { TextShimmer } from '@/components/ui/text-shimmer';
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  citations?: string[];
+}
+
+interface ParsedResponse {
+  keywords: string;
+  anchor: string;
+  body: string[];
+  invitation: string;
+  goDeeper: { title: string; reason: string };
+  toPonder: string;
 }
 
 const TEMPLE_CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/temple-chat`;
-
-const ERROR_RESPONSE = "something went quiet. try again.";
+const ERROR_RESPONSE = "KEYWORDS: SILENCE · PATIENCE · RETURN\n\nANCHOR: something went quiet\n\nBODY: try again.\n\nINVITATION: the thread is still here.\n\nGO DEEPER: 4'33\" by John Cage — sometimes the silence is the composition.\n\nTO PONDER: even pauses have rhythm.";
 
 const SUGGESTED_QUESTIONS = [
   "Hey temple...",
@@ -35,86 +45,335 @@ const WaveformIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Parse AI response into three movements
-function parseResponse(content: string): { anchor: string; body: string[]; return_line: string } {
-  const lines = content.split('\n').map(l => l.trim()).filter(Boolean);
-  if (lines.length <= 1) return { anchor: lines[0] || '', body: [], return_line: '' };
-  if (lines.length === 2) return { anchor: lines[0], body: [], return_line: lines[1] };
-  return {
-    anchor: lines[0],
-    body: lines.slice(1, -1),
-    return_line: lines[lines.length - 1],
+function parseStructuredResponse(content: string): ParsedResponse {
+  const defaults: ParsedResponse = {
+    keywords: '',
+    anchor: '',
+    body: [],
+    invitation: '',
+    goDeeper: { title: '', reason: '' },
+    toPonder: '',
   };
+
+  const keywordsMatch = content.match(/KEYWORDS:\s*(.+?)(?=\n\n|\nANCHOR:)/s);
+  const anchorMatch = content.match(/ANCHOR:\s*(.+?)(?=\n\n|\nBODY:)/s);
+  const bodyMatch = content.match(/BODY:\s*(.+?)(?=\n\n|\nINVITATION:)/s);
+  const invitationMatch = content.match(/INVITATION:\s*(.+?)(?=\n\n|\nGO DEEPER:)/s);
+  const goDeeperMatch = content.match(/GO DEEPER:\s*(.+?)(?=\n\n|\nTO PONDER:)/s);
+  const toPonderMatch = content.match(/TO PONDER:\s*(.+?)$/s);
+
+  if (keywordsMatch) defaults.keywords = keywordsMatch[1].trim();
+  if (anchorMatch) defaults.anchor = anchorMatch[1].trim();
+  if (bodyMatch) {
+    defaults.body = bodyMatch[1].trim().split('\n').map(l => l.trim()).filter(Boolean);
+  }
+  if (invitationMatch) defaults.invitation = invitationMatch[1].trim();
+  if (goDeeperMatch) {
+    const raw = goDeeperMatch[1].trim();
+    const dashIndex = raw.indexOf(' — ');
+    if (dashIndex > -1) {
+      defaults.goDeeper = { title: raw.slice(0, dashIndex).trim(), reason: raw.slice(dashIndex + 3).trim() };
+    } else {
+      defaults.goDeeper = { title: raw, reason: '' };
+    }
+  }
+  if (toPonderMatch) defaults.toPonder = toPonderMatch[1].trim();
+
+  // Fallback for unstructured responses
+  if (!defaults.anchor && !defaults.keywords) {
+    const lines = content.split('\n').map(l => l.trim()).filter(Boolean);
+    defaults.anchor = lines[0] || content;
+    defaults.body = lines.slice(1);
+  }
+
+  return defaults;
 }
 
 const customEasing = [0.16, 1, 0.3, 1] as const;
+const FADE_DURATION = 0.5;
 
-// Animated AI response component
-function AssistantMessage({ content, theme, isNew }: { content: string; theme: string; isNew: boolean }) {
-  const { anchor, body, return_line } = parseResponse(content);
+function AssistantMessage({
+  content,
+  theme,
+  isNew,
+  citations,
+  onOpenSources,
+}: {
+  content: string;
+  theme: string;
+  isNew: boolean;
+  citations?: string[];
+  onOpenSources: (citations: string[], subject: string) => void;
+}) {
+  const parsed = parseStructuredResponse(content);
+  const isDark = theme !== 'light';
 
-  const anchorColor = theme === 'light' ? '#000000' : '#ffffff';
-  const bodyColor = theme === 'light' ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.75)';
-  const returnColor = theme === 'light' ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.45)';
+  const anchorColor = isDark ? '#ffffff' : '#000000';
+  const keywordsColor = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)';
+  const bodyColor = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.7)';
+  const invitationColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)';
+  const toPonderColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
+  const labelColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)';
+  const cardBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
+  const cardBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)';
+  const sourcesBtnBorder = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
+  const sourcesBtnColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: '0.6rem',
+    fontFamily: "'Geist Mono', monospace",
+    letterSpacing: '0.15em',
+    textTransform: 'uppercase' as const,
+    color: labelColor,
+    marginBottom: '0.5rem',
+  };
 
   if (!isNew) {
-    // Already seen — render without animation
     return (
       <div className="max-w-[680px]">
+        {parsed.keywords && (
+          <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginBottom: '2rem' }}>
+            {parsed.keywords}
+          </p>
+        )}
         <p style={{ fontSize: '2.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: anchorColor, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: '2rem' }}>
-          {anchor}
+          {parsed.anchor}
         </p>
-        {body.map((sentence, i) => (
+        {parsed.body.map((sentence, i) => (
           <p key={i} style={{ fontSize: '1rem', fontFamily: "'DM Sans', 'Inter', sans-serif", fontWeight: 300, color: bodyColor, lineHeight: 1.9, marginBottom: '0.75rem' }}>
             {sentence}
           </p>
         ))}
-        {return_line && (
-          <p style={{ fontSize: '0.875rem', fontFamily: "'DM Sans', 'Inter', sans-serif", fontWeight: 300, color: returnColor, marginTop: '2rem', lineHeight: 1.6 }}>
-            {return_line}
+        {parsed.invitation && (
+          <p style={{ fontSize: '1.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: invitationColor, marginTop: '2rem', lineHeight: 1.4 }}>
+            {parsed.invitation}
           </p>
+        )}
+        {parsed.goDeeper.title && (
+          <div style={{ marginTop: '2rem' }}>
+            <p style={labelStyle}>GO DEEPER</p>
+            <div style={{ background: cardBg, border: `1px solid ${cardBorder}`, padding: '1rem' }}>
+              <p style={{ fontSize: '0.95rem', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: anchorColor, marginBottom: '0.25rem' }}>{parsed.goDeeper.title}</p>
+              {parsed.goDeeper.reason && (
+                <p style={{ fontSize: '0.85rem', fontFamily: "'DM Sans', sans-serif", fontStyle: 'italic', fontWeight: 300, color: bodyColor }}>{parsed.goDeeper.reason}</p>
+              )}
+            </div>
+          </div>
+        )}
+        {parsed.toPonder && (
+          <div style={{ marginTop: '2rem' }}>
+            <p style={labelStyle}>TO PONDER</p>
+            <p style={{ fontSize: '1rem', fontFamily: "'DM Serif Display', Georgia, serif", fontStyle: 'italic', fontWeight: 300, color: toPonderColor, lineHeight: 1.6 }}>
+              {parsed.toPonder}
+            </p>
+          </div>
+        )}
+        {citations && citations.length > 0 && (
+          <button
+            onClick={() => onOpenSources(citations, parsed.anchor || 'this response')}
+            style={{ marginTop: '1.5rem', background: 'none', border: `1px solid ${sourcesBtnBorder}`, fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.4rem 0.8rem', color: sourcesBtnColor, cursor: 'pointer', fontFamily: "'Geist Mono', monospace" }}
+          >
+            SOURCES
+          </button>
         )}
       </div>
     );
   }
 
   // Animated render
-  const anchorDelay = 0.6;
-  const bodyStartDelay = anchorDelay + 0.8 + 0.4;
-  const returnDelay = bodyStartDelay + body.length * 0.6 + 0.6;
+  let delay = 0.6;
+  const keywordsDelay = delay;
+  delay += 0.5;
+  const anchorDelay = delay;
+  delay += 0.8;
+  const bodyStartDelay = delay;
+  delay += parsed.body.length * 0.3;
+  const invitationDelay = delay + 0.3;
+  delay += 0.6;
+  const goDeeperDelay = delay + 0.3;
+  delay += 0.5;
+  const toPonderDelay = delay + 0.3;
+  delay += 0.5;
+  const sourcesDelay = delay + 0.3;
 
   return (
     <div className="max-w-[680px]">
+      {parsed.keywords && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: FADE_DURATION, delay: keywordsDelay, ease: customEasing }}
+          style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginBottom: '2rem' }}
+        >
+          {parsed.keywords}
+        </motion.p>
+      )}
       <motion.p
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: anchorDelay, ease: customEasing }}
+        transition={{ duration: FADE_DURATION, delay: anchorDelay, ease: customEasing }}
         style={{ fontSize: '2.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: anchorColor, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: '2rem' }}
       >
-        {anchor}
+        {parsed.anchor}
       </motion.p>
-      {body.map((sentence, i) => (
+      {parsed.body.map((sentence, i) => (
         <motion.p
           key={i}
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: bodyStartDelay + i * 0.2, ease: customEasing }}
+          transition={{ duration: FADE_DURATION, delay: bodyStartDelay + i * 0.3, ease: customEasing }}
           style={{ fontSize: '1rem', fontFamily: "'DM Sans', 'Inter', sans-serif", fontWeight: 300, color: bodyColor, lineHeight: 1.9, marginBottom: '0.75rem' }}
         >
           {sentence}
         </motion.p>
       ))}
-      {return_line && (
+      {parsed.invitation && (
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: returnDelay, ease: customEasing }}
-          style={{ fontSize: '0.875rem', fontFamily: "'DM Sans', 'Inter', sans-serif", fontWeight: 300, color: returnColor, marginTop: '2rem', lineHeight: 1.6 }}
+          transition={{ duration: FADE_DURATION, delay: invitationDelay, ease: customEasing }}
+          style={{ fontSize: '1.5rem', fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400, color: invitationColor, marginTop: '2rem', lineHeight: 1.4 }}
         >
-          {return_line}
+          {parsed.invitation}
         </motion.p>
       )}
+      {parsed.goDeeper.title && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: FADE_DURATION, delay: goDeeperDelay, ease: customEasing }}
+          style={{ marginTop: '2rem' }}
+        >
+          <p style={labelStyle}>GO DEEPER</p>
+          <div style={{ background: cardBg, border: `1px solid ${cardBorder}`, padding: '1rem' }}>
+            <p style={{ fontSize: '0.95rem', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: anchorColor, marginBottom: '0.25rem' }}>{parsed.goDeeper.title}</p>
+            {parsed.goDeeper.reason && (
+              <p style={{ fontSize: '0.85rem', fontFamily: "'DM Sans', sans-serif", fontStyle: 'italic', fontWeight: 300, color: bodyColor }}>{parsed.goDeeper.reason}</p>
+            )}
+          </div>
+        </motion.div>
+      )}
+      {parsed.toPonder && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: FADE_DURATION, delay: toPonderDelay, ease: customEasing }}
+          style={{ marginTop: '2rem' }}
+        >
+          <p style={labelStyle}>TO PONDER</p>
+          <p style={{ fontSize: '1rem', fontFamily: "'DM Serif Display', Georgia, serif", fontStyle: 'italic', fontWeight: 300, color: toPonderColor, lineHeight: 1.6 }}>
+            {parsed.toPonder}
+          </p>
+        </motion.div>
+      )}
+      {citations && citations.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: FADE_DURATION, delay: sourcesDelay, ease: customEasing }}
+        >
+          <button
+            onClick={() => onOpenSources(citations, parsed.anchor || 'this response')}
+            style={{ marginTop: '1.5rem', background: 'none', border: `1px solid ${sourcesBtnBorder}`, fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.4rem 0.8rem', color: sourcesBtnColor, cursor: 'pointer', fontFamily: "'Geist Mono', monospace" }}
+          >
+            SOURCES
+          </button>
+        </motion.div>
+      )}
     </div>
+  );
+}
+
+function SourcesPanel({
+  isOpen,
+  onClose,
+  citations,
+  subject,
+  theme,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  citations: string[];
+  subject: string;
+  theme: string;
+}) {
+  const isDark = theme !== 'light';
+  const bg = isDark ? 'rgba(10,10,10,0.7)' : 'rgba(255,255,255,0.7)';
+  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+  const textColor = isDark ? '#ffffff' : '#000000';
+  const mutedColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
+  const dividerColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      const panel = document.getElementById('sources-panel');
+      if (panel && !panel.contains(e.target as Node)) onClose();
+    };
+    setTimeout(() => document.addEventListener('click', handleClick), 10);
+    return () => document.removeEventListener('click', handleClick);
+  }, [isOpen, onClose]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          id="sources-panel"
+          initial={{ x: 340 }}
+          animate={{ x: 0 }}
+          exit={{ x: 340 }}
+          transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          style={{
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            width: 340,
+            height: '100vh',
+            background: bg,
+            backdropFilter: 'blur(20px)',
+            borderLeft: `1px solid ${borderColor}`,
+            zIndex: 50,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1rem' }}>
+            <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.1em', textTransform: 'uppercase', color: mutedColor }}>
+              Sources for {subject.length > 30 ? subject.slice(0, 30) + '…' : subject}
+            </p>
+            <button onClick={onClose} style={{ color: mutedColor, cursor: 'pointer', background: 'none', border: 'none', fontSize: '1.5rem', lineHeight: 1 }}>
+              +
+            </button>
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '0 1rem 1rem' }}>
+            {citations.map((url, i) => {
+              let domain = '';
+              try { domain = new URL(url).hostname.replace('www.', ''); } catch { domain = url; }
+              return (
+                <div key={i}>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'block', padding: '0.75rem 0', textDecoration: 'none' }}
+                  >
+                    <p style={{ fontSize: '0.875rem', fontFamily: "'DM Sans', sans-serif", color: textColor, marginBottom: '0.2rem', fontWeight: 400 }}>
+                      {domain}
+                    </p>
+                    <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", color: mutedColor, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {url}
+                    </p>
+                  </a>
+                  {i < citations.length - 1 && (
+                    <div style={{ height: 1, background: dividerColor }} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -130,11 +389,13 @@ export default function ChatDashboard() {
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0);
   const [newestMessageId, setNewestMessageId] = useState<string | null>(null);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(conversationId || null);
+  const [sourcesOpen, setSourcesOpen] = useState(false);
+  const [activeCitations, setActiveCitations] = useState<string[]>([]);
+  const [activeSubject, setActiveSubject] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load messages when conversation changes
   useEffect(() => {
     setCurrentConversationId(conversationId || null);
     if (!conversationId) {
@@ -155,15 +416,19 @@ export default function ChatDashboard() {
   }, [conversationId]);
 
   const hasConversation = messages.length > 0;
+  const isDark = theme !== 'light';
 
-  const textColor = theme === 'light' ? 'text-gray-900' : 'text-white';
-  const textSecondary = theme === 'light' ? 'text-gray-600' : 'text-[rgba(255,255,255,0.6)]';
-  const inputBgColor = theme === 'light' ? 'bg-[rgba(255,255,255,0.7)]' : 'bg-[rgba(40,40,40,0.7)]';
-  const inputBorderColor = theme === 'light' ? 'border-gray-200' : 'border-[rgba(255,255,255,0.15)]';
-  const inputHoverBg = theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-[rgba(255,255,255,0.05)]';
-  const buttonBg = theme === 'light' ? 'bg-gray-900' : 'bg-white';
-  const buttonText = theme === 'light' ? 'text-white' : 'text-gray-900';
-  const userMsgColor = theme === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.6)';
+  const textColor = isDark ? 'text-white' : 'text-gray-900';
+  const textSecondary = isDark ? 'text-[rgba(255,255,255,0.6)]' : 'text-gray-600';
+  const inputBgColor = isDark ? 'bg-[rgba(40,40,40,0.7)]' : 'bg-[rgba(255,255,255,0.7)]';
+  const inputBorderColor = isDark ? 'border-[rgba(255,255,255,0.15)]' : 'border-gray-200';
+  const inputHoverBg = isDark ? 'hover:bg-[rgba(255,255,255,0.05)]' : 'hover:bg-gray-100';
+  const buttonBg = isDark ? 'bg-white' : 'bg-gray-900';
+  const buttonText = isDark ? 'text-gray-900' : 'text-white';
+
+  const userBubbleBg = isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)';
+  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+  const userTextColor = isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.8)';
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -177,12 +442,17 @@ export default function ChatDashboard() {
     return () => clearInterval(interval);
   }, [isFocused, input, hasConversation]);
 
+  const handleOpenSources = (citations: string[], subject: string) => {
+    setActiveCitations(citations);
+    setActiveSubject(subject);
+    setSourcesOpen(true);
+  };
+
   const handleSend = async () => {
     if (!input.trim() || isWaiting || !user) return;
 
     let activeConversationId = currentConversationId;
 
-    // Create conversation if none exists
     if (!activeConversationId) {
       const title = input.trim().split(/\s+/).slice(0, 4).join(' ');
       const { data: conv, error } = await supabase
@@ -198,7 +468,6 @@ export default function ChatDashboard() {
 
     const userContent = input.trim();
 
-    // Save user message
     const { data: savedUserMsg } = await supabase
       .from('messages')
       .insert({ conversation_id: activeConversationId, role: 'user', content: userContent })
@@ -214,7 +483,6 @@ export default function ChatDashboard() {
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
     try {
-      // Build conversation history for API
       const history = messages.map(m => ({ role: m.role, content: m.content }));
       history.push({ role: 'user', content: userContent });
 
@@ -231,10 +499,9 @@ export default function ChatDashboard() {
 
       const data = await resp.json();
       const rawContent = data.content || '';
-      // Clean up any markdown italic markers for the return line
+      const citations = data.citations || [];
       const cleanedContent = rawContent.replace(/\*([^*]+)\*/g, '$1');
 
-      // Save AI response to DB
       const { data: savedAiMsg } = await supabase
         .from('messages')
         .insert({ conversation_id: activeConversationId!, role: 'assistant', content: cleanedContent })
@@ -243,11 +510,10 @@ export default function ChatDashboard() {
 
       if (savedAiMsg) {
         setNewestMessageId(savedAiMsg.id);
-        setMessages(prev => [...prev, { id: savedAiMsg.id, role: 'assistant', content: savedAiMsg.content, timestamp: new Date(savedAiMsg.created_at) }]);
+        setMessages(prev => [...prev, { id: savedAiMsg.id, role: 'assistant', content: savedAiMsg.content, timestamp: new Date(savedAiMsg.created_at), citations }]);
       }
     } catch (err) {
       console.error('Temple chat error:', err);
-      // Show error in Temple voice
       const errorId = Date.now().toString();
       setNewestMessageId(errorId);
       setMessages(prev => [...prev, { id: errorId, role: 'assistant', content: ERROR_RESPONSE, timestamp: new Date() }]);
@@ -285,7 +551,7 @@ export default function ChatDashboard() {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -24, opacity: 0 }}
                   transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-                  className={`${theme === 'light' ? 'text-[#333333]' : 'text-[#e8e8e8]'} text-[16px] leading-[1.6] font-['Inter',_sans-serif] cursor-text whitespace-nowrap`}
+                  className={`${isDark ? 'text-[#e8e8e8]' : 'text-[#333333]'} text-[16px] leading-[1.6] font-['Inter',_sans-serif] cursor-text whitespace-nowrap`}
                 >
                   {SUGGESTED_QUESTIONS[currentSuggestionIndex]}
                 </motion.span>
@@ -301,7 +567,7 @@ export default function ChatDashboard() {
             onBlur={() => { if (!input) setIsFocused(false); }}
             placeholder={hasConversation ? "Say something..." : ""}
             rows={1}
-            className={`w-full bg-transparent border-none resize-none ${textColor} text-[16px] leading-[1.6] font-['Inter',_sans-serif] focus:outline-none focus:ring-0 placeholder:${theme === 'light' ? 'text-gray-400' : 'text-gray-600'}`}
+            className={`w-full bg-transparent border-none resize-none ${textColor} text-[16px] leading-[1.6] font-['Inter',_sans-serif] focus:outline-none focus:ring-0`}
             style={{ maxHeight: '180px', overflow: 'auto', caretColor: '#666666' }}
           />
         </div>
@@ -351,23 +617,51 @@ export default function ChatDashboard() {
   // Conversation state
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255,255,255,0.2) transparent' }}>
+      <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: isDark ? 'rgba(255,255,255,0.2) transparent' : 'rgba(0,0,0,0.2) transparent' }}>
         <div className="max-w-[680px] mx-auto px-8 pt-16 pb-8">
           {messages.map((message) => (
             <div key={message.id}>
               {message.role === 'user' ? (
                 <div className="flex justify-end mb-12">
-                  <p style={{ fontSize: '0.9375rem', fontFamily: "'DM Sans', 'Inter', sans-serif", color: userMsgColor, textAlign: 'right', maxWidth: '80%' }}>
-                    {message.content}
-                  </p>
+                  <div
+                    style={{
+                      background: userBubbleBg,
+                      border: `1px solid ${userBubbleBorder}`,
+                      backdropFilter: 'blur(8px)',
+                      padding: '1rem 1.25rem',
+                      maxWidth: '75%',
+                    }}
+                  >
+                    <p style={{ fontSize: '0.9375rem', fontFamily: "'DM Sans', 'Inter', sans-serif", color: userTextColor }}>
+                      {message.content}
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <div className="mb-16">
-                  <AssistantMessage content={message.content} theme={theme} isNew={message.id === newestMessageId} />
+                  <AssistantMessage
+                    content={message.content}
+                    theme={theme}
+                    isNew={message.id === newestMessageId}
+                    citations={message.citations}
+                    onOpenSources={handleOpenSources}
+                  />
                 </div>
               )}
             </div>
           ))}
+
+          {isWaiting && (
+            <div className="mb-16 max-w-[680px]">
+              <TextShimmer
+                duration={2.5}
+                className="font-['Playfair_Display'] italic text-base [--base-color:rgba(255,255,255,0.25)] [--base-gradient-color:rgba(255,255,255,0.7)] dark:[--base-color:rgba(255,255,255,0.25)] dark:[--base-gradient-color:rgba(255,255,255,0.85)]"
+              >
+                Contemplating...
+              </TextShimmer>
+            </div>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
       </div>
@@ -375,6 +669,14 @@ export default function ChatDashboard() {
       <div className="flex-shrink-0 px-6 py-4 max-w-[680px] mx-auto w-full">
         {renderChatInput()}
       </div>
+
+      <SourcesPanel
+        isOpen={sourcesOpen}
+        onClose={() => setSourcesOpen(false)}
+        citations={activeCitations}
+        subject={activeSubject}
+        theme={theme}
+      />
     </div>
   );
 }
