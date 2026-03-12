@@ -868,7 +868,7 @@ export default function ChatDashboard() {
 
     setInput('');
     setIsWaiting(true);
-    if (textareaRef.current) textareaRef.current.style.height = 'auto';
+    
 
     try {
       const history = messages.map(m => ({ role: m.role, content: m.content }));
