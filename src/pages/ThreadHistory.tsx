@@ -225,7 +225,7 @@ export default function ThreadHistory() {
               No conversations yet.
             </p>
           )}
-          {conversations.map((conv, idx) => (
+          {filteredConversations.map((conv, idx) => (
             <div key={conv.id}>
               {/* Row */}
               <div
