@@ -166,7 +166,7 @@ function GoDeeperCard({
     for (const seg of segments) {
       if (seg.start > lastIdx) {
         parts.push(
-          <span key={`dim-${lastIdx}`} style={{ color: dimColor, opacity: 0.2 }}>
+          <span key={`dim-${lastIdx}`} style={{ color: dimColor }}>
             {userMessage.slice(lastIdx, seg.start)}
           </span>
         );
