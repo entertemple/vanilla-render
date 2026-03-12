@@ -20,7 +20,7 @@ interface ParsedResponse {
   anchor: string;
   body: string[];
   invitation: string;
-  goDeeper: { title: string; reason: string };
+  goDeeper: { title: string; reason: string; url?: string };
 }
 
 const TEMPLE_CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/temple-chat`;
@@ -76,11 +76,19 @@ function parseStructuredResponse(content: string): ParsedResponse {
   if (invitationMatch) defaults.invitation = stripCitations(invitationMatch[1].trim());
   if (goDeeperMatch) {
     const raw = stripCitations(goDeeperMatch[1].trim());
-    const dashIndex = raw.indexOf(' — ');
+    // Try to extract URL from format: [URL] Title — Reason  or  URL Title — Reason
+    const urlMatch = raw.match(/^(https?:\/\/\S+)\s+(.+)/);
+    let rest = raw;
+    let url = '';
+    if (urlMatch) {
+      url = urlMatch[1];
+      rest = urlMatch[2];
+    }
+    const dashIndex = rest.indexOf(' — ');
     if (dashIndex > -1) {
-      defaults.goDeeper = { title: raw.slice(0, dashIndex).trim(), reason: raw.slice(dashIndex + 3).trim() };
+      defaults.goDeeper = { title: rest.slice(0, dashIndex).trim(), reason: rest.slice(dashIndex + 3).trim(), url };
     } else {
-      defaults.goDeeper = { title: raw, reason: '' };
+      defaults.goDeeper = { title: rest, reason: '', url };
     }
   }
 
@@ -93,9 +101,9 @@ function parseStructuredResponse(content: string): ParsedResponse {
   return defaults;
 }
 
-// Build a Google search URL for the Go Deeper reference
+// Build a contextual search URL for the Go Deeper reference
 function buildSearchUrl(title: string): string {
-  return `https://www.google.com/search?q=${encodeURIComponent(title)}`;
+  return `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(title)}`;
 }
 
 const oracleEasing = [0.16, 1, 0.3, 1] as const;
@@ -112,10 +120,10 @@ function AssistantMessage({
   const parsed = parseStructuredResponse(content);
   const isDark = theme !== 'light';
 
-  const keywordsColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)';
+  const keywordsColor = isDark ? '#ffffff' : '#0e0e0e';
   const bodyColor = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.7)';
   const invitationColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)';
-  const labelColor = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
+  const labelColor = isDark ? '#ffffff' : '#0e0e0e';
   const anchorColor = isDark ? '#ffffff' : '#0e0e0e';
   const goDeeperTitleColor = isDark ? '#ffffff' : '#0e0e0e';
 
@@ -140,7 +148,7 @@ function AssistantMessage({
     letterSpacing: '-0.02em',
     lineHeight: 1.1,
     marginBottom: '0.75rem',
-    mixBlendMode: 'difference',
+    
   };
 
   const bodyStyle: React.CSSProperties = {
@@ -182,7 +190,7 @@ function AssistantMessage({
           <p style={anchorStyle}>{parsed.anchor}</p>
         )}
         {parsed.keywords && (
-          <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginTop: '0.75rem', marginBottom: '2rem', fontWeight: 500 }}>
+          <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase' as const, color: keywordsColor, marginTop: '0.75rem', marginBottom: '2rem', fontWeight: 500 }}>
             {keywordWords.join(' · ')}
           </p>
         )}
@@ -196,7 +204,7 @@ function AssistantMessage({
           <div style={{ marginTop: '2.5rem' }}>
             <p style={labelStyle}>GO DEEPER</p>
             <a
-              href={buildSearchUrl(parsed.goDeeper.title)}
+              href={parsed.goDeeper.url || buildSearchUrl(parsed.goDeeper.title)}
               target="_blank"
               rel="noopener noreferrer"
               style={goDeeperCardStyle}
@@ -243,12 +251,12 @@ function AssistantMessage({
       {keywordWords.length > 0 && (
         <div style={{ marginTop: '0.75rem', marginBottom: '2rem', display: 'flex', gap: '0.5em', alignItems: 'center' }}>
           {keywordWords.map((word, i) => (
-            <motion.span
+           <motion.span
               key={i}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: keywordsStartDelay + i * 0.1, ease: oracleEasing }}
-              style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, fontWeight: 500 }}
+              style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase' as const, color: keywordsColor, fontWeight: 500 }}
             >
               {i > 0 && <span style={{ marginRight: '0.5em' }}>·</span>}
               {word.trim()}
@@ -292,7 +300,7 @@ function AssistantMessage({
         >
           <p style={labelStyle}>GO DEEPER</p>
           <a
-            href={buildSearchUrl(parsed.goDeeper.title)}
+            href={parsed.goDeeper.url || buildSearchUrl(parsed.goDeeper.title)}
             target="_blank"
             rel="noopener noreferrer"
             style={goDeeperCardStyle}
