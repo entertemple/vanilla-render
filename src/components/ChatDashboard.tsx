@@ -221,7 +221,7 @@ function GoDeeperCard({
         marginBottom: '1rem',
         fontWeight: 500,
       }}>
-        GO DEEPER
+        TO PONDER
       </p>
       <p style={{
         fontFamily: "'DM Sans', 'Inter', sans-serif",
