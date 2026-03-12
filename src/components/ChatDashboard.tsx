@@ -991,13 +991,7 @@ export default function ChatDashboard() {
         )}
       </AnimatePresence>
 
-      {/* SVG Filter */}
-      <svg style={{ display: 'none' }}>
-        <filter id="glass-distortion">
-          <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves={2} result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale={77} />
-        </filter>
-      </svg>
+      {/* SVG Filter is now global in App.tsx */}
 
       {/* Glass container */}
       <div
