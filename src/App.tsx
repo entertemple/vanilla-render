@@ -50,6 +50,16 @@ function AppContent() {
 
   return (
     <div className="w-full h-screen overflow-hidden fixed inset-0">
+      {/* Global SVG filter for liquid glass effect */}
+      <svg style={{ display: 'none', position: 'absolute' }}>
+        <defs>
+          <filter id="glass-distortion">
+            <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves={2} result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale={77} />
+          </filter>
+        </defs>
+      </svg>
+
       <ErrorBoundary fallback={<div className="fixed inset-0 bg-black pointer-events-none" />}>
         <ShaderBackground
           width={dimensions.width}
