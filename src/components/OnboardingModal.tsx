@@ -1,6 +1,7 @@
 import { X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
+import LiquidGlass from './LiquidGlass';
 
 interface OnboardingModalProps {
   isOpen: boolean;
