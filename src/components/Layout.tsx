@@ -210,7 +210,6 @@ export default function Layout({ children }: LayoutProps) {
                     }
                   `}
                 >
-                  <MessageSquare className={`w-3.5 h-3.5 ${textColor} shrink-0`} strokeWidth={1.5} />
                   <span className={`font-['Inter',_sans-serif] ${textColor} text-[11px] truncate flex-1`}>
                     {conv.title}
                   </span>
