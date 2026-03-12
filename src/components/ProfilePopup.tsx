@@ -182,6 +182,8 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
             </div>
             </LiquidGlass>
           </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Avatar + Username Trigger Button */}
       <button
