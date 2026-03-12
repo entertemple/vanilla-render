@@ -410,12 +410,12 @@ function AssistantMessage({
   // Blur for Beat 3+
   const getBlurStyle = (): React.CSSProperties => {
     if (beat < 3) return {};
-    const blur = beat === 3 ? 1.5 : beat === 4 ? 3 : 6;
-    const opacity = beat === 3 ? 0.7 : beat === 4 ? 0.5 : 0.3;
+    const blur = beat === 3 ? 1 : beat === 4 ? 2.5 : 5;
+    const opacity = beat === 3 ? 0.75 : beat === 4 ? 0.55 : 0.3;
     return {
       filter: `blur(${blur}px)`,
       opacity,
-      transition: 'filter 600ms ease, opacity 600ms ease',
+      transition: 'filter 1200ms cubic-bezier(0.16, 1, 0.3, 1), opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1)',
     };
   };
 
