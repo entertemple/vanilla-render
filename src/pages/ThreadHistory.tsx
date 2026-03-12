@@ -459,7 +459,7 @@ export default function ThreadHistory() {
               )}
 
               {/* Divider */}
-              {idx < conversations.length - 1 && (
+              {idx < filteredConversations.length - 1 && (
                 <div style={{ height: 1, background: dividerColor }} />
               )}
             </div>
