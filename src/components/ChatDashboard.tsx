@@ -183,31 +183,52 @@ export default function ChatDashboard() {
   }, [isFocused, input, hasConversation]);
 
   const handleSend = async () => {
-    if (!input.trim() || isWaiting) return;
+    if (!input.trim() || isWaiting || !user) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input,
-      timestamp: new Date(),
-    };
+    let activeConversationId = currentConversationId;
 
-    setMessages(prev => [...prev, userMessage]);
+    // Create conversation if none exists
+    if (!activeConversationId) {
+      const title = input.trim().split(/\s+/).slice(0, 4).join(' ');
+      const { data: conv, error } = await supabase
+        .from('conversations')
+        .insert({ user_id: user.id, title })
+        .select()
+        .single();
+      if (error || !conv) return;
+      activeConversationId = conv.id;
+      setCurrentConversationId(conv.id);
+      navigate(`/chat/${conv.id}`, { replace: true });
+    }
+
+    // Save user message
+    const { data: savedUserMsg } = await supabase
+      .from('messages')
+      .insert({ conversation_id: activeConversationId, role: 'user', content: input.trim() })
+      .select()
+      .single();
+
+    if (savedUserMsg) {
+      setMessages(prev => [...prev, { id: savedUserMsg.id, role: 'user', content: savedUserMsg.content, timestamp: new Date(savedUserMsg.created_at) }]);
+    }
+
     setInput('');
     setIsWaiting(true);
-
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
-    setTimeout(() => {
-      const assistantId = (Date.now() + 1).toString();
-      const assistantMessage: Message = {
-        id: assistantId,
-        role: 'assistant',
-        content: MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)],
-        timestamp: new Date(),
-      };
-      setNewestMessageId(assistantId);
-      setMessages(prev => [...prev, assistantMessage]);
+    // Simulate AI response then save
+    setTimeout(async () => {
+      const aiContent = MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)];
+      const { data: savedAiMsg } = await supabase
+        .from('messages')
+        .insert({ conversation_id: activeConversationId!, role: 'assistant', content: aiContent })
+        .select()
+        .single();
+
+      if (savedAiMsg) {
+        setNewestMessageId(savedAiMsg.id);
+        setMessages(prev => [...prev, { id: savedAiMsg.id, role: 'assistant', content: savedAiMsg.content, timestamp: new Date(savedAiMsg.created_at) }]);
+      }
       setIsWaiting(false);
     }, 800 + Math.random() * 600);
   };
