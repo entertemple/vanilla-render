@@ -196,10 +196,12 @@ export default function ChatDashboard() {
       navigate(`/chat/${conv.id}`, { replace: true });
     }
 
+    const userContent = input.trim();
+
     // Save user message
     const { data: savedUserMsg } = await supabase
       .from('messages')
-      .insert({ conversation_id: activeConversationId, role: 'user', content: input.trim() })
+      .insert({ conversation_id: activeConversationId, role: 'user', content: userContent })
       .select()
       .single();
 
@@ -211,12 +213,56 @@ export default function ChatDashboard() {
     setIsWaiting(true);
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
-    // Simulate AI response then save
-    setTimeout(async () => {
-      const aiContent = MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)];
+    try {
+      // Build conversation history for API
+      const history = messages.map(m => ({ role: m.role, content: m.content }));
+      history.push({ role: 'user', content: userContent });
+
+      const resp = await fetch(TEMPLE_CHAT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: history }),
+      });
+
+      if (!resp.ok || !resp.body) throw new Error('API error');
+
+      // Buffer the full streamed response
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let fullContent = '';
+      let textBuffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (!line.startsWith('data: ')) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') break;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) fullContent += content;
+          } catch { /* partial json, skip */ }
+        }
+      }
+
+      // Clean up any markdown italic markers for the return line
+      const cleanedContent = fullContent.replace(/\*([^*]+)\*/g, '$1');
+
+      // Save AI response to DB
       const { data: savedAiMsg } = await supabase
         .from('messages')
-        .insert({ conversation_id: activeConversationId!, role: 'assistant', content: aiContent })
+        .insert({ conversation_id: activeConversationId!, role: 'assistant', content: cleanedContent })
         .select()
         .single();
 
@@ -224,8 +270,15 @@ export default function ChatDashboard() {
         setNewestMessageId(savedAiMsg.id);
         setMessages(prev => [...prev, { id: savedAiMsg.id, role: 'assistant', content: savedAiMsg.content, timestamp: new Date(savedAiMsg.created_at) }]);
       }
-      setIsWaiting(false);
-    }, 800 + Math.random() * 600);
+    } catch (err) {
+      console.error('Temple chat error:', err);
+      // Show error in Temple voice
+      const errorId = Date.now().toString();
+      setNewestMessageId(errorId);
+      setMessages(prev => [...prev, { id: errorId, role: 'assistant', content: ERROR_RESPONSE, timestamp: new Date() }]);
+    }
+
+    setIsWaiting(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
