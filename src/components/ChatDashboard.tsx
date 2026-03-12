@@ -227,37 +227,12 @@ export default function ChatDashboard() {
         body: JSON.stringify({ messages: history }),
       });
 
-      if (!resp.ok || !resp.body) throw new Error('API error');
+      if (!resp.ok) throw new Error('API error');
 
-      // Buffer the full streamed response
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let fullContent = '';
-      let textBuffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        textBuffer += decoder.decode(value, { stream: true });
-
-        let newlineIndex: number;
-        while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
-          let line = textBuffer.slice(0, newlineIndex);
-          textBuffer = textBuffer.slice(newlineIndex + 1);
-          if (line.endsWith('\r')) line = line.slice(0, -1);
-          if (!line.startsWith('data: ')) continue;
-          const jsonStr = line.slice(6).trim();
-          if (jsonStr === '[DONE]') break;
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content;
-            if (content) fullContent += content;
-          } catch { /* partial json, skip */ }
-        }
-      }
-
+      const data = await resp.json();
+      const rawContent = data.content || '';
       // Clean up any markdown italic markers for the return line
-      const cleanedContent = fullContent.replace(/\*([^*]+)\*/g, '$1');
+      const cleanedContent = rawContent.replace(/\*([^*]+)\*/g, '$1');
 
       // Save AI response to DB
       const { data: savedAiMsg } = await supabase
