@@ -464,11 +464,13 @@ function AssistantMessage({
 
         {showSharpQuestion && (
           <p style={{
-            fontSize: '1rem',
+            fontSize: '1.5rem',
+            fontFamily: "'DM Serif Display', Georgia, serif",
+            fontWeight: 400,
             color: isDark ? '#ffffff' : '#0e0e0e',
-            marginTop: '1.5rem',
+            marginTop: '2.5rem',
             textAlign: 'center',
-            fontFamily: "'DM Sans', 'Inter', sans-serif",
+            opacity: 1,
           }}>
             {beat2Question}
           </p>
