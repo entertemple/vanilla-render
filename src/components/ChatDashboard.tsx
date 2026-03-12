@@ -93,9 +93,9 @@ function parseStructuredResponse(content: string): ParsedResponse {
   return defaults;
 }
 
-// Build a Google search URL for the Go Deeper reference
+// Build a contextual search URL for the Go Deeper reference
 function buildSearchUrl(title: string): string {
-  return `https://www.google.com/search?q=${encodeURIComponent(title)}`;
+  return `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(title)}`;
 }
 
 const oracleEasing = [0.16, 1, 0.3, 1] as const;
