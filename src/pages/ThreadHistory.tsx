@@ -222,7 +222,7 @@ export default function ThreadHistory() {
                 color: textColor,
               }}
             >
-              No conversations yet.
+              {q ? 'No matching conversations.' : 'No conversations yet.'}
             </p>
           )}
           {filteredConversations.map((conv, idx) => (
