@@ -27,14 +27,8 @@ const TEMPLE_CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/templ
 const TEMPLE_PHRASES_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/temple-phrases`;
 const ERROR_RESPONSE = "ANCHOR: something went quiet\n\nKEYWORDS: SILENCE · PATIENCE · RETURN\n\nBODY:\ntry again.\n\nINVITATION: the thread is still here.\n\nGO DEEPER: 4'33\" by John Cage — sometimes the silence is the composition — https://en.wikipedia.org/wiki/4%E2%80%B233%E2%80%B3";
 
-const SUGGESTED_QUESTIONS = [
-  "Hey temple...",
-  "I've been 'about to start' for three weeks now...",
-  "my body said no but I said sure, absolutely, sounds great...",
-  "I have a vision board and an overdraft. explain...",
-  "I know the answer. I just don't like it...",
-  "manifested a parking spot in Manhattan. universe is playing...",
-];
+// Voice input not supported message duration
+const VOICE_UNSUPPORTED_TIMEOUT = 3000;
 
 const WaveformIcon = ({ className }: { className?: string }) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
