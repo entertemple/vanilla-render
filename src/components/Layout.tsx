@@ -22,23 +22,39 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const { theme, userPlan } = useTheme();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [conversations, setConversations] = useState<Conversation[]>([
-    {
-      id: '1',
-      title: 'Understanding Non-Duality',
-      createdAt: new Date()
-    },
-    {
-      id: '2',
-      title: 'Buddhist Meditation',
-      createdAt: new Date()
-    }
-  ]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+
+  // Load conversations from Supabase
+  useEffect(() => {
+    if (!user) return;
+    const loadConversations = async () => {
+      const { data } = await supabase
+        .from('conversations')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (data) {
+        setConversations(data.map(c => ({ id: c.id, title: c.title, createdAt: new Date(c.created_at) })));
+      }
+    };
+    loadConversations();
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('conversations-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'conversations', filter: `user_id=eq.${user.id}` }, () => {
+        loadConversations();
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
 
   // Auto-close sidebar on mobile
   useEffect(() => {
