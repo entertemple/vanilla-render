@@ -213,7 +213,7 @@ export default function ThreadHistory() {
 
         {/* Conversation List */}
         <div>
-          {conversations.length === 0 && (
+          {filteredConversations.length === 0 && (
             <p
               style={{
                 fontFamily: "'Inter', sans-serif",
