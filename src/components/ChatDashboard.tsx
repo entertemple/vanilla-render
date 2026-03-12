@@ -199,7 +199,7 @@ function GoDeeperCard({
 
     if (lastIdx < userMessage.length) {
       parts.push(
-        <span key={`dim-${lastIdx}`} style={{ color: dimColor, opacity: 0.2 }}>
+        <span key={`dim-${lastIdx}`} style={{ color: dimColor }}>
           {userMessage.slice(lastIdx)}
         </span>
       );
