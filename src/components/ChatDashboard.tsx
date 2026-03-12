@@ -20,7 +20,7 @@ interface ParsedResponse {
   anchor: string;
   body: string[];
   invitation: string;
-  goDeeper: { title: string; reason: string };
+  goDeeper: { title: string; reason: string; url?: string };
 }
 
 const TEMPLE_CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/temple-chat`;
