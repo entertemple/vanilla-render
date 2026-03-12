@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import { MoreHorizontal } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -21,6 +22,7 @@ export default function ThreadHistory() {
   const isDark = theme !== 'light';
 
   const [conversations, setConversations] = useState<ConversationRow[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
@@ -155,6 +157,13 @@ export default function ThreadHistory() {
     setDeletingId(null);
   };
 
+  const q = searchQuery.toLowerCase().trim();
+  const filteredConversations = q
+    ? conversations.filter(c =>
+        c.title.toLowerCase().includes(q) || c.preview.toLowerCase().includes(q)
+      )
+    : conversations;
+
   return (
     <div className="flex-1 flex flex-col p-6 md:p-8">
       <div style={{ maxWidth: 680 }}>
@@ -170,28 +179,41 @@ export default function ThreadHistory() {
           >
             History
           </h1>
-          <button
-            onClick={handleNewConversation}
+          <div
             style={{
-              background: 'none',
+              position: 'relative',
               border: `1px solid ${borderBtn}`,
-              borderRadius: 0,
-              fontFamily: "'Inter', sans-serif",
-              fontSize: '0.7rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase' as const,
-              padding: '0.4rem 0.9rem',
-              color: textColor,
-              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0.4rem 0.7rem',
+              gap: '0.5rem',
+              minWidth: 200,
+              maxWidth: 260,
             }}
           >
-            + New Conversation
-          </button>
+            <Search size={13} style={{ color: textColor, opacity: 0.35, flexShrink: 0 }} strokeWidth={1.5} />
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search conversations"
+              style={{
+                background: 'none',
+                border: 'none',
+                outline: 'none',
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '0.7rem',
+                letterSpacing: '0.04em',
+                color: textColor,
+                width: '100%',
+                padding: 0,
+              }}
+            />
+          </div>
         </div>
 
         {/* Conversation List */}
         <div>
-          {conversations.length === 0 && (
+          {filteredConversations.length === 0 && (
             <p
               style={{
                 fontFamily: "'Inter', sans-serif",
@@ -200,10 +222,10 @@ export default function ThreadHistory() {
                 color: textColor,
               }}
             >
-              No conversations yet.
+              {q ? 'No matching conversations.' : 'No conversations yet.'}
             </p>
           )}
-          {conversations.map((conv, idx) => (
+          {filteredConversations.map((conv, idx) => (
             <div key={conv.id}>
               {/* Row */}
               <div
@@ -437,7 +459,7 @@ export default function ThreadHistory() {
               )}
 
               {/* Divider */}
-              {idx < conversations.length - 1 && (
+              {idx < filteredConversations.length - 1 && (
                 <div style={{ height: 1, background: dividerColor }} />
               )}
             </div>
