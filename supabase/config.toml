@@ -2,3 +2,6 @@ project_id = "bgnoclpweenvkzyuxchy"
 
 [functions.temple-chat]
 verify_jwt = false
+
+[functions.temple-phrases]
+verify_jwt = false
