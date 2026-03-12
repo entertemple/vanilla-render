@@ -454,6 +454,10 @@ function AssistantMessage({
           />
         )}
 
+        {showGoDeeperReference && (
+          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="GO DEEPER" />
+        )}
+
         {showADoor && (
           <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} />
         )}
