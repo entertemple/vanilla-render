@@ -207,10 +207,11 @@ function GoDeeperCard({
       style={{
         background: bg,
         border: `1px solid ${border}`,
-        borderRadius: '4px',
+        borderRadius: '15px',
         padding: '1.25rem',
         marginTop: '2rem',
       }}
+      className="go-deeper-card"
     >
       <p style={{
         fontSize: '0.65rem',
