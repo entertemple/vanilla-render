@@ -946,62 +946,146 @@ export default function ChatDashboard() {
   };
 
   const renderChatInput = () => (
-    <div className={`relative w-full rounded-full ${inputBgColor} backdrop-blur-[120px] border ${inputBorderColor} shadow-[0_20px_60px_rgba(0,0,0,0.25),_0_0_0_1px_rgba(255,255,255,0.05)_inset] transition-all duration-300 hover:shadow-[0_24px_70px_rgba(0,0,0,0.3),_0_0_0_1px_rgba(255,255,255,0.08)_inset]`}>
-      <div className="flex items-center gap-4 px-6 py-4">
-        <button onClick={() => fileInputRef.current?.click()} className={`w-8 h-8 flex items-center justify-center flex-shrink-0 rounded-full ${inputHoverBg} transition-all duration-200 hover:scale-105`} aria-label="Attach file">
-          <Plus className={`w-5 h-5 ${textColor}`} strokeWidth={2.5} />
-        </button>
-        <input type="file" ref={fileInputRef} className="hidden" multiple onChange={(e) => console.log('Files:', e.target.files)} />
-
-        <div className="flex-1 relative min-h-[26px]">
-          {!hasConversation && !isFocused && !input && (
-            <div className="absolute inset-0 flex items-center overflow-hidden cursor-text" onClick={() => { setIsFocused(true); textareaRef.current?.focus(); }}>
-              <AnimatePresence mode="popLayout">
-                <motion.span
-                  key={currentSuggestionIndex}
-                  initial={{ y: 24, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -24, opacity: 0 }}
-                  transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-                  className={`${isDark ? 'text-[#e8e8e8]' : 'text-[#333333]'} text-[16px] leading-[1.6] font-['Inter',_sans-serif] cursor-text whitespace-nowrap`}
-                >
-                  {SUGGESTED_QUESTIONS[currentSuggestionIndex]}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-          )}
-          <textarea
-            ref={textareaRef}
-            value={input}
-            onChange={handleTextareaChange}
-            onKeyDown={handleKeyDown}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => { if (!input) setIsFocused(false); }}
-            placeholder={hasConversation ? "Say something..." : ""}
-            rows={1}
-            className={`w-full bg-transparent border-none resize-none ${textColor} text-[16px] leading-[1.6] font-['Inter',_sans-serif] focus:outline-none focus:ring-0`}
-            style={{ maxHeight: '180px', overflow: 'auto', caretColor: '#666666' }}
-          />
-        </div>
-
-        <div className="flex items-center gap-3 flex-shrink-0">
-          {input.trim() ? (
-            <motion.button
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              onClick={handleSend}
-              className={`w-9 h-9 flex items-center justify-center flex-shrink-0 rounded-full ${buttonBg} transition-all duration-200 hover:scale-110 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]`}
-              aria-label="Send message"
-            >
-              <ArrowUp className={`w-5 h-5 ${buttonText}`} strokeWidth={2.5} />
-            </motion.button>
-          ) : (
-            <button className={`w-9 h-9 flex items-center justify-center flex-shrink-0 rounded-full ${inputHoverBg} transition-all duration-200 hover:scale-105`} aria-label="Voice input">
-              <WaveformIcon className={textColor} />
+    <div className="w-full flex flex-col items-center">
+      {/* Attached file pill */}
+      <AnimatePresence>
+        {attachedFile && (
+          <motion.div
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              padding: '0.25rem 0.6rem',
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+              borderRadius: 0,
+              marginBottom: '0.5rem',
+              fontSize: '0.7rem',
+              fontFamily: "'Inter', sans-serif",
+              color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
+            }}
+          >
+            {attachedFile.name}
+            <button onClick={() => setAttachedFile(null)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', opacity: 0.6 }}>
+              <X size={12} />
             </button>
-          )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* SVG Filter */}
+      <svg style={{ display: 'none' }}>
+        <filter id="glass-distortion">
+          <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves={2} result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={77} />
+        </filter>
+      </svg>
+
+      {/* Glass container */}
+      <div
+        ref={glassRef}
+        className="glass-search"
+        onMouseMove={handleGlassMouseMove}
+        onMouseLeave={handleGlassMouseLeave}
+      >
+        <div className="glass-filter" />
+        <div className="glass-overlay" />
+        <div className="glass-specular" ref={specularRef} />
+        <div className="glass-content">
+          <div className="flex items-center gap-4 px-6 py-4">
+            {/* File Attachment */}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-8 h-8 flex items-center justify-center flex-shrink-0 rounded-full transition-all duration-200 hover:scale-105"
+              style={{ color: isDark ? '#ffffff' : '#000000' }}
+              aria-label="Attach file"
+            >
+              <Plus className="w-5 h-5" strokeWidth={2.5} />
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept=".txt,.pdf,.png,.jpg,.jpeg"
+              onChange={handleFileChange}
+            />
+
+            {/* Text Input */}
+            <div className="flex-1 relative min-h-[26px]">
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={handleTextareaChange}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter temple…"
+                rows={1}
+                className="w-full bg-transparent border-none resize-none text-[16px] leading-[1.6] font-['Inter',_sans-serif] focus:outline-none focus:ring-0"
+                style={{
+                  maxHeight: '180px',
+                  overflow: 'auto',
+                  caretColor: isDark ? '#ffffff' : '#000000',
+                  color: isDark ? '#ffffff' : '#000000',
+                }}
+              />
+            </div>
+
+            {/* Right controls */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {input.trim() ? (
+                <motion.button
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  onClick={handleSend}
+                  className={`w-9 h-9 flex items-center justify-center flex-shrink-0 rounded-full ${buttonBg} transition-all duration-200 hover:scale-110 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]`}
+                  aria-label="Send message"
+                >
+                  <ArrowUp className={`w-5 h-5 ${buttonText}`} strokeWidth={2.5} />
+                </motion.button>
+              ) : (
+                <button
+                  onClick={handleVoiceInput}
+                  className="w-9 h-9 flex items-center justify-center flex-shrink-0 rounded-full transition-all duration-200 hover:scale-105"
+                  aria-label="Voice input"
+                >
+                  {isRecording ? (
+                    <motion.div
+                      animate={{ opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
+                    >
+                      <WaveformIcon className="text-red-500" />
+                    </motion.div>
+                  ) : (
+                    <WaveformIcon className={isDark ? 'text-white' : 'text-black'} />
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Voice unsupported message */}
+      <AnimatePresence>
+        {voiceUnsupported && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              marginTop: '0.5rem',
+              fontSize: '0.75rem',
+              fontFamily: "'Inter', sans-serif",
+              color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
+            }}
+          >
+            Voice input not supported in this browser
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 
