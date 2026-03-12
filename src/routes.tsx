@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
 import MainChat from "./pages/MainChat";
 import DiscoverFeed from "./pages/DiscoverFeed";
 import ThreadHistory from "./pages/ThreadHistory";
@@ -11,6 +12,7 @@ import UsagePolicy from "./pages/UsagePolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Upgrade from "./pages/Upgrade";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Landing from "./pages/Landing";
 
 export const router = createBrowserRouter([
@@ -19,15 +21,21 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
     path: "/landing",
     element: <Landing />,
   },
   {
     path: "/",
     element: (
-      <Layout>
-        <Outlet />
-      </Layout>
+      <ProtectedRoute>
+        <Layout>
+          <Outlet />
+        </Layout>
+      </ProtectedRoute>
     ),
     children: [
       {

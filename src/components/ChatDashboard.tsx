@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Plus, ArrowUp } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Message {
@@ -122,15 +125,39 @@ function AssistantMessage({ content, theme, isNew }: { content: string; theme: s
 
 export default function ChatDashboard() {
   const { theme } = useTheme();
+  const { user } = useAuth();
+  const { id: conversationId } = useParams();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isWaiting, setIsWaiting] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0);
   const [newestMessageId, setNewestMessageId] = useState<string | null>(null);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(conversationId || null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Load messages when conversation changes
+  useEffect(() => {
+    setCurrentConversationId(conversationId || null);
+    if (!conversationId) {
+      setMessages([]);
+      return;
+    }
+    const loadMessages = async () => {
+      const { data } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('conversation_id', conversationId)
+        .order('created_at', { ascending: true });
+      if (data) {
+        setMessages(data.map(m => ({ id: m.id, role: m.role as 'user' | 'assistant', content: m.content, timestamp: new Date(m.created_at) })));
+      }
+    };
+    loadMessages();
+  }, [conversationId]);
 
   const hasConversation = messages.length > 0;
 
@@ -156,31 +183,52 @@ export default function ChatDashboard() {
   }, [isFocused, input, hasConversation]);
 
   const handleSend = async () => {
-    if (!input.trim() || isWaiting) return;
+    if (!input.trim() || isWaiting || !user) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input,
-      timestamp: new Date(),
-    };
+    let activeConversationId = currentConversationId;
 
-    setMessages(prev => [...prev, userMessage]);
+    // Create conversation if none exists
+    if (!activeConversationId) {
+      const title = input.trim().split(/\s+/).slice(0, 4).join(' ');
+      const { data: conv, error } = await supabase
+        .from('conversations')
+        .insert({ user_id: user.id, title })
+        .select()
+        .single();
+      if (error || !conv) return;
+      activeConversationId = conv.id;
+      setCurrentConversationId(conv.id);
+      navigate(`/chat/${conv.id}`, { replace: true });
+    }
+
+    // Save user message
+    const { data: savedUserMsg } = await supabase
+      .from('messages')
+      .insert({ conversation_id: activeConversationId, role: 'user', content: input.trim() })
+      .select()
+      .single();
+
+    if (savedUserMsg) {
+      setMessages(prev => [...prev, { id: savedUserMsg.id, role: 'user', content: savedUserMsg.content, timestamp: new Date(savedUserMsg.created_at) }]);
+    }
+
     setInput('');
     setIsWaiting(true);
-
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
-    setTimeout(() => {
-      const assistantId = (Date.now() + 1).toString();
-      const assistantMessage: Message = {
-        id: assistantId,
-        role: 'assistant',
-        content: MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)],
-        timestamp: new Date(),
-      };
-      setNewestMessageId(assistantId);
-      setMessages(prev => [...prev, assistantMessage]);
+    // Simulate AI response then save
+    setTimeout(async () => {
+      const aiContent = MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)];
+      const { data: savedAiMsg } = await supabase
+        .from('messages')
+        .insert({ conversation_id: activeConversationId!, role: 'assistant', content: aiContent })
+        .select()
+        .single();
+
+      if (savedAiMsg) {
+        setNewestMessageId(savedAiMsg.id);
+        setMessages(prev => [...prev, { id: savedAiMsg.id, role: 'assistant', content: savedAiMsg.content, timestamp: new Date(savedAiMsg.created_at) }]);
+      }
       setIsWaiting(false);
     }, 800 + Math.random() * 600);
   };

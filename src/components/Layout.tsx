@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Plus, MessageSquare, Trash2, Menu, X, Settings, User, Sparkles, BookOpen, History, Compass, Zap } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import SettingsModal from './SettingsModal';
 import ProfileModal from './ProfileModal';
 import ProfilePopup from './ProfilePopup';
@@ -20,23 +22,39 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const { theme, userPlan } = useTheme();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [conversations, setConversations] = useState<Conversation[]>([
-    {
-      id: '1',
-      title: 'Understanding Non-Duality',
-      createdAt: new Date()
-    },
-    {
-      id: '2',
-      title: 'Buddhist Meditation',
-      createdAt: new Date()
-    }
-  ]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+
+  // Load conversations from Supabase
+  useEffect(() => {
+    if (!user) return;
+    const loadConversations = async () => {
+      const { data } = await supabase
+        .from('conversations')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (data) {
+        setConversations(data.map(c => ({ id: c.id, title: c.title, createdAt: new Date(c.created_at) })));
+      }
+    };
+    loadConversations();
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('conversations-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'conversations', filter: `user_id=eq.${user.id}` }, () => {
+        loadConversations();
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
 
   // Auto-close sidebar on mobile
   useEffect(() => {
@@ -80,21 +98,22 @@ export default function Layout({ children }: LayoutProps) {
     ? 'bg-[rgba(255,255,255,0.1)]' 
     : 'bg-[rgba(255,255,255,0.05)]';
 
-  const createNewChat = () => {
-    const newConversation: Conversation = {
-      id: Date.now().toString(),
-      title: 'New Conversation',
-      createdAt: new Date()
-    };
+  const createNewChat = async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from('conversations')
+      .insert({ user_id: user.id, title: 'New Conversation' })
+      .select()
+      .single();
 
-    setConversations([newConversation, ...conversations]);
-    navigate(`/chat/${newConversation.id}`);
+    if (data && !error) {
+      navigate(`/chat/${data.id}`);
+    }
   };
 
-  const deleteConversation = (id: string, e: React.MouseEvent) => {
+  const deleteConversation = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const filtered = conversations.filter(c => c.id !== id);
-    setConversations(filtered);
+    await supabase.from('conversations').delete().eq('id', id);
     
     if (location.pathname === `/chat/${id}`) {
       navigate('/chat');
