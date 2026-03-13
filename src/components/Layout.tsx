@@ -165,7 +165,6 @@ export default function Layout({ children }: LayoutProps) {
             {/* Navigation Links */}
             <div className={`flex-shrink-0 p-2 border-b ${borderColor}`}>
               {navigationItems.map((item) => {
-                const Icon = item.icon;
                 const active = isActive(item.path);
                 return (
                   <button
@@ -177,7 +176,6 @@ export default function Layout({ children }: LayoutProps) {
                       ${active ? `${activeBg} border ${borderColor}` : hoverBg}
                     `}
                   >
-                    <Icon className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />
                     <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px]`}>
                       {item.label}
                     </span>
