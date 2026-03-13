@@ -151,7 +151,7 @@ export default function Landing() {
       {/* ═══ SCROLLABLE CONTENT ═══ */}
       <div
         ref={containerRef}
-        className="w-full h-full overflow-y-auto overflow-x-hidden"
+        className="w-full h-full overflow-y-auto overflow-x-hidden relative z-[52]"
         style={{ scrollbarWidth: 'thin', scrollbarColor: 'hsl(var(--border)) transparent' }}>
 
         {/* ═══ 1. HERO ═══ */}
