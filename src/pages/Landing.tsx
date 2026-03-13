@@ -123,9 +123,9 @@ export default function Landing() {
       <AnimatePresence>
         {menuOpen && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop - below nav z-index so wordmark stays on top */}
             <motion.div
-              className="fixed inset-0 z-[65]"
+              className="fixed inset-0 z-[70]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
