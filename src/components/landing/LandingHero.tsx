@@ -380,6 +380,7 @@ export default function LandingHero() {
                 </a>
               </div>
             </div>
+            </div>
           </div>
         </motion.div>
       </div>
