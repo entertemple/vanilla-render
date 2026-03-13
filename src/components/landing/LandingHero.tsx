@@ -198,10 +198,10 @@ export default function LandingHero() {
                         fontFamily: FONT_BODY,
                         fontSize: '0.7rem',
                         fontWeight: 500,
-                        color: 'rgba(255,255,255,0.45)',
                         letterSpacing: '0.08em',
                         textTransform: 'uppercase' as const,
                       }}
+                      className="text-muted-foreground"
                     >
                       {kw}
                     </span>
