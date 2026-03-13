@@ -67,7 +67,7 @@ export default function LandingHero() {
           </h1>
 
           <p
-            className="text-muted-foreground mb-10"
+            className="text-muted-foreground mb-10 text-center"
             style={{
               fontFamily: FONT_BODY,
               fontSize: 'clamp(14px, 1.5vw, 16px)',
