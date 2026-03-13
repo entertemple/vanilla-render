@@ -144,9 +144,7 @@ export default function LandingHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <div
-            className="rounded-2xl p-8 md:p-10 bg-card border border-border dark:bg-[rgba(30,30,30,0.95)] dark:border-[rgba(255,255,255,0.12)]"
-          >
+          <div className="rounded-2xl p-8 md:p-10 bg-card border border-border dark:bg-[rgba(30,30,30,0.95)] dark:border-[rgba(255,255,255,0.12)]">
             {/* User message */}
             <motion.div
               className="flex justify-end mb-8"
@@ -168,8 +166,9 @@ export default function LandingHero() {
 
             {/* Temple response */}
             <div className="space-y-6">
-              {/* Anchor — SECTION 1 font */}
+              {/* Anchor */}
               <motion.h2
+                className="text-foreground"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.4, delay: ANCHOR_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -179,7 +178,6 @@ export default function LandingHero() {
                   fontWeight: 400,
                   lineHeight: 1.15,
                 }}
-                className="text-foreground"
               >
                 {PREVIEW_ANCHOR}
               </motion.h2>
@@ -194,6 +192,7 @@ export default function LandingHero() {
                 {PREVIEW_KEYWORDS.map((kw, i) => (
                   <span key={kw}>
                     <span
+                      className="text-muted-foreground"
                       style={{
                         fontFamily: FONT_BODY,
                         fontSize: '0.7rem',
@@ -201,7 +200,6 @@ export default function LandingHero() {
                         letterSpacing: '0.08em',
                         textTransform: 'uppercase' as const,
                       }}
-                      className="text-muted-foreground"
                     >
                       {kw}
                     </span>
@@ -217,6 +215,7 @@ export default function LandingHero() {
                 {PREVIEW_BODY.map((line, i) => (
                   <motion.p
                     key={line}
+                    className="text-foreground/80"
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: BODY_START_DELAY + i * BODY_STAGGER, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -226,15 +225,15 @@ export default function LandingHero() {
                       fontWeight: 600,
                       lineHeight: 1.9,
                     }}
-                    className="text-foreground/80"
                   >
                     {line}
                   </motion.p>
                 ))}
               </div>
 
-              {/* Invitation — SECTION 4 font */}
+              {/* Invitation */}
               <motion.p
+                className="text-foreground/70"
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.4, delay: INVITATION_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -245,20 +244,19 @@ export default function LandingHero() {
                   fontStyle: 'italic',
                   lineHeight: 1.4,
                 }}
-                className="text-foreground/70"
               >
                 {PREVIEW_INVITATION}
               </motion.p>
 
               {/* GO DEEPER card */}
               <motion.div
-                className="rounded-[15px] p-5 mt-4"
+                className="rounded-[15px] p-5 mt-4 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: GO_DEEPER_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="rounded-[15px] p-5 mt-4 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
+              >
                 <p
-                  className="mb-3"
+                  className="mb-3 text-muted-foreground"
                   style={{
                     fontFamily: FONT_BODY,
                     fontSize: '0.6rem',
@@ -266,20 +264,17 @@ export default function LandingHero() {
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase' as const,
                   }}
-                  className="mb-3 text-muted-foreground"
                 >
                   GO DEEPER
                 </p>
                 <p className="text-foreground/80" style={{ fontFamily: FONT_BODY, fontSize: '0.8rem', lineHeight: 1.8 }}>
                   {PREVIEW_USER_MSG.split(/(\bsomething to say\b|\bwithout it going wrong\b|\bI don't know how to say it\b)/g).map((part, i) => {
                     const isHighlighted = GO_DEEPER_PHRASES.some(p => p.text === part);
-                      return (
-                        <span
-                          key={i}
-                          className={isHighlighted ? 'text-foreground font-semibold' : 'text-muted-foreground/50'}
-                          style={{
-                            cursor: isHighlighted ? 'pointer' : 'default',
-                          }}
+                    return (
+                      <span
+                        key={i}
+                        className={isHighlighted ? 'text-foreground font-semibold' : 'text-muted-foreground/50'}
+                        style={{ cursor: isHighlighted ? 'pointer' : 'default' }}
                       >
                         {part}
                       </span>
@@ -290,11 +285,10 @@ export default function LandingHero() {
 
               {/* TO PONDER card */}
               <motion.div
-                className="rounded-[15px] p-5"
+                className="rounded-[15px] p-5 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: TO_PONDER_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="rounded-[15px] p-5 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
               >
                 <p
                   className="mb-2 text-muted-foreground"
