@@ -8,6 +8,7 @@ import LandingPricing from '@/components/landing/LandingPricing';
 
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
 const FONT_BODY = "'Geist Mono', monospace";
+const FONT_SERIF = "'DM Serif Display', Georgia, serif";
 
 export default function Landing() {
   const navigate = useNavigate();
