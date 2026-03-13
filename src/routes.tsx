@@ -3,6 +3,8 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MainChat from "./pages/MainChat";
 import Oracle from "./pages/Oracle";
+import Journal from "./pages/Journal";
+import ThreadHistory from "./pages/ThreadHistory";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Landing from "./pages/Landing";
@@ -62,6 +64,26 @@ export const router = createBrowserRouter([
       <ProtectedRoute>
         <Layout>
           <Oracle />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/history",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <ThreadHistory />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/journal",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <Journal />
         </Layout>
       </ProtectedRoute>
     ),

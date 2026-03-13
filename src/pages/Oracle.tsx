@@ -17,11 +17,13 @@ export default function Oracle() {
   const [loading, setLoading] = useState(true);
   const [cardVisible, setCardVisible] = useState(false);
   const [anchorVisible, setAnchorVisible] = useState(false);
+  const [dividerVisible, setDividerVisible] = useState(false);
   const [bodyVisible, setBodyVisible] = useState(false);
+  const [bottomVisible, setBottomVisible] = useState(false);
 
   const dayIndex = new Date().getDay();
   const isDark = theme === 'dark';
-  const strokeColor = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
+  const strokeColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.2)';
 
   const dateStr = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -32,7 +34,6 @@ export default function Oracle() {
   useEffect(() => {
     const fetchCard = async () => {
       try {
-        // Try to get recent conversation anchors
         let recentAnchors = '';
         if (user) {
           const { data: messages } = await supabase
@@ -43,7 +44,6 @@ export default function Oracle() {
             .limit(10);
 
           if (messages && messages.length > 0) {
-            // Extract anchor words from responses
             const anchors = messages
               .map((m) => {
                 const match = m.content.match(/ANCHOR:\s*(.+)/);
@@ -66,7 +66,6 @@ export default function Oracle() {
         }
       } catch (err) {
         console.error('Oracle card error:', err);
-        // Fallback card
         setCard({
           anchor: 'Stillness',
           body: 'What you are looking for is not ahead of you. It has been here the entire time, waiting for you to stop moving long enough to notice.',
@@ -82,49 +81,78 @@ export default function Oracle() {
   // Staggered reveal
   useEffect(() => {
     if (loading) return;
-    const t1 = setTimeout(() => setCardVisible(true), 400);
-    const t2 = setTimeout(() => setAnchorVisible(true), 1600);
-    const t3 = setTimeout(() => setBodyVisible(true), 2400);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const t1 = setTimeout(() => setCardVisible(true), 300);
+    const t2 = setTimeout(() => setAnchorVisible(true), 2100);
+    const t3 = setTimeout(() => setDividerVisible(true), 2500);
+    const t4 = setTimeout(() => setBodyVisible(true), 2750);
+    const t5 = setTimeout(() => setBottomVisible(true), 3100);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+    };
   }, [loading]);
 
   return (
     <div
       className="w-full h-full flex flex-col items-center justify-center relative"
-      style={{ minHeight: '100%' }}
+      style={{ minHeight: '100%', background: '#000000' }}
     >
+      {/* Ambient orbs */}
+      <div className="oracle-bg-orb-1" />
+      <div className="oracle-bg-orb-2" />
+
+      {/* Grain overlay */}
+      <div className="oracle-grain" />
+
       {/* Oracle Card */}
       <div
-        className="relative"
+        className="oracle-card"
         style={{
-          width: 380,
-          height: 560,
-          maxWidth: 'calc(100vw - 3rem)',
-          maxHeight: 'calc(100vh - 12rem)',
-          borderRadius: 4,
-          border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.08)',
-          background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-          backdropFilter: 'blur(12px)',
-          padding: '2.5rem 2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
           opacity: cardVisible || loading ? 1 : 0,
-          transform: cardVisible ? 'translateY(0)' : 'translateY(12px)',
-          transition: 'opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1), transform 1200ms cubic-bezier(0.16, 1, 0.3, 1)',
+          transform: cardVisible
+            ? 'translateY(0) scale(1)'
+            : 'translateY(24px) scale(0.97)',
+          transition:
+            'opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1), transform 1200ms cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
         {/* SVG Geometry — top 55% */}
-        <div style={{ flex: '0 0 55%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <SacredGeometry dayIndex={dayIndex} strokeColor={strokeColor} />
+        <div
+          className="oracle-svg-container"
+          style={{
+            flex: '0 0 55%',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            paddingBottom: '1.5rem',
+            marginBottom: '1.5rem',
+          }}
+        >
+          <div className="oracle-svg">
+            <SacredGeometry dayIndex={dayIndex} strokeColor={strokeColor} strokeWidth={1.5} />
+          </div>
         </div>
 
         {/* Anchor + Body */}
-        <div style={{ flex: '1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+        <div
+          style={{
+            flex: '1',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+        >
           {loading ? (
             <TextShimmer
-              duration={2.5}
-              className="font-['DM_Sans'] italic text-2xl font-light [--base-color:rgba(255,255,255,0.2)] [--base-gradient-color:rgba(255,255,255,0.7)]"
+              duration={3}
+              className="font-['DM_Sans'] italic font-extralight text-[1.875rem] tracking-[0.05em] [--base-color:rgba(255,255,255,0.1)] [--base-gradient-color:rgba(255,255,255,0.55)]"
             >
               Reading...
             </TextShimmer>
@@ -134,32 +162,45 @@ export default function Oracle() {
               <div
                 style={{
                   fontFamily: '"DM Sans", Arial, sans-serif',
-                  fontSize: '2rem',
-                  fontWeight: 300,
+                  fontSize: '1.875rem',
+                  fontWeight: 200,
                   fontStyle: 'italic',
                   textAlign: 'center',
-                  letterSpacing: '0.02em',
-                  marginTop: '1.5rem',
-                  color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
+                  letterSpacing: '0.05em',
+                  color: 'rgba(255,255,255,0.95)',
+                  textShadow:
+                    '0 0 30px rgba(255,255,255,0.2), 0 1px 0 rgba(255,255,255,0.1)',
+                  lineHeight: 1.1,
                   opacity: anchorVisible ? 1 : 0,
-                  transition: 'opacity 1000ms ease',
+                  transform: anchorVisible ? 'translateY(0)' : 'translateY(8px)',
+                  transition: 'opacity 900ms ease, transform 900ms ease',
                 }}
               >
                 {card?.anchor}
               </div>
 
+              {/* Divider */}
+              <div
+                className="oracle-divider"
+                style={{
+                  width: dividerVisible ? 28 : 0,
+                  transition: 'width 500ms ease',
+                }}
+              />
+
               {/* Body Text */}
               <div
                 style={{
                   fontFamily: '"Geist Mono", monospace',
-                  fontSize: '0.8rem',
-                  lineHeight: 1.7,
+                  fontSize: '0.75rem',
+                  lineHeight: 1.9,
                   textAlign: 'center',
-                  color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)',
-                  marginTop: '0.875rem',
-                  maxWidth: 280,
+                  color: 'rgba(255,255,255,0.38)',
+                  maxWidth: 260,
+                  margin: '0 auto',
+                  letterSpacing: '0.025em',
                   opacity: bodyVisible ? 1 : 0,
-                  transition: 'opacity 800ms ease',
+                  transition: 'opacity 700ms ease',
                 }}
               >
                 {card?.body}
@@ -171,27 +212,25 @@ export default function Oracle() {
 
       {/* Bottom Bar */}
       <div
-        className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-6 py-4"
+        style={{
+          fontFamily: '"Geist Mono", monospace',
+          fontSize: '0.65rem',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase' as const,
+          color: 'rgba(255,255,255,0.18)',
+          padding: '0 2.5rem 2rem',
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          justifyContent: 'space-between',
+          opacity: bottomVisible ? 1 : 0,
+          transition: 'opacity 500ms ease',
+        }}
       >
-        <span
-          style={{
-            fontFamily: '"DM Sans", Arial, sans-serif',
-            fontSize: '0.85rem',
-            color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)',
-          }}
-        >
-          {dateStr}
-        </span>
-        <span
-          style={{
-            fontFamily: '"Geist Mono", monospace',
-            fontSize: '0.75rem',
-            opacity: 0.4,
-            color: isDark ? '#fff' : '#000',
-          }}
-        >
-          A new card on every visit
-        </span>
+        <span>{dateStr}</span>
+        <span>A new card on every visit</span>
       </div>
     </div>
   );
