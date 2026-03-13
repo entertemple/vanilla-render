@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import WordmarkLight from '@/components/WordmarkLight';
 import WordmarkDark from '@/components/WordmarkDark';
 import LandingHero from '@/components/landing/LandingHero';
+import ConversationPreview from '@/components/landing/ConversationPreview';
 import LandingPricing from '@/components/landing/LandingPricing';
 
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
