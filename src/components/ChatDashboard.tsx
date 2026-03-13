@@ -225,10 +225,12 @@ function GoDeeperCard({
         GO DEEPER
       </p>
       <p style={{
-        fontFamily: "'DM Sans', 'Inter', sans-serif",
-        fontSize: '1rem',
+        fontFamily: "'Geist Mono', monospace",
+        fontSize: '0.8rem',
         lineHeight: 1.8,
-        fontWeight: 400,
+        fontWeight: 300,
+        letterSpacing: '-0.01em',
+        opacity: 0.5,
       }}>
         {renderHighlightedMessage()}
       </p>
