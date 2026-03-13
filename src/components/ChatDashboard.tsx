@@ -506,7 +506,7 @@ function AssistantMessage({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: kDelay + i * 0.1, ease: oracleEasing }}
-                style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, fontWeight: 500 }}
+                style={{ fontSize: '0.65rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.2em', textTransform: 'uppercase', color: keywordsColor, fontWeight: 400 }}
               >
                 {i > 0 && <span style={{ marginRight: '0.5em' }}>·</span>}
                 {word.trim()}
