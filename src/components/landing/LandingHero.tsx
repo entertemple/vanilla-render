@@ -297,11 +297,11 @@ export default function LandingHero() {
                 className="rounded-[15px] p-5 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
                 <p
                   className="mb-2"
+                  className="mb-2 text-muted-foreground"
                   style={{
                     fontFamily: FONT_BODY,
                     fontSize: '0.6rem',
                     fontWeight: 600,
-                    color: 'rgba(255,255,255,0.35)',
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase' as const,
                   }}
