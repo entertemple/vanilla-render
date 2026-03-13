@@ -180,6 +180,7 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
