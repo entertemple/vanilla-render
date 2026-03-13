@@ -372,12 +372,12 @@ function AssistantMessage({
   const anchorColor = isDark ? '#ffffff' : '#0e0e0e';
 
   const anchorStyle: React.CSSProperties = {
-    fontSize: '2.5rem',
-    fontFamily: "'DM Serif Display', Georgia, serif",
-    fontWeight: 400,
+    fontSize: '3rem',
+    fontFamily: "'DM Sans', Arial, sans-serif",
+    fontWeight: 300,
     color: anchorColor,
-    letterSpacing: '-0.02em',
-    lineHeight: 1.1,
+    letterSpacing: '-0.03em',
+    lineHeight: 1,
     marginBottom: '0.75rem',
   };
 
