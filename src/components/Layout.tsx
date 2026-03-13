@@ -178,7 +178,7 @@ export default function Layout({ children }: LayoutProps) {
                     `}
                   >
                     <Icon className={`w-3.5 h-3.5 ${textColor}`} strokeWidth={1.5} />
-                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[11px]`}>
+                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[16px]`}>
                       {item.label}
                     </span>
                   </button>
