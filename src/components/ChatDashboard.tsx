@@ -991,12 +991,10 @@ export default function ChatDashboard() {
                 onKeyDown={handleKeyDown}
                 placeholder="Enter temple…"
                 rows={1}
-                className="w-full bg-transparent border-none resize-none text-[16px] leading-[1.6] font-['Inter',_sans-serif] focus:outline-none focus:ring-0"
+                className="search-input w-full bg-transparent border-none resize-none text-[16px] leading-[1.6] font-['Inter',_sans-serif] focus:outline-none focus:ring-0"
                 style={{
                   maxHeight: '180px',
                   overflow: 'auto',
-                  caretColor: isDark ? '#ffffff' : '#000000',
-                  color: isDark ? '#ffffff' : '#000000',
                 }}
               />
             </div>
