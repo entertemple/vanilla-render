@@ -184,6 +184,11 @@ export default function Landing() {
           </div>
         </section>
 
+        {/* ═══ 3.5 CONVERSATION PREVIEW ═══ */}
+        <section className="py-32 md:py-48 px-6 md:px-12">
+          <ConversationPreview />
+        </section>
+
         {/* ═══ 4. WHAT TEMPLE IS ═══ */}
         <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={whatRef}>
           <motion.p

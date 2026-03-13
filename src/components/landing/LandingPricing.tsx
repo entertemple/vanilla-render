@@ -30,7 +30,7 @@ export default function LandingPricing() {
   const [isAnnual, setIsAnnual] = useState(false);
 
   return (
-    <section ref={ref} className="py-48 px-6 md:px-12 max-w-[800px] mx-auto">
+    <section ref={ref} className="py-48 px-6 md:px-12 max-w-[1000px] mx-auto">
       <p
         className="text-center text-muted-foreground mb-16 uppercase tracking-[0.2em]"
         style={{ fontFamily: FONT_BODY, fontSize: '0.68rem' }}>
