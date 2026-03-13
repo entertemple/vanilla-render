@@ -63,7 +63,7 @@ export default function LandingHero() {
           <h1
             className="text-foreground mb-4 text-center"
             style={{
-              fontFamily: DM Serif Display', Georgia, serif",
+              fontFamily: "'DM Serif Display', Georgia, serif",
               fontSize: 'clamp(40px, 6vw, 72px)',
               fontWeight: 400,
               lineHeight: 1.05,
