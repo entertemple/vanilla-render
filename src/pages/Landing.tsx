@@ -20,11 +20,11 @@ const FONT_BODY = "'Geist Mono', monospace";
 const FONT_SERIF = "'DM Serif Display', Georgia, serif";
 
 const MENU_ITEMS = [
-  { label: 'About', img: menuAbout, action: 'scroll-about' },
-  { label: 'Pricing', img: menuPricing, action: 'scroll-pricing' },
-  { label: 'Events', img: menuEvents, action: 'link', href: '#' },
-  { label: 'Sounds', img: menuSounds, action: 'link', href: '#' },
   { label: 'Shop', img: menuShop, action: 'link', href: '#' },
+  { label: 'About', img: menuAbout, action: 'scroll-about' },
+  { label: 'Events', img: menuEvents, action: 'link', href: '#' },
+  { label: 'Journal', img: menuPricing, action: 'link', href: '#' },
+  { label: 'Sounds', img: menuSounds, action: 'link', href: '#' },
   { label: 'Instagram', img: menuInstagram, action: 'link', href: 'https://instagram.com' },
 ];
 
