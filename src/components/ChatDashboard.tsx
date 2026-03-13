@@ -298,13 +298,13 @@ function ADoorCard({
       }}
     >
       <p style={{
-        fontSize: '0.65rem',
-        fontFamily: "'Inter', sans-serif",
-        letterSpacing: '0.15em',
+        fontSize: '0.6rem',
+        fontFamily: "'Geist Mono', monospace",
+        letterSpacing: '0.2em',
         textTransform: 'uppercase',
         color: labelColor,
         marginBottom: '0.75rem',
-        fontWeight: 500,
+        fontWeight: 400,
       }}>
         {label}
       </p>
