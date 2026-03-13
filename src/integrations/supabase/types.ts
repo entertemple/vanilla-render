@@ -73,6 +73,10 @@ export type Database = {
           email: string | null
           font_preference: string
           id: string
+          language: string
+          model_settings: Json
+          notifications_enabled: boolean
+          shader_colors: Json
           theme_preference: string
           user_id: string
         }
@@ -81,6 +85,10 @@ export type Database = {
           email?: string | null
           font_preference?: string
           id?: string
+          language?: string
+          model_settings?: Json
+          notifications_enabled?: boolean
+          shader_colors?: Json
           theme_preference?: string
           user_id: string
         }
@@ -89,6 +97,10 @@ export type Database = {
           email?: string | null
           font_preference?: string
           id?: string
+          language?: string
+          model_settings?: Json
+          notifications_enabled?: boolean
+          shader_colors?: Json
           theme_preference?: string
           user_id?: string
         }
