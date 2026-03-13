@@ -47,18 +47,6 @@ export default function Landing() {
     return () => observer.disconnect();
   }, []);
 
-  // Glass specular highlight
-  const specularRef = useRef<HTMLDivElement>(null);
-  const handleGlassMouseMove = (e: React.MouseEvent) => {
-    if (!specularRef.current) return;
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    specularRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255,255,255,0.07), transparent 40%)`;
-  };
-  const handleGlassMouseLeave = () => {
-    if (specularRef.current) specularRef.current.style.background = 'transparent';
-  };
 
   return (
     <div className="fixed inset-0 z-50 bg-background">
