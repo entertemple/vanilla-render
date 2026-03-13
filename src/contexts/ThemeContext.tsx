@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 type Theme = 'light' | 'dark';
 type Plan = 'free' | 'pro';
@@ -22,26 +23,42 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [userPlan, setUserPlanState] = useState<Plan>('free');
   const [profileImage, setProfileImageState] = useState<string | null>(null);
 
+  // Load from localStorage first, then override with Supabase
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+    if (savedTheme) setTheme(savedTheme);
     
     const savedColors = localStorage.getItem('shaderColors');
-    if (savedColors) {
-      setShaderColorsState(JSON.parse(savedColors));
-    }
+    if (savedColors) setShaderColorsState(JSON.parse(savedColors));
 
     const savedPlan = localStorage.getItem('userPlan') as Plan;
-    if (savedPlan) {
-      setUserPlanState(savedPlan);
-    }
+    if (savedPlan) setUserPlanState(savedPlan);
 
     const savedProfileImage = localStorage.getItem('profileImage');
-    if (savedProfileImage) {
-      setProfileImageState(savedProfileImage);
-    }
+    if (savedProfileImage) setProfileImageState(savedProfileImage);
+
+    // Load from Supabase profile
+    const loadProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+      if (data) {
+        if (data.theme_preference) {
+          setTheme(data.theme_preference as Theme);
+          localStorage.setItem('theme', data.theme_preference);
+        }
+        const colors = (data as any).shader_colors;
+        if (colors && Array.isArray(colors) && colors.length === 3) {
+          setShaderColorsState(colors as [string, string, string]);
+          localStorage.setItem('shaderColors', JSON.stringify(colors));
+        }
+      }
+    };
+    loadProfile();
   }, []);
 
   const toggleTheme = () => {
@@ -71,14 +88,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ 
-      theme, 
-      toggleTheme, 
-      shaderColors, 
-      setShaderColors,
-      userPlan,
-      setUserPlan,
-      profileImage,
-      setProfileImage
+      theme, toggleTheme, shaderColors, setShaderColors,
+      userPlan, setUserPlan, profileImage, setProfileImage
     }}>
       {children}
     </ThemeContext.Provider>
