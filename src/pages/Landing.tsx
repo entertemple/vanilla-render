@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'motion/react';
+import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import WordmarkLight from '@/components/WordmarkLight';
 import WordmarkDark from '@/components/WordmarkDark';
@@ -8,52 +8,6 @@ import LandingPricing from '@/components/landing/LandingPricing';
 
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
 const FONT_BODY = "'Geist Mono', monospace";
-
-function GlassCard({
-  children,
-  className = '',
-  intensity = 'medium',
-}: {
-  children: React.ReactNode;
-  className?: string;
-  intensity?: 'light' | 'medium' | 'heavy';
-}) {
-  const blurMap = { light: 'blur(8px)', medium: 'blur(14px)', heavy: 'blur(20px)' };
-  const bgLight = { light: 'rgba(255,255,255,0.35)', medium: 'rgba(255,255,255,0.45)', heavy: 'rgba(255,255,255,0.55)' };
-  const bgDark = { light: 'rgba(0,0,0,0.25)', medium: 'rgba(0,0,0,0.35)', heavy: 'rgba(0,0,0,0.45)' };
-
-  return (
-    <div
-      className={`relative rounded-3xl overflow-hidden ${className}`}
-      style={{
-        backdropFilter: blurMap[intensity],
-        WebkitBackdropFilter: blurMap[intensity],
-      }}
-    >
-      {/* Light mode bg */}
-      <div
-        className="absolute inset-0 dark:hidden"
-        style={{
-          background: bgLight[intensity],
-          borderRadius: 'inherit',
-          border: '1px solid rgba(0,0,0,0.06)',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 32px rgba(0,0,0,0.06)',
-        }}
-      />
-      {/* Dark mode bg */}
-      <div
-        className="absolute inset-0 hidden dark:block"
-        style={{
-          background: bgDark[intensity],
-          borderRadius: 'inherit',
-          border: '1px solid rgba(255,255,255,0.08)',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.3)',
-        }}
-      />
-      <div className="relative z-10">{children}</div>
-    </div>
-  );
-}
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -154,43 +108,41 @@ export default function Landing() {
         <LandingHero />
 
         {/* ═══ 2. STATEMENT ═══ */}
-        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[960px] mx-auto" ref={statementRef}>
-          <GlassCard intensity="medium" className="px-10 py-16 md:px-16 md:py-20">
-            <motion.p
-              className="text-muted-foreground text-center"
-              style={{
-                fontFamily: FONT_HEADING,
-                fontSize: 'clamp(24px, 4vw, 42px)',
-                fontWeight: 400,
-                lineHeight: 1.35,
-                letterSpacing: '-0.01em',
-              }}
-              initial={{ opacity: 0, y: 30 }}
-              animate={statementInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.9, delay: 0.2 }}
-            >
-              Somewhere along the way, thinking got complicated. Tools piled up. Noise crept in. Everyone optimized for more — more output, more answers, more reasons to stay.
-            </motion.p>
-            <motion.p
-              className="text-foreground text-center mt-10"
-              style={{
-                fontFamily: FONT_HEADING,
-                fontSize: 'clamp(24px, 4vw, 42px)',
-                fontWeight: 400,
-                lineHeight: 1.35,
-                letterSpacing: '-0.01em',
-              }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={statementInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.9, delay: 0.5 }}
-            >
-              Temple is the room where you can finally listen to yourself.
-            </motion.p>
-          </GlassCard>
+        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={statementRef}>
+          <motion.p
+            className="text-muted-foreground text-center"
+            style={{
+              fontFamily: FONT_HEADING,
+              fontSize: 'clamp(24px, 4vw, 42px)',
+              fontWeight: 400,
+              lineHeight: 1.35,
+              letterSpacing: '-0.01em',
+            }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={statementInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.2 }}
+          >
+            Somewhere along the way, thinking got complicated. Tools piled up. Noise crept in. Everyone optimized for more — more output, more answers, more reasons to stay.
+          </motion.p>
+          <motion.p
+            className="text-foreground text-center mt-10"
+            style={{
+              fontFamily: FONT_HEADING,
+              fontSize: 'clamp(24px, 4vw, 42px)',
+              fontWeight: 400,
+              lineHeight: 1.35,
+              letterSpacing: '-0.01em',
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={statementInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.5 }}
+          >
+            Temple is the room where you can finally listen to yourself.
+          </motion.p>
         </section>
 
         {/* ═══ 3. HOW IT WORKS ═══ */}
-        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[860px] mx-auto text-center" ref={howRef}>
+        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[800px] mx-auto text-center" ref={howRef}>
           <div ref={aboutRef}>
             <motion.p
               className="text-muted-foreground uppercase tracking-[0.2em] mb-16"
@@ -201,66 +153,61 @@ export default function Landing() {
             >
               How It Works
             </motion.p>
-
-            <GlassCard intensity="light" className="px-10 py-14 md:px-16 md:py-16">
-              {[
-                "You bring what you're carrying.",
-                'Temple reads what lives underneath it.',
-                'Then it leaves you with what matters.',
-              ].map((line, i) => (
-                <motion.p
-                  key={i}
-                  className="text-foreground mb-4 last:mb-0"
-                  style={{
-                    fontFamily: FONT_HEADING,
-                    fontSize: 'clamp(20px, 3vw, 32px)',
-                    fontWeight: 400,
-                    lineHeight: 1.5,
-                  }}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={howInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.7, delay: 0.2 + i * 0.15 }}
-                >
-                  {line}
-                </motion.p>
-              ))}
-            </GlassCard>
+            {[
+              "You bring what you're carrying.",
+              'Temple reads what lives underneath it.',
+              'Then it leaves you with what matters.',
+            ].map((line, i) => (
+              <motion.p
+                key={i}
+                className="text-foreground mb-4"
+                style={{
+                  fontFamily: FONT_HEADING,
+                  fontSize: 'clamp(20px, 3vw, 32px)',
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                }}
+                initial={{ opacity: 0, y: 16 }}
+                animate={howInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.7, delay: 0.2 + i * 0.15 }}
+              >
+                {line}
+              </motion.p>
+            ))}
           </div>
         </section>
 
         {/* ═══ 4. WHAT TEMPLE IS ═══ */}
-        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[960px] mx-auto" ref={whatRef}>
-          <GlassCard intensity="medium" className="px-10 py-16 md:px-16 md:py-20">
-            <motion.p
-              className="text-muted-foreground text-center"
-              style={{
-                fontFamily: FONT_HEADING,
-                fontSize: 'clamp(24px, 4vw, 42px)',
-                fontWeight: 400,
-                lineHeight: 1.35,
-                letterSpacing: '-0.01em',
-              }}
-              initial={{ opacity: 0, y: 30 }}
-              animate={whatInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.9, delay: 0.2 }}
-            >
-              Most AI tells you what to do. Temple shows you what you already know but haven't been able to say.
-            </motion.p>
-            <motion.p
-              className="text-muted-foreground text-center mt-10"
-              style={{
-                fontFamily: FONT_HEADING,
-                fontSize: 'clamp(20px, 3vw, 32px)',
-                fontWeight: 400,
-                lineHeight: 1.45,
-              }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={whatInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.9, delay: 0.5 }}
-            >
-              It doesn't push you further than you want to go. But if you're ready to look closer, it will go there with you.
-            </motion.p>
-          </GlassCard>
+        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={whatRef}>
+          <motion.p
+            className="text-muted-foreground text-center"
+            style={{
+              fontFamily: FONT_HEADING,
+              fontSize: 'clamp(24px, 4vw, 42px)',
+              fontWeight: 400,
+              lineHeight: 1.35,
+              letterSpacing: '-0.01em',
+            }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={whatInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.2 }}
+          >
+            Most AI tells you what to do. Temple shows you what you already know but haven't been able to say.
+          </motion.p>
+          <motion.p
+            className="text-muted-foreground text-center mt-10"
+            style={{
+              fontFamily: FONT_HEADING,
+              fontSize: 'clamp(20px, 3vw, 32px)',
+              fontWeight: 400,
+              lineHeight: 1.45,
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={whatInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.5 }}
+          >
+            It doesn't push you further than you want to go. But if you're ready to look closer, it will go there with you.
+          </motion.p>
         </section>
 
         {/* ═══ 5. PRICING ═══ */}
@@ -270,53 +217,51 @@ export default function Landing() {
 
         {/* ═══ 6. CLOSING ═══ */}
         <section className="py-32 md:py-48 px-6 flex flex-col items-center justify-center min-h-[60vh]" ref={closingRef}>
-          <GlassCard intensity="heavy" className="px-12 py-16 md:px-20 md:py-24 flex flex-col items-center">
-            <motion.h1
-              className="text-foreground text-center mb-6"
-              style={{
-                fontFamily: FONT_HEADING,
-                fontSize: 'clamp(56px, 12vw, 160px)',
-                fontWeight: 400,
-                lineHeight: 0.95,
-                letterSpacing: '-0.02em',
-              }}
-              initial={{ opacity: 0, y: 40 }}
-              animate={closingInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              It just works.
-            </motion.h1>
+          <motion.h1
+            className="text-foreground text-center mb-6"
+            style={{
+              fontFamily: FONT_HEADING,
+              fontSize: 'clamp(56px, 12vw, 160px)',
+              fontWeight: 400,
+              lineHeight: 0.95,
+              letterSpacing: '-0.02em',
+            }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={closingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            It just works.
+          </motion.h1>
 
-            <motion.p
-              className="text-muted-foreground text-center mb-12 max-w-[480px]"
-              style={{
-                fontFamily: FONT_BODY,
-                fontSize: 'clamp(13px, 1.5vw, 15px)',
-                lineHeight: 1.6,
-              }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={closingInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              The first AI built for the interior life. Always the first place you go.
-            </motion.p>
+          <motion.p
+            className="text-muted-foreground text-center mb-12 max-w-[480px]"
+            style={{
+              fontFamily: FONT_BODY,
+              fontSize: 'clamp(13px, 1.5vw, 15px)',
+              lineHeight: 1.6,
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={closingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            The first AI built for the interior life. Always the first place you go.
+          </motion.p>
 
-            <motion.button
-              onClick={() => navigate('/chat')}
-              className="px-12 py-5 rounded-[100px] bg-foreground text-background transition-all hover:opacity-90 hover:scale-[1.02]"
-              style={{
-                fontFamily: FONT_BODY,
-                fontSize: '14px',
-                fontWeight: 400,
-                letterSpacing: '0.02em',
-              }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={closingInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.5 }}
-            >
-              Enter Temple
-            </motion.button>
-          </GlassCard>
+          <motion.button
+            onClick={() => navigate('/chat')}
+            className="px-12 py-5 rounded-[100px] bg-foreground text-background transition-all hover:opacity-90 hover:scale-[1.02]"
+            style={{
+              fontFamily: FONT_BODY,
+              fontSize: '14px',
+              fontWeight: 400,
+              letterSpacing: '0.02em',
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={closingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            Enter Temple
+          </motion.button>
         </section>
 
         {/* ═══ 7. FOOTER — Full-width wordmark ═══ */}

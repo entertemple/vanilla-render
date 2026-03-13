@@ -53,33 +53,6 @@ export default function LandingHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          {/* Glass wrapper for signup form */}
-          <div
-            className="relative rounded-3xl overflow-hidden p-8 md:p-10"
-            style={{
-              backdropFilter: 'blur(14px)',
-              WebkitBackdropFilter: 'blur(14px)',
-            }}
-          >
-            <div
-              className="absolute inset-0 dark:hidden"
-              style={{
-                background: 'rgba(255,255,255,0.4)',
-                border: '1px solid rgba(0,0,0,0.06)',
-                borderRadius: 'inherit',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 32px rgba(0,0,0,0.06)',
-              }}
-            />
-            <div
-              className="absolute inset-0 hidden dark:block"
-              style={{
-                background: 'rgba(0,0,0,0.35)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 'inherit',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.3)',
-              }}
-            />
-            <div className="relative z-10 flex flex-col">
           <h1
             className="text-foreground mb-4"
             style={{
@@ -155,8 +128,6 @@ export default function LandingHero() {
             {' '}and{' '}
             <a href="/privacy-policy" className="underline hover:text-foreground transition-colors">Privacy Policy</a>
           </p>
-            </div>
-          </div>
         </motion.div>
 
         {/* RIGHT COLUMN — Conversation Preview Card */}
@@ -167,32 +138,14 @@ export default function LandingHero() {
           transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <div
-            className="rounded-[20px] p-6 md:p-8 overflow-hidden max-h-[680px] overflow-y-auto relative"
+            className="rounded-[20px] p-6 md:p-8 overflow-hidden max-h-[680px] overflow-y-auto"
             style={{
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              background: '#0a0a0a',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 40px 80px rgba(0,0,0,0.2)',
               scrollbarWidth: 'none',
             }}
           >
-            <div
-              className="absolute inset-0 dark:hidden"
-              style={{
-                background: 'rgba(255,255,255,0.5)',
-                border: '1px solid rgba(0,0,0,0.08)',
-                borderRadius: 'inherit',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7), 0 40px 80px rgba(0,0,0,0.08)',
-              }}
-            />
-            <div
-              className="absolute inset-0 hidden dark:block"
-              style={{
-                background: 'rgba(0,0,0,0.45)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 'inherit',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 40px 80px rgba(0,0,0,0.3)',
-              }}
-            />
-            <div className="relative z-10">
             {/* User message */}
             <div className="flex justify-end mb-8">
               <div
@@ -379,7 +332,6 @@ export default function LandingHero() {
                   Listen on Spotify →
                 </a>
               </div>
-            </div>
             </div>
           </div>
         </motion.div>
