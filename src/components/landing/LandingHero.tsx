@@ -162,7 +162,7 @@ export default function LandingHero() {
                   lineHeight: 1.6,
                 }}
               >
-                {PREVIEW_USER_MSG}
+                <span className="text-foreground">{PREVIEW_USER_MSG}</span>
               </div>
             </motion.div>
 
