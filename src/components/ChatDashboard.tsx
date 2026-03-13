@@ -394,13 +394,14 @@ function AssistantMessage({
   // Responsive body font size handled via className below
 
   const invitationStyle: React.CSSProperties = {
-    fontSize: '1.75rem',
-    fontFamily: "'DM Serif Display', Georgia, serif",
+    fontSize: '1.2rem',
+    fontFamily: "'DM Sans', Arial, sans-serif",
     fontStyle: 'italic',
-    fontWeight: 400,
+    fontWeight: 300,
     color: invitationColor,
+    letterSpacing: '-0.02em',
     marginTop: '1.5rem',
-    lineHeight: 1.4,
+    lineHeight: 1.5,
   };
 
   const keywordWords = parsed.keywords ? parsed.keywords.split(/\s*·\s*/).slice(0, 3) : [];
