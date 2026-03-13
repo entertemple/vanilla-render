@@ -144,7 +144,7 @@ export default function LandingHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <div className="rounded-2xl p-8 md:p-10 bg-card border border-border">
+          <div className="rounded-2xl p-8 md:p-10 bg-card border border-border dark:bg-[rgba(30,30,30,0.95)] dark:border-[rgba(255,255,255,0.12)]">
             {/* User message */}
             <motion.div
               className="flex justify-end mb-8"
@@ -153,7 +153,7 @@ export default function LandingHero() {
               transition={{ duration: 0.6, delay: USER_MSG_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <div
-                className="rounded-2xl px-5 py-3.5 max-w-[85%] bg-muted border border-border"
+                className="rounded-2xl px-5 py-3.5 max-w-[85%] bg-muted dark:bg-[rgba(255,255,255,0.06)] border border-border dark:border-[rgba(255,255,255,0.08)]"
                 style={{
                   fontFamily: FONT_BODY,
                   fontSize: '0.9rem',
@@ -250,7 +250,7 @@ export default function LandingHero() {
 
               {/* GO DEEPER card */}
               <motion.div
-                className="rounded-[15px] p-5 mt-4 bg-muted border border-border"
+                className="rounded-[15px] p-5 mt-4 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: GO_DEEPER_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -285,7 +285,7 @@ export default function LandingHero() {
 
               {/* TO PONDER card */}
               <motion.div
-                className="rounded-[15px] p-5 bg-muted border border-border"
+                className="rounded-[15px] p-5 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: TO_PONDER_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
