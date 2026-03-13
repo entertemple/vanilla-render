@@ -121,7 +121,6 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const navigationItems = [
-    { icon: MessageSquare, label: 'Chat', path: '/chat' },
     { icon: Sparkles, label: 'Discover', path: '/discover' },
     { icon: BookOpen, label: 'Library', path: '/library' },
     { icon: History, label: 'History', path: '/history' },

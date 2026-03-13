@@ -390,6 +390,8 @@ function AssistantMessage({
     marginBottom: '0.75rem',
   };
 
+  // Responsive body font size handled via className below
+
   const invitationStyle: React.CSSProperties = {
     fontSize: '1.75rem',
     fontFamily: "'DM Serif Display', Georgia, serif",
