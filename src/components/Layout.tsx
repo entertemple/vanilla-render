@@ -209,7 +209,7 @@ export default function Layout({ children }: LayoutProps) {
                     }
                   `}
                 >
-                  <span className={`font-['Inter',_sans-serif] ${textColor} text-[11px] truncate flex-1`}>
+                  <span className={`font-['Inter',_sans-serif] ${textColor} text-[16px] truncate flex-1`}>
                     {conv.title}
                   </span>
                   <button

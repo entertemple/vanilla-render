@@ -171,13 +171,16 @@ label,
 }
 
 .dark .glass-search {
-  --bg-color: rgba(0, 0, 0, 0.45);
+  --bg-color: rgba(40, 40, 40, 0.75);
   --highlight: rgba(255, 255, 255, 0.08);
   --text: #ffffff;
   --input-bg: rgba(0, 0, 0, 0.35);
-  --input-border: rgba(255, 255, 255, 0.08);
+  --input-border: rgba(255, 255, 255, 0.2);
   --input-focus: rgba(0, 0, 0, 0.5);
-  background: #1a1a1a;
+  background: rgba(40, 40, 40, 0.75);
+  backdrop-filter: blur(120px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 /* Dark theme — deepened glassmorphism */
