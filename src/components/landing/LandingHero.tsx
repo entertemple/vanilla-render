@@ -177,9 +177,9 @@ export default function LandingHero() {
                   fontFamily: FONT_SERIF,
                   fontSize: '2.5rem',
                   fontWeight: 400,
-                  color: 'rgba(255,255,255,0.9)',
                   lineHeight: 1.15,
                 }}
+                className="text-foreground"
               >
                 {PREVIEW_ANCHOR}
               </motion.h2>
