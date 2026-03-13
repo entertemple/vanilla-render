@@ -202,8 +202,8 @@ export default function LandingHero() {
                   <p
                     key={line}
                     style={{
-                      fontFamily: FONT_BODY,
-                      fontSize: '0.82rem',
+                      fontFamily: FONT_HEADING,
+                      fontSize: '1rem',
                       fontWeight: 600,
                       color: 'rgba(255,255,255,0.8)',
                       lineHeight: 1.9,
