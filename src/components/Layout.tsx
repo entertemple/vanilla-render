@@ -177,8 +177,8 @@ export default function Layout({ children }: LayoutProps) {
                       ${active ? `${activeBg} border ${borderColor}` : hoverBg}
                     `}
                   >
-                    <Icon className={`w-3.5 h-3.5 ${textColor}`} strokeWidth={1.5} />
-                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[16px]`}>
+                    <Icon className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />
+                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px]`}>
                       {item.label}
                     </span>
                   </button>
