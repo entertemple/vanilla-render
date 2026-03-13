@@ -153,17 +153,12 @@ export default function Layout({ children }: LayoutProps) {
             <div className={`flex-shrink-0 p-4 border-b ${borderColor} space-y-3`}>
               <button
                 onClick={createNewChat}
-                className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] glass-new-chat border ${borderColor} ${hoverBg} transition-colors relative`}
+                className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] border ${borderColor} ${hoverBg} transition-colors`}
               >
-                <div className="glass-filter" />
-                <div className="glass-overlay" />
-                <div className="glass-specular" />
-                <div className="glass-content flex items-center gap-2">
-                  <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
-                  <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[11px] tracking-[-0.22px] uppercase`}>
-                    New Chat
-                  </span>
-                </div>
+                <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
+                <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[16px] tracking-[-0.22px] uppercase`}>
+                  New Chat
+                </span>
               </button>
             </div>
 
