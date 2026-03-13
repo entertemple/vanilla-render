@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Plus, Trash2, Menu, X, Settings, User, Compass, Zap } from 'lucide-react';
+import { Plus, Trash2, Menu, X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -121,7 +121,9 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const navigationItems = [
-    { icon: Compass, label: 'Oracle', path: '/oracle' },
+    { label: 'Oracle', path: '/oracle' },
+    { label: 'History', path: '/history' },
+    { label: 'Journal', path: '/journal' },
   ];
 
   const isActive = (path: string) => {
@@ -163,7 +165,6 @@ export default function Layout({ children }: LayoutProps) {
             {/* Navigation Links */}
             <div className={`flex-shrink-0 p-2 border-b ${borderColor}`}>
               {navigationItems.map((item) => {
-                const Icon = item.icon;
                 const active = isActive(item.path);
                 return (
                   <button
@@ -175,7 +176,6 @@ export default function Layout({ children }: LayoutProps) {
                       ${active ? `${activeBg} border ${borderColor}` : hoverBg}
                     `}
                   >
-                    <Icon className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />
                     <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px]`}>
                       {item.label}
                     </span>

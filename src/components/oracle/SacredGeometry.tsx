@@ -4,6 +4,7 @@ interface SacredGeometryProps {
   dayIndex: number;
   className?: string;
   strokeColor?: string;
+  strokeWidth?: number;
 }
 
 function KatharaGrid({ stroke }: { stroke: string }) {
@@ -241,7 +242,7 @@ function KrysticMerkaba({ stroke }: { stroke: string }) {
 
 const GEOMETRIES = [KatharaGrid, ReucheFormation, KrystalSpiral, EckashaSymbol, MaharicShield, StarCrystalSeal, KrysticMerkaba];
 
-export default function SacredGeometry({ dayIndex, className, strokeColor = 'rgba(255,255,255,0.25)' }: SacredGeometryProps) {
+export default function SacredGeometry({ dayIndex, className, strokeColor = 'rgba(255,255,255,0.25)', strokeWidth }: SacredGeometryProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const GeometryComponent = GEOMETRIES[dayIndex % 7];
 
@@ -269,7 +270,7 @@ export default function SacredGeometry({ dayIndex, className, strokeColor = 'rgb
       ref={svgRef}
       viewBox="0 0 200 200"
       className={className}
-      style={{ width: '100%', height: 'auto' }}
+      style={{ width: '100%', height: 'auto', ...(strokeWidth ? { strokeWidth: `${strokeWidth}px` } : {}) }}
     >
       <GeometryComponent stroke={strokeColor} />
     </svg>
