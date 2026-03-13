@@ -88,30 +88,16 @@ export default function Landing() {
 
       {/* ═══ FIXED NAV ═══ */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-6 md:px-12 h-[72px] transition-all duration-500 ${
-          scrolled
-            ? 'backdrop-blur-[16px] bg-background/80 border-b border-border'
-            : 'bg-transparent'
-        }`}
+        className="fixed top-0 left-0 right-0 z-[75] flex items-center justify-between px-6 md:px-12 h-[72px] bg-transparent"
         style={{ fontFamily: FONT_HEADING }}
       >
-        {/* Left: Menu button */}
+        {/* Left: Menu pill */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted/50 transition-colors outline-none"
+          className={pillClass}
+          style={{ fontSize: '14px', fontWeight: 400, fontFamily: FONT_HEADING }}
         >
-          {menuOpen ? (
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="text-foreground">
-              <path d="M4 4L14 14M14 4L4 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          ) : (
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="text-foreground">
-              <rect x="3" y="4" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2" />
-              <rect x="10" y="4" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2" />
-              <rect x="3" y="11" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2" />
-              <rect x="10" y="11" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2" />
-            </svg>
-          )}
+          {menuOpen ? 'Close' : 'Menu'}
         </button>
 
         {/* Center: Wordmark */}
