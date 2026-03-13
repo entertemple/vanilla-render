@@ -273,9 +273,9 @@ label,
   text-align: center;
   width: 100%;
   display: block;
-  font-family: 'Playfair Display', serif;
+  font-family: "DM Sans", Arial, sans-serif;
   font-size: 1.5rem;
-  font-weight: 400;
+  font-weight: 300;
   font-style: italic;
   opacity: 1;
   filter: blur(0px);
