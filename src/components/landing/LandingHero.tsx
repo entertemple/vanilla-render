@@ -54,7 +54,7 @@ export default function LandingHero() {
           transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <h1
-            className="text-foreground mb-4"
+            className="text-foreground mb-4 text-center"
             style={{
               fontFamily: FONT_HEADING,
               fontSize: 'clamp(40px, 6vw, 72px)',
