@@ -230,13 +230,14 @@ export default function Landing() {
         {/* ═══ 4. WHAT TEMPLE IS ═══ */}
         <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={whatRef}>
           <motion.p
-            className="text-muted-foreground text-center"
+            className="text-foreground text-center"
             style={{
               fontFamily: FONT_HEADING,
               fontSize: 'clamp(24px, 4vw, 42px)',
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
@@ -245,12 +246,13 @@ export default function Landing() {
             Most AI tells you what to do. Temple shows you what you already know but haven't been able to say.
           </motion.p>
           <motion.p
-            className="text-muted-foreground text-center mt-10"
+            className="text-foreground text-center mt-10"
             style={{
               fontFamily: FONT_HEADING,
               fontSize: 'clamp(20px, 3vw, 32px)',
               fontWeight: 400,
               lineHeight: 1.45,
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
