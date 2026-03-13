@@ -1,8 +1,9 @@
 import { useRef, useEffect, useState, useMemo } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, Check } from 'lucide-react';
 import WordmarkLight from '@/components/WordmarkLight';
+import LandingPricing from '@/components/landing/LandingPricing';
 
 const FONT_FAMILY = "'DM Sans', Arial, sans-serif";
 
