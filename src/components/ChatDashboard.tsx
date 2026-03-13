@@ -382,11 +382,12 @@ function AssistantMessage({
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: '1rem',
-    fontFamily: "'DM Sans', 'Inter', sans-serif",
-    fontWeight: 600,
+    fontSize: '0.95rem',
+    fontFamily: "'DM Sans', Arial, sans-serif",
+    fontWeight: 300,
     color: bodyColor,
-    lineHeight: 1.9,
+    lineHeight: 2,
+    letterSpacing: '-0.01em',
     marginBottom: '0.75rem',
   };
 
