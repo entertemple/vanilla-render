@@ -321,9 +321,11 @@ function ADoorCard({
       </p>
       {goDeeper.reason && (
         <p style={{
-          fontSize: '0.875rem',
-          fontFamily: "'DM Sans', 'Inter', sans-serif",
-          fontWeight: 400,
+          fontSize: '0.75rem',
+          fontFamily: "'Geist Mono', monospace",
+          fontWeight: 300,
+          letterSpacing: '0.01em',
+          lineHeight: 1.7,
           color: reasonColor,
         }}>
           {goDeeper.reason}
