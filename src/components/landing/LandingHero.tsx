@@ -180,7 +180,7 @@ export default function LandingHero() {
                     <span
                       style={{
                         fontFamily: FONT_BODY,
-                        fontSize: '0.65rem',
+                        fontSize: '0.7rem',
                         fontWeight: 500,
                         color: 'rgba(255,255,255,0.45)',
                         letterSpacing: '0.08em',
