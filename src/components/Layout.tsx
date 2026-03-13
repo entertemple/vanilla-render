@@ -194,7 +194,7 @@ export default function Layout({ children }: LayoutProps) {
                 scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent'
               }}
             >
-              <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[9px] tracking-[0.1em] uppercase px-3 py-2`}>
+              <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[12px] tracking-[0.1em] uppercase px-3 py-2`}>
                 Recent Chats
               </div>
               {conversations.map((conv) => (
