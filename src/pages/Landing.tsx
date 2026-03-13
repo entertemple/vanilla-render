@@ -277,6 +277,7 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 0.95,
               letterSpacing: '-0.02em',
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 40 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
