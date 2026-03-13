@@ -156,7 +156,7 @@ export default function Layout({ children }: LayoutProps) {
                 className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] border ${borderColor} ${hoverBg} transition-colors`}
               >
                 <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
-                <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[16px] tracking-[-0.22px] uppercase`}>
+                <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[13px] tracking-[-0.22px] uppercase`}>
                   New Chat
                 </span>
               </button>
