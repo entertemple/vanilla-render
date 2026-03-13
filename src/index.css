@@ -167,6 +167,7 @@ label,
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  background: #ededed;
 }
 
 .dark .glass-search {
@@ -176,6 +177,7 @@ label,
   --input-bg: rgba(0, 0, 0, 0.35);
   --input-border: rgba(255, 255, 255, 0.08);
   --input-focus: rgba(0, 0, 0, 0.5);
+  background: #1a1a1a;
 }
 
 /* Dark theme — deepened glassmorphism */
@@ -273,7 +275,7 @@ label,
   --highlight: rgba(255, 255, 255, 0.75);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
 }
 
 .dark .glass-new-chat {

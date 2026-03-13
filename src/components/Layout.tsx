@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Plus, MessageSquare, Trash2, Menu, X, Settings, User, Sparkles, BookOpen, History, Compass, Zap } from 'lucide-react';
+import { Plus, Trash2, Menu, X, Settings, User, Sparkles, BookOpen, History, Compass, Zap } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -121,7 +121,6 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const navigationItems = [
-    { icon: MessageSquare, label: 'Chat', path: '/chat' },
     { icon: Sparkles, label: 'Discover', path: '/discover' },
     { icon: BookOpen, label: 'Library', path: '/library' },
     { icon: History, label: 'History', path: '/history' },
