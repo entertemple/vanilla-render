@@ -146,7 +146,7 @@ export default function Landing() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <X size={18} strokeWidth={1.5} />
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M4 4L14 14M14 4L4 14"/></svg>
             </motion.button>
             {/* Card + close button */}
             <motion.div
