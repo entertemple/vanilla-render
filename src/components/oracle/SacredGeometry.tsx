@@ -270,7 +270,7 @@ export default function SacredGeometry({ dayIndex, className, strokeColor = 'rgb
       ref={svgRef}
       viewBox="0 0 200 200"
       className={className}
-      style={{ width: '100%', height: 'auto' }}
+      style={{ width: '100%', height: 'auto', ...(strokeWidth ? { strokeWidth: `${strokeWidth}px` } : {}) }}
     >
       <GeometryComponent stroke={strokeColor} />
     </svg>

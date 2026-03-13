@@ -303,3 +303,118 @@ label,
     stroke-dashoffset: 0;
   }
 }
+
+/* Oracle page styles */
+.oracle-bg-orb-1 {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120,120,140,0.12) 0%, transparent 70%);
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.oracle-bg-orb-2 {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(80,80,120,0.08) 0%, transparent 70%);
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.oracle-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.oracle-card {
+  width: 380px;
+  min-height: 560px;
+  height: auto;
+  position: relative;
+  z-index: 10;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(40px) saturate(180%) brightness(1.1);
+  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.1);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow:
+    0 0 0 0.5px rgba(255,255,255,0.06) inset,
+    0 1px 0 rgba(255,255,255,0.15) inset,
+    0 -1px 0 rgba(0,0,0,0.3) inset,
+    0 32px 64px rgba(0,0,0,0.5),
+    0 8px 24px rgba(0,0,0,0.3),
+    0 2px 8px rgba(0,0,0,0.2);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: calc(100vw - 3rem);
+  max-height: calc(100vh - 12rem);
+}
+
+.oracle-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.35) 30%,
+    rgba(255,255,255,0.5) 50%,
+    rgba(255,255,255,0.35) 70%,
+    transparent 100%
+  );
+  border-radius: 1px;
+  z-index: 1;
+}
+
+.oracle-card::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 19px;
+  background: linear-gradient(
+    160deg,
+    rgba(255,255,255,0.05) 0%,
+    transparent 50%,
+    rgba(0,0,0,0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.oracle-svg {
+  filter:
+    drop-shadow(0 0 6px rgba(255,255,255,0.12))
+    drop-shadow(0 0 20px rgba(255,255,255,0.05));
+}
+
+.oracle-divider {
+  height: 1px;
+  margin: 1rem auto;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.25) 50%,
+    transparent
+  );
+}
