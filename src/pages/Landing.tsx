@@ -58,7 +58,7 @@ export default function Landing() {
         <div
           className={`hidden md:flex items-center gap-0 rounded-[100px] transition-all duration-500 ${
           scrolled ?
-          'backdrop-blur-[10px] bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.3)] shadow-[0_8px_32px_rgba(34,34,34,0.08)]' :
+          'bg-muted/80 border border-border shadow-sm' :
           'bg-transparent border border-transparent'}`
           }
           style={{ padding: '6px 8px' }}>
@@ -90,7 +90,7 @@ export default function Landing() {
 
         {/* Mobile nav */}
         <div
-          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-[100px] p-2 backdrop-blur-[10px] bg-[rgba(255,255,255,0.6)] dark:bg-[rgba(0,0,0,0.6)] border border-border shadow-[0_8px_32px_rgba(34,34,34,0.08)]">
+          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-[100px] p-2 bg-muted/90 border border-border shadow-sm">
           <button onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })} className="px-3 py-2 rounded-[100px] hover:bg-muted/50 transition-colors">
             <WordmarkLight className="h-4 dark:hidden" />
             <WordmarkDark className="h-4 hidden dark:block" />
