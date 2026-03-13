@@ -47,7 +47,7 @@ export default function Landing() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 bg-background">
+    <div className="fixed inset-0 z-50">
       {/* ═══ FIXED NAV ═══ */}
       <nav
         className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-center px-6 md:px-12 h-[80px]"
