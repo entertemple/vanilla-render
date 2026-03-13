@@ -120,7 +120,7 @@ export default function LandingHero() {
 
           {/* Legal */}
           <p
-            className="text-muted-foreground max-w-[320px]"
+            className="text-muted-foreground max-w-[320px] text-center"
             style={{ fontFamily: FONT_BODY, fontSize: '0.62rem', lineHeight: 1.5 }}
           >
             By continuing you agree to Temple's{' '}
