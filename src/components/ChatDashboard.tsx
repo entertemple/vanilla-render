@@ -684,20 +684,6 @@ export default function ChatDashboard() {
     }
   }, [messages, isWaiting]);
 
-  // Mouse tracking for specular highlight
-  const handleGlassMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!specularRef.current || !glassRef.current) return;
-    const rect = glassRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    specularRef.current.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(255,255,255,0.15), transparent)`;
-  }, []);
-
-  const handleGlassMouseLeave = useCallback(() => {
-    if (specularRef.current) {
-      specularRef.current.style.background = 'none';
-    }
-  }, []);
 
   // Voice input handler
   const handleVoiceInput = useCallback(() => {
