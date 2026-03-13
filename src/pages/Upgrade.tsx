@@ -1,319 +1,222 @@
 import { useTheme } from '../contexts/ThemeContext';
 import { Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+const FONT_HEADING = "'DM Sans', Arial, sans-serif";
+const FONT_BODY = "'Geist Mono', monospace";
 
 const FREE_FEATURES = [
-  'Every conversation, every beat',
-  'Full beat system — GO DEEPER, blur, sharp question',
-  'Daily Oracle card',
-  'Silence timer',
-  'History saved',
+  'Basic spiritual guidance',
+  '10 messages per day',
+  'Access to core teachings',
+  'Community support',
 ];
 
-const MONTHLY_FEATURES = [
-  'Unlimited conversations',
-  'Full beat system',
-  'Daily Oracle card',
-  'Silence timer',
-  'Full conversation history',
-  'Visual anchor journal',
-];
-
-const ANNUAL_FEATURES = [
-  'Everything in monthly',
-  'Full year visual journal — your anchor words across 365 days, each one opens that conversation',
-  'Your interior life rendered over time',
+const PRO_FEATURES = [
+  'Unlimited messages',
+  'Advanced spiritual insights',
+  'Priority response times',
+  'Access to all teachings',
+  'Personalized guidance',
+  'Early access to new features',
+  'Download conversation history',
+  'Custom meditation guides',
 ];
 
 export default function Upgrade() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const navigate = useNavigate();
 
   return (
-    <div className="flex-1 flex flex-col items-center px-6 pt-16 pb-12">
-      <p
-        className="text-center mb-12 tracking-[0.16em] uppercase"
-        style={{
-          fontSize: '0.7rem',
-          lineHeight: '1.6',
-          color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
-        }}
-      >
-        For when you need to hear yourself think.
-      </p>
-
-      <div className="w-full max-w-[680px] grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+    <div className="flex-1 flex flex-col items-center justify-center px-6 py-16">
+      <div className="w-full max-w-[800px] grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* FREE */}
         <div
-          className="rounded-[4px] p-7 flex flex-col"
+          className="rounded-2xl p-8 md:p-10 flex flex-col"
           style={{
-            background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-            border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
+            background: isDark ? 'rgba(255,255,255,0.06)' : 'hsl(0 0% 98%)',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'hsl(0 0% 90%)'}`,
+            backdropFilter: isDark ? 'blur(40px)' : 'none',
           }}
         >
-          <p
-            className="tracking-[0.14em] uppercase mb-5"
-            style={{
-              fontSize: '0.6rem',
-              fontWeight: 500,
-              color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
-            }}
-          >
-            Free
-          </p>
-          <p
-            style={{
-              fontSize: 'clamp(28px, 3vw, 40px)',
-              fontWeight: 400,
-              lineHeight: 1,
-              color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)',
-            }}
-          >
-            $0
-          </p>
-          <p
-            className="mt-1.5 mb-8"
-            style={{
-              fontSize: '0.7rem',
-              lineHeight: '1.5',
-              color: isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.4)',
-            }}
-          >
-            7 days. Full experience. No card required.
-          </p>
+          <div className="flex items-center justify-between mb-8">
+            <p
+              style={{
+                fontFamily: FONT_BODY,
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
+              }}
+            >
+              FREE
+            </p>
+            <span
+              className="rounded-full px-4 py-1.5"
+              style={{
+                fontFamily: FONT_BODY,
+                fontSize: '0.65rem',
+                fontWeight: 500,
+                letterSpacing: '0.1em',
+                border: `1px solid ${isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'}`,
+                color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)',
+              }}
+            >
+              ACTIVE
+            </span>
+          </div>
 
-          <ul className="space-y-2.5 flex-1 mb-8">
+          <div className="flex items-baseline gap-2 mb-10">
+            <p
+              style={{
+                fontFamily: FONT_HEADING,
+                fontSize: '64px',
+                fontWeight: 400,
+                lineHeight: 1,
+                color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
+              }}
+            >
+              $0
+            </p>
+            <p
+              style={{
+                fontFamily: FONT_BODY,
+                fontSize: '0.85rem',
+                color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
+              }}
+            >
+              forever
+            </p>
+          </div>
+
+          <ul className="space-y-5 flex-1 mb-10">
             {FREE_FEATURES.map((f) => (
               <li
                 key={f}
-                className="flex items-start gap-2.5"
-                style={{
-                  fontSize: '0.72rem',
-                  lineHeight: '1.5',
-                  color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
-                }}
+                className="flex items-start gap-3"
+                style={{ fontFamily: FONT_BODY, fontSize: '0.82rem', lineHeight: 1.5 }}
               >
                 <Check
-                  size={12}
+                  size={16}
                   className="mt-0.5 shrink-0"
                   strokeWidth={1.5}
-                  style={{ color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)' }}
+                  style={{ color: isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)' }}
                 />
-                {f}
+                <span
+                  style={{
+                    fontWeight: 600,
+                    color: isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.8)',
+                  }}
+                >
+                  {f}
+                </span>
               </li>
             ))}
           </ul>
 
           <button
-            className="w-full py-3 rounded-[4px] transition-opacity hover:opacity-80"
+            className="w-full py-4 rounded-full transition-opacity hover:opacity-80 uppercase tracking-[0.1em]"
             style={{
+              fontFamily: FONT_BODY,
               fontSize: '0.72rem',
               fontWeight: 400,
               border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'}`,
               background: 'transparent',
-              color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
+              color: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.4)',
             }}
           >
-            Start your trial
+            CURRENT PLAN
           </button>
         </div>
 
-        {/* MONTHLY */}
+        {/* PRO */}
         <div
-          className="rounded-[4px] p-7 flex flex-col"
+          className="rounded-2xl p-8 md:p-10 flex flex-col"
           style={{
-            background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
-            border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'}`,
+            background: isDark ? 'rgba(255,255,255,0.06)' : 'hsl(0 0% 98%)',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'hsl(0 0% 88%)'}`,
+            backdropFilter: isDark ? 'blur(40px)' : 'none',
           }}
         >
-          <p
-            className="tracking-[0.14em] uppercase mb-5"
-            style={{
-              fontSize: '0.6rem',
-              fontWeight: 500,
-              color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
-            }}
-          >
-            Monthly
-          </p>
-          <p
-            style={{
-              fontSize: 'clamp(28px, 3vw, 40px)',
-              fontWeight: 400,
-              lineHeight: 1,
-              color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)',
-            }}
-          >
-            $15
-          </p>
-          <p
-            className="mt-0.5"
-            style={{
-              fontSize: '0.65rem',
-              color: isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.4)',
-            }}
-          >
-            /month
-          </p>
-          <p
-            className="mt-1.5 mb-8"
-            style={{
-              fontSize: '0.7rem',
-              lineHeight: '1.5',
-              color: isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.4)',
-            }}
-          >
-            Come back whenever something is heavy.
-          </p>
+          <div className="flex items-center justify-between mb-8">
+            <p
+              style={{
+                fontFamily: FONT_BODY,
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
+              }}
+            >
+              PRO
+            </p>
+          </div>
 
-          <ul className="space-y-2.5 flex-1 mb-8">
-            {MONTHLY_FEATURES.map((f) => (
+          <div className="flex items-baseline gap-2 mb-10">
+            <p
+              style={{
+                fontFamily: FONT_HEADING,
+                fontSize: '64px',
+                fontWeight: 400,
+                lineHeight: 1,
+                color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
+              }}
+            >
+              $12
+            </p>
+            <p
+              style={{
+                fontFamily: FONT_BODY,
+                fontSize: '0.85rem',
+                color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
+              }}
+            >
+              per month
+            </p>
+          </div>
+
+          <ul className="space-y-5 flex-1 mb-10">
+            {PRO_FEATURES.map((f) => (
               <li
                 key={f}
-                className="flex items-start gap-2.5"
-                style={{
-                  fontSize: '0.72rem',
-                  lineHeight: '1.5',
-                  color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
-                }}
+                className="flex items-start gap-3"
+                style={{ fontFamily: FONT_BODY, fontSize: '0.82rem', lineHeight: 1.5 }}
               >
                 <Check
-                  size={12}
+                  size={16}
                   className="mt-0.5 shrink-0"
                   strokeWidth={1.5}
-                  style={{ color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)' }}
+                  style={{ color: isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)' }}
                 />
-                {f}
+                <span
+                  style={{
+                    fontWeight: 600,
+                    color: isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.8)',
+                  }}
+                >
+                  {f}
+                </span>
               </li>
             ))}
           </ul>
 
           <button
-            className="w-full py-3 rounded-[4px] transition-opacity hover:opacity-90"
+            onClick={() => navigate('/login')}
+            className="w-full py-4 rounded-full transition-opacity hover:opacity-80 uppercase tracking-[0.1em]"
             style={{
+              fontFamily: FONT_BODY,
               fontSize: '0.72rem',
               fontWeight: 400,
-              background: isDark ? '#ffffff' : '#0e0e0e',
-              color: isDark ? '#0e0e0e' : '#ffffff',
-              border: 'none',
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'}`,
+              background: 'transparent',
+              color: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.4)',
             }}
           >
-            Enter Temple
-          </button>
-        </div>
-
-        {/* ANNUAL */}
-        <div
-          className="rounded-[4px] p-7 flex flex-col relative"
-          style={{
-            background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
-            border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}`,
-          }}
-        >
-          <span
-            className="absolute top-4 right-4 tracking-[0.12em] uppercase"
-            style={{
-              fontSize: '0.6rem',
-              color: isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)',
-            }}
-          >
-            Best Value
-          </span>
-
-          <p
-            className="tracking-[0.14em] uppercase mb-5"
-            style={{
-              fontSize: '0.6rem',
-              fontWeight: 500,
-              color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
-            }}
-          >
-            Annual
-          </p>
-          <p
-            style={{
-              fontSize: 'clamp(28px, 3vw, 40px)',
-              fontWeight: 400,
-              lineHeight: 1,
-              color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)',
-            }}
-          >
-            $99
-          </p>
-          <p
-            className="mt-0.5"
-            style={{
-              fontSize: '0.65rem',
-              color: isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.4)',
-            }}
-          >
-            /year
-          </p>
-          <p
-            className="mt-1 mb-1"
-            style={{
-              fontSize: '0.65rem',
-              color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.35)',
-            }}
-          >
-            $8.25/month — save $81
-          </p>
-          <p
-            className="mb-8"
-            style={{
-              fontSize: '0.7rem',
-              lineHeight: '1.5',
-              color: isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.4)',
-            }}
-          >
-            A full year of clarity.
-          </p>
-
-          <ul className="space-y-2.5 flex-1 mb-8">
-            {ANNUAL_FEATURES.map((f) => (
-              <li
-                key={f}
-                className="flex items-start gap-2.5"
-                style={{
-                  fontSize: '0.72rem',
-                  lineHeight: '1.5',
-                  color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
-                }}
-              >
-                <Check
-                  size={12}
-                  className="mt-0.5 shrink-0"
-                  strokeWidth={1.5}
-                  style={{ color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)' }}
-                />
-                {f}
-              </li>
-            ))}
-          </ul>
-
-          <button
-            className="w-full py-3 rounded-[4px] transition-opacity hover:opacity-90"
-            style={{
-              fontSize: '0.72rem',
-              fontWeight: 400,
-              background: isDark ? '#ffffff' : '#0e0e0e',
-              color: isDark ? '#0e0e0e' : '#ffffff',
-              border: 'none',
-            }}
-          >
-            Enter Temple
+            UPGRADE TO PRO
           </button>
         </div>
       </div>
-
-      <p
-        className="text-center"
-        style={{
-          fontSize: '0.65rem',
-          color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.3)',
-        }}
-      >
-        Cancel anytime. Your history stays.
-      </p>
     </div>
   );
 }
