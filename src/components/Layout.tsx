@@ -121,7 +121,9 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const navigationItems = [
-    { icon: Compass, label: 'Oracle', path: '/oracle' },
+    { label: 'Oracle', path: '/oracle' },
+    { label: 'History', path: '/history' },
+    { label: 'Journal', path: '/journal' },
   ];
 
   const isActive = (path: string) => {
