@@ -154,7 +154,7 @@ export default function Landing() {
               How It Works
             </motion.p>
             {[
-              'You bring what you're carrying.',
+              "You bring what you're carrying.",
               'Temple reads what lives underneath it.',
               'Then it leaves you with what matters.',
             ].map((line, i) => (
