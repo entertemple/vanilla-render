@@ -137,7 +137,7 @@ export default function Landing() {
                 WebkitBackdropFilter: 'blur(20px)',
               }}
             />
-            {/* Card */}
+            {/* Card + close button */}
             <motion.div
               className="fixed z-[72] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               initial={{ opacity: 0, scale: 0.92 }}
@@ -145,17 +145,6 @@ export default function Landing() {
               exit={{ opacity: 0, scale: 0.92 }}
               transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              {/* Close button */}
-              <button
-                onClick={() => setMenuOpen(false)}
-                className={`absolute -top-4 -right-4 w-8 h-8 rounded-full flex items-center justify-center z-10 transition-colors ${
-                  isDark ? 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.15)]' : 'bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.1)]'
-                }`}
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" className="text-foreground">
-                  <path d="M3 3L11 11M11 3L3 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-              </button>
 
               <div
                 className={`rounded-[28px] p-10 ${
