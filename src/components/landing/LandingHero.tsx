@@ -153,7 +153,7 @@ export default function LandingHero() {
               transition={{ duration: 0.6, delay: USER_MSG_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <div
-                className="rounded-2xl px-5 py-3.5 max-w-[85%] bg-muted dark:bg-[rgba(255,255,255,0.06)] border border-border dark:border-[rgba(255,255,255,0.08)]"
+                className="rounded-2xl px-5 py-3.5 max-w-[85%] bg-muted border border-border"
                 style={{
                   fontFamily: FONT_BODY,
                   fontSize: '0.9rem',
