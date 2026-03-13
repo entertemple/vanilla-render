@@ -69,12 +69,12 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
 
   const handleLearnMore = () => {
     setIsOpen(false);
-    navigate('/learn-more');
+    // No-op: page removed
   };
 
   const handleUpgrade = () => {
     setIsOpen(false);
-    navigate('/upgrade');
+    // No-op: page removed
   };
 
   const handleLogout = async () => {

@@ -178,8 +178,8 @@ export default function Landing() {
                       onClick={() => handleMenuItem(item)}
                       className="flex flex-col items-center gap-2.5 group outline-none"
                     >
-                      <div className="w-[120px] h-[120px] rounded-2xl overflow-hidden transition-transform group-hover:scale-[1.03]">
-                        <img src={item.img} alt={item.label} className="w-full h-full object-cover" />
+                      <div className="w-[140px] h-[140px] rounded-[20px] overflow-hidden transition-transform group-hover:scale-[1.03]">
+                        <img src={item.img} alt={item.label} className="w-full h-full object-cover" loading="lazy" />
                       </div>
                       <span
                         className="text-foreground text-sm"
