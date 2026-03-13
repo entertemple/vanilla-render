@@ -171,7 +171,7 @@ export default function Landing() {
                     : '0 24px 80px rgba(0,0,0,0.12)',
                 }}
               >
-                <div className="grid grid-cols-3 gap-5">
+                <div className="grid grid-cols-3 gap-6">
                   {MENU_ITEMS.map((item) => (
                     <button
                       key={item.label}
