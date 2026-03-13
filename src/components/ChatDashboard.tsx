@@ -605,8 +605,6 @@ export default function ChatDashboard() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const glassRef = useRef<HTMLDivElement>(null);
-  const specularRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
@@ -684,20 +682,6 @@ export default function ChatDashboard() {
     }
   }, [messages, isWaiting]);
 
-  // Mouse tracking for specular highlight
-  const handleGlassMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!specularRef.current || !glassRef.current) return;
-    const rect = glassRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    specularRef.current.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(255,255,255,0.15), transparent)`;
-  }, []);
-
-  const handleGlassMouseLeave = useCallback(() => {
-    if (specularRef.current) {
-      specularRef.current.style.background = 'none';
-    }
-  }, []);
 
   // Voice input handler
   const handleVoiceInput = useCallback(() => {
@@ -977,25 +961,9 @@ export default function ChatDashboard() {
         )}
       </AnimatePresence>
 
-      {/* SVG Filter */}
-      <svg style={{ display: 'none' }}>
-        <filter id="glass-distortion">
-          <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves={2} result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale={77} />
-        </filter>
-      </svg>
-
-      {/* Glass container */}
-      <div
-        ref={glassRef}
-        className="glass-search"
-        onMouseMove={handleGlassMouseMove}
-        onMouseLeave={handleGlassMouseLeave}
-      >
-        <div className="glass-filter" />
-        <div className="glass-overlay" />
-        <div className="glass-specular" ref={specularRef} />
-        <div className="glass-content">
+      {/* Chat input container */}
+      <div className="glass-search">
+        <div className="search-container">
           <div className="flex items-center gap-4 px-6 py-4">
             {/* File Attachment */}
             <button
@@ -1023,12 +991,10 @@ export default function ChatDashboard() {
                 onKeyDown={handleKeyDown}
                 placeholder="Enter temple…"
                 rows={1}
-                className="w-full bg-transparent border-none resize-none text-[16px] leading-[1.6] font-['Inter',_sans-serif] focus:outline-none focus:ring-0"
+                className="search-input w-full bg-transparent border-none resize-none text-[16px] leading-[1.6] font-['Inter',_sans-serif] focus:outline-none focus:ring-0"
                 style={{
                   maxHeight: '180px',
                   overflow: 'auto',
-                  caretColor: isDark ? '#ffffff' : '#000000',
-                  color: isDark ? '#ffffff' : '#000000',
                 }}
               />
             </div>
