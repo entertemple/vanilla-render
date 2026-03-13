@@ -263,10 +263,10 @@ export default function LandingHero() {
                     fontFamily: FONT_BODY,
                     fontSize: '0.6rem',
                     fontWeight: 600,
-                    color: 'rgba(255,255,255,0.35)',
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase' as const,
                   }}
+                  className="mb-3 text-muted-foreground"
                 >
                   GO DEEPER
                 </p>
