@@ -1,6 +1,37 @@
+@import 'geist/dist/mono.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Font assignments */
+h1, h2, h3, h4, h5, h6,
+.anchor-text,
+[class*="anchor"],
+[class*="title"],
+[class*="heading"] {
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+body,
+p,
+button,
+input,
+textarea,
+label,
+[class*="body"],
+[class*="keyword"],
+[class*="invitation"],
+[class*="ponder"],
+[class*="label"],
+[class*="btn"],
+[class*="nav"],
+[class*="card"],
+[class*="meta"],
+[class*="timestamp"],
+[class*="shimmer"] {
+  font-family: "Geist Mono", monospace;
+}
 
 @layer base {
   :root {
@@ -218,4 +249,34 @@
   position: relative;
   z-index: 4;
   color: var(--text);
+}
+
+/* Sharp question line — blur anchor */
+.blur-anchor-question {
+  text-align: center;
+  width: 100%;
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-style: italic;
+  opacity: 1;
+  filter: blur(0px);
+  margin-top: 2.5rem;
+  animation: anchorReveal 1400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 600ms;
+}
+
+/* New Chat button glass effect */
+.glass-new-chat {
+  --bg-color: rgba(255, 255, 255, 0.25);
+  --highlight: rgba(255, 255, 255, 0.75);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+}
+
+.dark .glass-new-chat {
+  --bg-color: rgba(0, 0, 0, 0.45);
+  --highlight: rgba(255, 255, 255, 0.08);
 }

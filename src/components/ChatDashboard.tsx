@@ -404,13 +404,13 @@ function AssistantMessage({
 
   // Blur for Beat 3+
   const getBlurStyle = (): React.CSSProperties => {
-    if (beat < 3) return {};
-    const blur = beat === 3 ? 1 : beat === 4 ? 2.5 : 5;
-    const opacity = beat === 3 ? 0.75 : beat === 4 ? 0.55 : 0.3;
+    if (beat < 2) return {};
+    const blur = beat === 2 ? 1.5 : beat === 3 ? 3 : 6;
+    const opacity = beat === 2 ? 0.7 : beat === 3 ? 0.5 : 0.3;
     return {
       filter: `blur(${blur}px)`,
       opacity,
-      transition: 'filter 1200ms cubic-bezier(0.16, 1, 0.3, 1), opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1)',
+      transition: 'filter 600ms ease, opacity 600ms ease',
     };
   };
 
@@ -458,14 +458,8 @@ function AssistantMessage({
         )}
 
         {showSharpQuestion && (
-          <p style={{
-            fontSize: '1.5rem',
-            fontFamily: "'DM Serif Display', Georgia, serif",
-            fontWeight: 400,
+          <p className="blur-anchor-question" style={{
             color: isDark ? '#ffffff' : '#0e0e0e',
-            marginTop: '2.5rem',
-            textAlign: 'center',
-            opacity: 1,
           }}>
             {beat2Question}
           </p>
@@ -562,16 +556,12 @@ function AssistantMessage({
 
       {showSharpQuestion && (
         <motion.p
+          className="blur-anchor-question"
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            fontSize: '1.5rem',
-            fontFamily: "'DM Serif Display', Georgia, serif",
-            fontWeight: 400,
             color: isDark ? '#ffffff' : '#0e0e0e',
-            marginTop: '2.5rem',
-            textAlign: 'center',
           }}
         >
           {beat2Question}
