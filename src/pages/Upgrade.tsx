@@ -31,7 +31,7 @@ export default function Upgrade() {
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 py-16">
-      <div className="w-full max-w-[800px] grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="w-full max-w-[1000px] grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* TRIAL */}
         <div
           className="rounded-2xl p-8 md:p-10 flex flex-col"

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import WordmarkLight from '@/components/WordmarkLight';
 import WordmarkDark from '@/components/WordmarkDark';
 import LandingHero from '@/components/landing/LandingHero';
+import ConversationPreview from '@/components/landing/ConversationPreview';
 import LandingPricing from '@/components/landing/LandingPricing';
 
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
@@ -111,7 +112,7 @@ export default function Landing() {
         <LandingHero />
 
         {/* ═══ 2. STATEMENT ═══ */}
-        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={statementRef}>
+        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[1100px] mx-auto" ref={statementRef}>
           <motion.p
             className="text-foreground text-center"
             style={{
@@ -181,6 +182,11 @@ export default function Landing() {
               </motion.p>
             )}
           </div>
+        </section>
+
+        {/* ═══ 3.5 CONVERSATION PREVIEW ═══ */}
+        <section className="py-32 md:py-48 px-6 md:px-12">
+          <ConversationPreview />
         </section>
 
         {/* ═══ 4. WHAT TEMPLE IS ═══ */}
