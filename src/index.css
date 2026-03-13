@@ -1,6 +1,37 @@
+@import 'geist/dist/mono.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Font assignments */
+h1, h2, h3, h4, h5, h6,
+.anchor-text,
+[class*="anchor"],
+[class*="title"],
+[class*="heading"] {
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+body,
+p,
+button,
+input,
+textarea,
+label,
+[class*="body"],
+[class*="keyword"],
+[class*="invitation"],
+[class*="ponder"],
+[class*="label"],
+[class*="btn"],
+[class*="nav"],
+[class*="card"],
+[class*="meta"],
+[class*="timestamp"],
+[class*="shimmer"] {
+  font-family: "Geist Mono", monospace;
+}
 
 @layer base {
   :root {
