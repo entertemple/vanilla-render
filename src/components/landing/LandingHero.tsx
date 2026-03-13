@@ -294,11 +294,7 @@ export default function LandingHero() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: TO_PONDER_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                }}
-              >
+                className="rounded-[15px] p-5 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
                 <p
                   className="mb-2"
                   style={{
