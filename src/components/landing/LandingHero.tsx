@@ -144,7 +144,7 @@ export default function LandingHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <div className="rounded-2xl p-8 md:p-10 bg-card border border-border dark:bg-[rgba(30,30,30,0.95)] dark:border-[rgba(255,255,255,0.12)]">
+          <div className="rounded-2xl p-8 md:p-10 bg-card border border-border">
             {/* User message */}
             <motion.div
               className="flex justify-end mb-8"
