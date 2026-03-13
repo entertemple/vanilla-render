@@ -215,6 +215,7 @@ export default function Landing() {
                   fontSize: 'clamp(20px, 3vw, 32px)',
                   fontWeight: 400,
                   lineHeight: 1.5,
+                  mixBlendMode: 'normal',
                 }}
                 initial={{ opacity: 0, y: 16 }}
                 animate={howInView ? { opacity: 1, y: 0 } : {}}
