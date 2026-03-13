@@ -961,25 +961,9 @@ export default function ChatDashboard() {
         )}
       </AnimatePresence>
 
-      {/* SVG Filter */}
-      <svg style={{ display: 'none' }}>
-        <filter id="glass-distortion">
-          <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves={2} result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale={77} />
-        </filter>
-      </svg>
-
-      {/* Glass container */}
-      <div
-        ref={glassRef}
-        className="glass-search"
-        onMouseMove={handleGlassMouseMove}
-        onMouseLeave={handleGlassMouseLeave}
-      >
-        <div className="glass-filter" />
-        <div className="glass-overlay" />
-        <div className="glass-specular" ref={specularRef} />
-        <div className="glass-content">
+      {/* Chat input container */}
+      <div className="glass-search">
+        <div className="search-container">
           <div className="flex items-center gap-4 px-6 py-4">
             {/* File Attachment */}
             <button
