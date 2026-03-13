@@ -1138,7 +1138,7 @@ export default function ChatDashboard() {
                       maxWidth: '75%',
                     }}
                   >
-                    <p style={{ fontSize: '0.9375rem', fontFamily: "'DM Sans', 'Inter', sans-serif", color: userTextColor }}>
+                    <p style={{ fontSize: '0.9rem', fontFamily: "'Geist Mono', monospace", fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.8, color: userTextColor }}>
                       {message.content}
                     </p>
                   </div>
