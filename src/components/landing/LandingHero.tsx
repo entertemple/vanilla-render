@@ -48,13 +48,13 @@ export default function LandingHero() {
       <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         {/* LEFT COLUMN — Copy + Signup */}
         <motion.div
-          className="flex flex-col"
+          className="flex flex-col items-center lg:items-center"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <h1
-            className="text-foreground mb-4"
+            className="text-foreground mb-4 text-center"
             style={{
               fontFamily: FONT_HEADING,
               fontSize: 'clamp(40px, 6vw, 72px)',
@@ -67,7 +67,7 @@ export default function LandingHero() {
           </h1>
 
           <p
-            className="text-muted-foreground mb-10"
+            className="text-muted-foreground mb-10 text-center"
             style={{
               fontFamily: FONT_BODY,
               fontSize: 'clamp(14px, 1.5vw, 16px)',
@@ -120,7 +120,7 @@ export default function LandingHero() {
 
           {/* Legal */}
           <p
-            className="text-muted-foreground max-w-[320px]"
+            className="text-muted-foreground max-w-[320px] text-center"
             style={{ fontFamily: FONT_BODY, fontSize: '0.62rem', lineHeight: 1.5 }}
           >
             By continuing you agree to Temple's{' '}

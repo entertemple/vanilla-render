@@ -79,15 +79,12 @@ export default function Landing() {
         <div
           className="absolute inset-0"
           style={{
-            backdropFilter: 'blur(4px)',
-            filter: 'url(#landing-glass-distortion) saturate(120%) brightness(1.15)',
+            backdropFilter: 'blur(12px)',
+            filter: 'url(#landing-glass-distortion) saturate(120%) brightness(1.05)',
           }}
         />
         <div
-          className="absolute inset-0"
-          style={{
-            background: 'var(--bg-color, rgba(255,255,255,0.03))',
-          }}
+          className="absolute inset-0 bg-background/70"
         />
         <div
           ref={specularRef}
@@ -160,13 +157,14 @@ export default function Landing() {
         {/* ═══ 2. STATEMENT ═══ */}
         <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={statementRef}>
           <motion.p
-            className="text-muted-foreground text-center"
+            className="text-foreground text-center"
             style={{
               fontFamily: FONT_HEADING,
               fontSize: 'clamp(24px, 4vw, 42px)',
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
@@ -182,6 +180,7 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
@@ -216,6 +215,7 @@ export default function Landing() {
                   fontSize: 'clamp(20px, 3vw, 32px)',
                   fontWeight: 400,
                   lineHeight: 1.5,
+                  mixBlendMode: 'normal',
                 }}
                 initial={{ opacity: 0, y: 16 }}
                 animate={howInView ? { opacity: 1, y: 0 } : {}}
@@ -230,13 +230,14 @@ export default function Landing() {
         {/* ═══ 4. WHAT TEMPLE IS ═══ */}
         <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={whatRef}>
           <motion.p
-            className="text-muted-foreground text-center"
+            className="text-foreground text-center"
             style={{
               fontFamily: FONT_HEADING,
               fontSize: 'clamp(24px, 4vw, 42px)',
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
@@ -245,12 +246,13 @@ export default function Landing() {
             Most AI tells you what to do. Temple shows you what you already know but haven't been able to say.
           </motion.p>
           <motion.p
-            className="text-muted-foreground text-center mt-10"
+            className="text-foreground text-center mt-10"
             style={{
               fontFamily: FONT_HEADING,
               fontSize: 'clamp(20px, 3vw, 32px)',
               fontWeight: 400,
               lineHeight: 1.45,
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
@@ -275,6 +277,7 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 0.95,
               letterSpacing: '-0.02em',
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 40 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
