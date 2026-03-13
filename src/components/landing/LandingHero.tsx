@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { Check } from 'lucide-react';
 
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
 const FONT_BODY = "'Geist Mono', monospace";
+const FONT_SERIF = "'DM Serif Display', Georgia, serif";
 
 // Static conversation preview data
 const PREVIEW_USER_MSG = "I have something to say and I don't know how to say it without it going wrong.";
@@ -25,21 +25,28 @@ const GO_DEEPER_PHRASES = [
   { text: "I don't know how to say it", highlighted: true },
 ];
 
+// Animation timing constants (matching live chat)
+const INITIAL_DELAY = 0.6;
+const USER_MSG_DELAY = INITIAL_DELAY;
+const ANCHOR_DELAY = USER_MSG_DELAY + 1.2;
+const KEYWORDS_DELAY = ANCHOR_DELAY + 0.8;
+const BODY_START_DELAY = KEYWORDS_DELAY + 0.5;
+const BODY_STAGGER = 0.35;
+const INVITATION_DELAY = BODY_START_DELAY + PREVIEW_BODY.length * BODY_STAGGER + 0.6;
+const GO_DEEPER_DELAY = INVITATION_DELAY + 1.0;
+const TO_PONDER_DELAY = GO_DEEPER_DELAY + 0.6;
+
 export default function LandingHero() {
   const navigate = useNavigate();
   const { signUp } = useAuth();
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleEmailContinue = async () => {
     if (!email.trim()) return;
-    // Navigate to signup with email pre-filled
     navigate(`/signup?email=${encodeURIComponent(email)}`);
   };
 
   const handleGoogleSignIn = () => {
-    // Will be wired to Google OAuth
     navigate('/login');
   };
 
@@ -56,7 +63,7 @@ export default function LandingHero() {
           <h1
             className="text-foreground mb-4 text-center"
             style={{
-              fontFamily: FONT_HEADING,
+              fontFamily: FONT_SERIF,
               fontSize: 'clamp(40px, 6vw, 72px)',
               fontWeight: 400,
               lineHeight: 1.05,
@@ -130,7 +137,7 @@ export default function LandingHero() {
           </p>
         </motion.div>
 
-        {/* RIGHT COLUMN — Conversation Preview Card */}
+        {/* RIGHT COLUMN — Animated Conversation Preview Card */}
         <motion.div
           className="hidden lg:block"
           initial={{ opacity: 0, y: 30 }}
@@ -138,13 +145,15 @@ export default function LandingHero() {
           transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <div
-            className="rounded-2xl p-6 md:p-8 overflow-hidden max-h-[680px] overflow-y-auto bg-card border border-border dark:bg-[rgba(255,255,255,0.06)] dark:border-[rgba(255,255,255,0.12)] dark:backdrop-blur-xl"
-            style={{
-              scrollbarWidth: 'none',
-            }}
+            className="rounded-2xl p-8 md:p-10 bg-card border border-border dark:bg-[rgba(255,255,255,0.06)] dark:border-[rgba(255,255,255,0.12)] dark:backdrop-blur-xl"
           >
             {/* User message */}
-            <div className="flex justify-end mb-8">
+            <motion.div
+              className="flex justify-end mb-8"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: USER_MSG_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
               <div
                 className="rounded-2xl px-5 py-3.5 max-w-[85%] dark:bg-[rgba(255,255,255,0.06)] dark:border-[rgba(255,255,255,0.08)] border"
                 style={{
@@ -156,14 +165,17 @@ export default function LandingHero() {
               >
                 {PREVIEW_USER_MSG}
               </div>
-            </div>
+            </motion.div>
 
             {/* Temple response */}
             <div className="space-y-6">
-              {/* Anchor */}
-              <h2
+              {/* Anchor — SECTION 1 font */}
+              <motion.h2
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.4, delay: ANCHOR_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
                 style={{
-                  fontFamily: FONT_HEADING,
+                  fontFamily: FONT_SERIF,
                   fontSize: '2.5rem',
                   fontWeight: 400,
                   color: 'rgba(255,255,255,0.9)',
@@ -171,10 +183,15 @@ export default function LandingHero() {
                 }}
               >
                 {PREVIEW_ANCHOR}
-              </h2>
+              </motion.h2>
 
               {/* Keywords */}
-              <div className="flex items-center gap-2">
+              <motion.div
+                className="flex items-center gap-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: KEYWORDS_DELAY }}
+              >
                 {PREVIEW_KEYWORDS.map((kw, i) => (
                   <span key={kw}>
                     <span
@@ -194,13 +211,16 @@ export default function LandingHero() {
                     )}
                   </span>
                 ))}
-              </div>
+              </motion.div>
 
-              {/* Body */}
+              {/* Body — staggered lines */}
               <div className="space-y-2">
-                {PREVIEW_BODY.map((line) => (
-                  <p
+                {PREVIEW_BODY.map((line, i) => (
+                  <motion.p
                     key={line}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, delay: BODY_START_DELAY + i * BODY_STAGGER, ease: [0.25, 0.46, 0.45, 0.94] }}
                     style={{
                       fontFamily: FONT_HEADING,
                       fontSize: '1rem',
@@ -210,27 +230,33 @@ export default function LandingHero() {
                     }}
                   >
                     {line}
-                  </p>
+                  </motion.p>
                 ))}
               </div>
 
-              {/* Invitation */}
-              <p
+              {/* Invitation — SECTION 4 font */}
+              <motion.p
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.4, delay: INVITATION_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
                 style={{
-                  fontFamily: FONT_HEADING,
+                  fontFamily: FONT_SERIF,
                   fontSize: '1.75rem',
-                  fontWeight: 300,
+                  fontWeight: 400,
                   fontStyle: 'italic',
                   color: 'rgba(255,255,255,0.7)',
                   lineHeight: 1.4,
                 }}
               >
                 {PREVIEW_INVITATION}
-              </p>
+              </motion.p>
 
               {/* GO DEEPER card */}
-              <div
+              <motion.div
                 className="rounded-[15px] p-5 mt-4"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: GO_DEEPER_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.08)',
@@ -266,11 +292,14 @@ export default function LandingHero() {
                     );
                   })}
                 </p>
-              </div>
+              </motion.div>
 
               {/* TO PONDER card */}
-              <div
+              <motion.div
                 className="rounded-[15px] p-5"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: TO_PONDER_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.08)',
@@ -292,9 +321,9 @@ export default function LandingHero() {
                 <p
                   className="mb-1"
                   style={{
-                    fontFamily: FONT_HEADING,
+                    fontFamily: FONT_SERIF,
                     fontSize: '1.1rem',
-                    fontWeight: 300,
+                    fontWeight: 400,
                     fontStyle: 'italic',
                     color: 'rgba(255,255,255,0.75)',
                   }}
@@ -326,7 +355,7 @@ export default function LandingHero() {
                 >
                   Listen on Spotify →
                 </a>
-              </div>
+              </motion.div>
             </div>
           </div>
         </motion.div>
