@@ -295,8 +295,8 @@ export default function LandingHero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: TO_PONDER_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
                 className="rounded-[15px] p-5 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
+              >
                 <p
-                  className="mb-2"
                   className="mb-2 text-muted-foreground"
                   style={{
                     fontFamily: FONT_BODY,
@@ -309,23 +309,21 @@ export default function LandingHero() {
                   TO PONDER
                 </p>
                 <p
-                  className="mb-1"
+                  className="mb-1 text-foreground/75"
                   style={{
                     fontFamily: FONT_SERIF,
                     fontSize: '1.1rem',
                     fontWeight: 400,
                     fontStyle: 'italic',
-                    color: 'rgba(255,255,255,0.75)',
                   }}
                 >
                   Phoebe Bridgers — Savior Complex
                 </p>
                 <p
-                  className="mb-2"
+                  className="mb-2 text-muted-foreground"
                   style={{
                     fontFamily: FONT_BODY,
                     fontSize: '0.72rem',
-                    color: 'rgba(255,255,255,0.45)',
                     lineHeight: 1.5,
                   }}
                 >
@@ -335,12 +333,10 @@ export default function LandingHero() {
                   href="https://open.spotify.com/search/Phoebe%20Bridgers%20Savior%20Complex"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block"
+                  className="inline-block text-muted-foreground/60 underline"
                   style={{
                     fontFamily: FONT_BODY,
                     fontSize: '0.62rem',
-                    color: 'rgba(255,255,255,0.3)',
-                    textDecoration: 'underline',
                   }}
                 >
                   Listen on Spotify →
