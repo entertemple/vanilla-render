@@ -250,7 +250,7 @@ export default function LandingHero() {
 
               {/* GO DEEPER card */}
               <motion.div
-                className="rounded-[15px] p-5 mt-4 bg-muted dark:bg-[rgba(255,255,255,0.04)] border border-border dark:border-[rgba(255,255,255,0.08)]"
+                className="rounded-[15px] p-5 mt-4 bg-muted border border-border"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: GO_DEEPER_DELAY, ease: [0.25, 0.46, 0.45, 0.94] }}
