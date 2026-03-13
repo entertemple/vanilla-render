@@ -58,7 +58,7 @@ export default function Landing() {
         <div
           className={`hidden md:flex items-center gap-0 rounded-[100px] transition-all duration-500 ${
           scrolled ?
-          'backdrop-blur-[10px] bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.3)] shadow-[0_8px_32px_rgba(34,34,34,0.08)]' :
+          'bg-muted/80 border border-border shadow-sm' :
           'bg-transparent border border-transparent'}`
           }
           style={{ padding: '6px 8px' }}>
