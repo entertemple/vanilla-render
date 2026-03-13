@@ -12,6 +12,7 @@ import UsagePolicy from "./pages/UsagePolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Upgrade from "./pages/Upgrade";
+import Oracle from "./pages/Oracle";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Landing from "./pages/Landing";
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
       {
         path: "upgrade",
         element: <Upgrade />,
+      },
+      {
+        path: "oracle",
+        element: <Oracle />,
       },
       {
         path: "learn-more",

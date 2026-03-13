@@ -122,6 +122,7 @@ export default function Layout({ children }: LayoutProps) {
 
   const navigationItems = [
     { icon: Sparkles, label: 'Discover', path: '/discover' },
+    { icon: Compass, label: 'Oracle', path: '/oracle' },
     { icon: BookOpen, label: 'Library', path: '/library' },
     { icon: History, label: 'History', path: '/history' },
   ];
