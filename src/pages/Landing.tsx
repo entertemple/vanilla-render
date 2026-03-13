@@ -233,7 +233,7 @@ export default function Landing() {
           <motion.p
             className="text-foreground text-center"
             style={{
-              fontFamily: FONT_HEADING,
+              fontFamily: FONT_SERIF,
               fontSize: 'clamp(24px, 4vw, 42px)',
               fontWeight: 400,
               lineHeight: 1.35,
