@@ -46,8 +46,58 @@ export default function Landing() {
     return () => observer.disconnect();
   }, []);
 
+  // Glass specular highlight
+  const specularRef = useRef<HTMLDivElement>(null);
+  const handleGlassMouseMove = (e: React.MouseEvent) => {
+    if (!specularRef.current) return;
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    specularRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255,255,255,0.07), transparent 40%)`;
+  };
+  const handleGlassMouseLeave = () => {
+    if (specularRef.current) specularRef.current.style.background = 'transparent';
+  };
+
   return (
     <div className="fixed inset-0 z-50">
+      {/* ═══ SVG DISTORTION FILTER ═══ */}
+      <svg style={{ display: 'none' }}>
+        <filter id="landing-glass-distortion">
+          <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves={2} result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={77} />
+        </filter>
+      </svg>
+
+      {/* ═══ LIQUID GLASS OVERLAY ═══ */}
+      <div
+        className="fixed inset-0 z-[51] pointer-events-none"
+        onMouseMove={handleGlassMouseMove}
+        onMouseLeave={handleGlassMouseLeave}
+        style={{ pointerEvents: 'auto' }}
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            backdropFilter: 'blur(4px)',
+            filter: 'url(#landing-glass-distortion) saturate(120%) brightness(1.15)',
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'var(--bg-color, rgba(255,255,255,0.03))',
+          }}
+        />
+        <div
+          ref={specularRef}
+          className="absolute inset-0"
+          style={{
+            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.08)',
+          }}
+        />
+      </div>
+
       {/* ═══ FIXED NAV ═══ */}
       <nav
         className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-center px-6 md:px-12 h-[80px]"
@@ -101,7 +151,7 @@ export default function Landing() {
       {/* ═══ SCROLLABLE CONTENT ═══ */}
       <div
         ref={containerRef}
-        className="w-full h-full overflow-y-auto overflow-x-hidden"
+        className="w-full h-full overflow-y-auto overflow-x-hidden relative z-[52]"
         style={{ scrollbarWidth: 'thin', scrollbarColor: 'hsl(var(--border)) transparent' }}>
 
         {/* ═══ 1. HERO ═══ */}
