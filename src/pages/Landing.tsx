@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { motion, useInView } from 'motion/react';
+import { motion, useInView, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import WordmarkLight from '@/components/WordmarkLight';
 import WordmarkDark from '@/components/WordmarkDark';
@@ -8,15 +8,30 @@ import ConversationPreview from '@/components/landing/ConversationPreview';
 import LandingPricing from '@/components/landing/LandingPricing';
 import LandingFooter from '@/components/landing/LandingFooter';
 
+import menuAbout from '@/assets/menu-about.jpg';
+import menuPricing from '@/assets/menu-pricing.jpg';
+import menuEvents from '@/assets/menu-events.jpg';
+import menuSounds from '@/assets/menu-sounds.jpg';
+import menuShop from '@/assets/menu-shop.jpg';
+import menuInstagram from '@/assets/menu-instagram.jpg';
+
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
 const FONT_BODY = "'Geist Mono', monospace";
 const FONT_SERIF = "'DM Serif Display', Georgia, serif";
+
+const MENU_ITEMS = [
+  { label: 'About', img: menuAbout, action: 'scroll-about' },
+  { label: 'Pricing', img: menuPricing, action: 'scroll-pricing' },
+  { label: 'Events', img: menuEvents, action: 'link', href: '#' },
+  { label: 'Sounds', img: menuSounds, action: 'link', href: '#' },
+  { label: 'Shop', img: menuShop, action: 'link', href: '#' },
+  { label: 'Instagram', img: menuInstagram, action: 'link', href: 'https://instagram.com' },
+];
 
 export default function Landing() {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Section refs
   const aboutRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
   const statementRef = useRef<HTMLDivElement>(null);
@@ -29,8 +44,9 @@ export default function Landing() {
   const whatInView = useInView(whatRef, { once: true, amount: 0.3 });
   const closingInView = useInView(closingRef, { once: true, amount: 0.3 });
 
-  // Nav scroll glassmorphism
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -39,10 +55,6 @@ export default function Landing() {
     return () => el.removeEventListener('scroll', handler);
   }, []);
 
-  // About dropdown
-  const [aboutOpen, setAboutOpen] = useState(false);
-
-  // Detect dark mode
   const [isDark, setIsDark] = useState(false);
   useEffect(() => {
     const check = () => setIsDark(document.documentElement.classList.contains('dark'));
@@ -52,10 +64,29 @@ export default function Landing() {
     return () => observer.disconnect();
   }, []);
 
+  const handleMenuItem = (item: typeof MENU_ITEMS[0]) => {
+    setMenuOpen(false);
+    if (item.action === 'scroll-about') {
+      aboutRef.current?.scrollIntoView({ behavior: 'smooth' });
+    } else if (item.action === 'scroll-pricing') {
+      pricingRef.current?.scrollIntoView({ behavior: 'smooth' });
+    } else if (item.action === 'link' && item.href) {
+      if (item.href.startsWith('http')) {
+        window.open(item.href, '_blank', 'noopener,noreferrer');
+      }
+    }
+  };
+
+  const pillClass = `px-5 py-2.5 rounded-full text-sm transition-colors cursor-pointer border ${
+    isDark
+      ? 'border-[rgba(255,255,255,0.12)] text-[rgba(255,255,255,0.7)] hover:bg-[rgba(255,255,255,0.08)]'
+      : 'border-[rgba(0,0,0,0.1)] text-[rgba(0,0,0,0.65)] hover:bg-[rgba(0,0,0,0.04)]'
+  }`;
+
   return (
     <div className="fixed inset-0 z-50 bg-background">
 
-      {/* ═══ FIXED NAV — full width ═══ */}
+      {/* ═══ FIXED NAV ═══ */}
       <nav
         className={`fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-6 md:px-12 h-[72px] transition-all duration-500 ${
           scrolled
@@ -64,82 +95,133 @@ export default function Landing() {
         }`}
         style={{ fontFamily: FONT_HEADING }}
       >
-        {/* Left: Wordmark */}
+        {/* Left: Menu button */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted/50 transition-colors outline-none"
+        >
+          {menuOpen ? (
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="text-foreground">
+              <path d="M4 4L14 14M14 4L4 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="text-foreground">
+              <rect x="3" y="4" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2" />
+              <rect x="10" y="4" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2" />
+              <rect x="3" y="11" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2" />
+              <rect x="10" y="11" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2" />
+            </svg>
+          )}
+        </button>
+
+        {/* Center: Wordmark */}
         <button
           onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="outline-none focus:outline-none"
+          className="absolute left-1/2 -translate-x-1/2 outline-none focus:outline-none"
         >
           <WordmarkLight className="h-5 dark:hidden" />
           <WordmarkDark className="h-5 hidden dark:block" />
         </button>
 
-        {/* Right: Nav items (desktop) */}
-        <div className="hidden md:flex items-center gap-1">
-          {/* About dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setAboutOpen(!aboutOpen)}
-              onBlur={() => setTimeout(() => setAboutOpen(false), 150)}
-              className="px-4 py-2 text-foreground rounded-full hover:bg-muted/50 transition-colors"
-              style={{ fontSize: '14px', fontWeight: 400 }}
-            >
-              About
-            </button>
-            {aboutOpen && (
-              <div
-                className={`absolute top-full mt-2 left-0 rounded-xl border border-border py-2 min-w-[180px] z-[100] ${
-                  isDark ? 'bg-[#111]' : 'bg-background'
-                } shadow-lg`}
-              >
-                <button
-                  onClick={() => { aboutRef.current?.scrollIntoView({ behavior: 'smooth' }); setAboutOpen(false); }}
-                  className="w-full text-left px-4 py-2.5 text-foreground hover:bg-muted/50 transition-colors"
-                  style={{ fontSize: '14px', fontFamily: FONT_HEADING }}
-                >
-                  How It Works
-                </button>
-                <button
-                  onClick={() => { whatRef.current?.scrollIntoView({ behavior: 'smooth' }); setAboutOpen(false); }}
-                  className="w-full text-left px-4 py-2.5 text-foreground hover:bg-muted/50 transition-colors"
-                  style={{ fontSize: '14px', fontFamily: FONT_HEADING }}
-                >
-                  Who It's For
-                </button>
-              </div>
-            )}
-          </div>
-
-          <button
-            onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-4 py-2 text-foreground rounded-full hover:bg-muted/50 transition-colors"
-            style={{ fontSize: '14px', fontWeight: 400 }}
-          >
-            Pricing
-          </button>
-
-          <button
-            onClick={() => navigate('/login')}
-            className="ml-2 px-5 py-2 text-foreground rounded-full border border-border hover:bg-muted/50 transition-colors whitespace-nowrap"
-            style={{ fontSize: '14px', fontWeight: 400 }}
-          >
-            Enter Temple
-          </button>
-        </div>
-
-        {/* Mobile nav */}
-        <div
-          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full p-2 backdrop-blur-[10px] bg-background/60 border border-border shadow-lg"
-          style={{ fontFamily: FONT_HEADING }}
+        {/* Right: Enter button */}
+        <button
+          onClick={() => navigate('/login')}
+          className={pillClass}
+          style={{ fontSize: '14px', fontWeight: 400, fontFamily: FONT_HEADING }}
         >
-          <button onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })} className="px-3 py-2 rounded-full hover:bg-muted/50 transition-colors">
-            <WordmarkLight className="h-4 dark:hidden" />
-            <WordmarkDark className="h-4 hidden dark:block" />
-          </button>
-          <button onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-foreground rounded-full hover:bg-muted/50 transition-colors" style={{ fontSize: '12px' }}>About</button>
-          <button onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-foreground rounded-full hover:bg-muted/50 transition-colors" style={{ fontSize: '12px' }}>Pricing</button>
-          <button onClick={() => navigate('/login')} className="px-3 py-2 text-foreground rounded-full border border-border hover:bg-muted/50 transition-colors whitespace-nowrap" style={{ fontSize: '12px' }}>Enter Temple</button>
-        </div>
+          Enter
+        </button>
       </nav>
+
+      {/* ═══ MENU POPCARD ═══ */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 z-[65]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setMenuOpen(false)}
+              style={{
+                background: isDark ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.6)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+              }}
+            />
+            {/* Card */}
+            <motion.div
+              className="fixed z-[70] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setMenuOpen(false)}
+                className={`absolute -top-4 -right-4 w-8 h-8 rounded-full flex items-center justify-center z-10 transition-colors ${
+                  isDark ? 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.15)]' : 'bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.1)]'
+                }`}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" className="text-foreground">
+                  <path d="M3 3L11 11M11 3L3 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </button>
+
+              <div
+                className={`rounded-3xl p-8 ${
+                  isDark
+                    ? 'bg-[rgba(30,30,30,0.85)] border border-[rgba(255,255,255,0.08)]'
+                    : 'bg-[rgba(255,255,255,0.85)] border border-[rgba(0,0,0,0.06)]'
+                }`}
+                style={{
+                  backdropFilter: 'blur(40px) saturate(150%)',
+                  WebkitBackdropFilter: 'blur(40px) saturate(150%)',
+                  boxShadow: isDark
+                    ? '0 24px 80px rgba(0,0,0,0.5)'
+                    : '0 24px 80px rgba(0,0,0,0.12)',
+                }}
+              >
+                <div className="grid grid-cols-3 gap-5">
+                  {MENU_ITEMS.map((item) => (
+                    <button
+                      key={item.label}
+                      onClick={() => handleMenuItem(item)}
+                      className="flex flex-col items-center gap-2.5 group outline-none"
+                    >
+                      <div className="w-[120px] h-[120px] rounded-2xl overflow-hidden transition-transform group-hover:scale-[1.03]">
+                        <img src={item.img} alt={item.label} className="w-full h-full object-cover" />
+                      </div>
+                      <span
+                        className="text-foreground text-sm"
+                        style={{ fontFamily: FONT_HEADING, fontWeight: 400 }}
+                      >
+                        {item.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ MOBILE NAV ═══ */}
+      <div
+        className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-1 rounded-full p-2 backdrop-blur-[10px] bg-background/60 border border-border shadow-lg"
+        style={{ fontFamily: FONT_HEADING }}
+      >
+        <button onClick={() => setMenuOpen(true)} className="px-3 py-2 rounded-full hover:bg-muted/50 transition-colors text-foreground" style={{ fontSize: '12px' }}>Menu</button>
+        <button onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })} className="px-3 py-2 rounded-full hover:bg-muted/50 transition-colors">
+          <WordmarkLight className="h-3.5 dark:hidden" />
+          <WordmarkDark className="h-3.5 hidden dark:block" />
+        </button>
+        <button onClick={() => navigate('/login')} className="px-3 py-2 text-foreground rounded-full border border-border hover:bg-muted/50 transition-colors whitespace-nowrap" style={{ fontSize: '12px' }}>Enter</button>
+      </div>
 
       {/* ═══ SCROLLABLE CONTENT ═══ */}
       <div
@@ -160,7 +242,6 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
-              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
@@ -175,7 +256,6 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
-              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
@@ -208,7 +288,6 @@ export default function Landing() {
                   fontSize: 'clamp(20px, 3vw, 32px)',
                   fontWeight: 400,
                   lineHeight: 1.5,
-                  mixBlendMode: 'normal'
                 }}
                 initial={{ opacity: 0, y: 16 }}
                 animate={howInView ? { opacity: 1, y: 0 } : {}}
@@ -234,7 +313,6 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
-              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
@@ -248,7 +326,6 @@ export default function Landing() {
               fontSize: 'clamp(20px, 3vw, 32px)',
               fontWeight: 400,
               lineHeight: 1.45,
-              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
@@ -272,7 +349,6 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 0.95,
               letterSpacing: '-0.02em',
-              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 40 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
@@ -294,7 +370,7 @@ export default function Landing() {
           </motion.p>
 
           <motion.button
-            onClick={() => navigate('/chat')}
+            onClick={() => navigate('/login')}
             className="px-12 py-5 rounded-full bg-foreground text-background transition-all hover:opacity-90 hover:scale-[1.02]"
             style={{
               fontFamily: FONT_BODY,
@@ -309,7 +385,10 @@ export default function Landing() {
           </motion.button>
         </section>
 
-        {/* ═══ 7. FOOTER ═══ */}
+        {/* ═══ 7. WORDMARK + FOOTER ═══ */}
+        <div className="w-full px-8 md:px-16 pt-32">
+          {isDark ? <WordmarkDark className="w-full h-auto" /> : <WordmarkLight className="w-full h-auto" />}
+        </div>
         <LandingFooter />
       </div>
     </div>

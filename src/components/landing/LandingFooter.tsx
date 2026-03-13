@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import WordmarkDark from '@/components/WordmarkDark';
-import WordmarkLight from '@/components/WordmarkLight';
 
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
 
@@ -30,9 +28,9 @@ export default function LandingFooter() {
   }`;
 
   return (
-    <footer className="px-8 md:px-16 pt-32 pb-16">
+    <footer className="px-8 md:px-16 pt-16 pb-16">
       {/* Footer columns */}
-      <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 mb-32">
+      <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
         {/* About */}
         <div>
           <p className={headerClass} style={{ fontFamily: "'Geist Mono', monospace" }}>about</p>
@@ -126,11 +124,6 @@ export default function LandingFooter() {
             )}
           </div>
         </div>
-      </div>
-
-      {/* Full-width wordmark */}
-      <div className="w-full">
-        {isDark ? <WordmarkDark className="w-full h-auto" /> : <WordmarkLight className="w-full h-auto" />}
       </div>
     </footer>
   );
