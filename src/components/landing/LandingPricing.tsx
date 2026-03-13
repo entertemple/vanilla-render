@@ -23,6 +23,46 @@ const MEMBER_FEATURES = [
   'Your interior life across 365 days',
 ];
 
+function GlassPricingCard({
+  children,
+  delay,
+  inView,
+}: {
+  children: React.ReactNode;
+  delay: number;
+  inView: boolean;
+}) {
+  return (
+    <motion.div
+      className="rounded-2xl p-8 md:p-10 flex flex-col relative overflow-hidden"
+      style={{ backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay }}
+    >
+      <div
+        className="absolute inset-0 dark:hidden"
+        style={{
+          background: 'rgba(255,255,255,0.45)',
+          border: '1px solid rgba(0,0,0,0.06)',
+          borderRadius: 'inherit',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 32px rgba(0,0,0,0.06)',
+        }}
+      />
+      <div
+        className="absolute inset-0 hidden dark:block"
+        style={{
+          background: 'rgba(0,0,0,0.35)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 'inherit',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.3)',
+        }}
+      />
+      <div className="relative z-10 flex flex-col flex-1">{children}</div>
+    </motion.div>
+  );
+}
+
 export default function LandingPricing() {
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
@@ -39,20 +79,7 @@ export default function LandingPricing() {
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* TRIAL */}
-        <motion.div
-          className="rounded-2xl p-8 md:p-10 flex flex-col relative overflow-hidden"
-          style={{ backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.1 }}
-        >
-          <div className="absolute inset-0 dark:hidden" style={{ background: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 'inherit', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 32px rgba(0,0,0,0.06)' }} />
-          <div className="absolute inset-0 hidden dark:block" style={{ background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 'inherit', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.3)' }} />
-          <div className="relative z-10 flex flex-col flex-1">
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.1 }}
-        >
+        <GlassPricingCard delay={0.1} inView={inView}>
           <div className="mb-2">
             <p
               className="text-foreground uppercase tracking-[0.08em]"
@@ -99,20 +126,10 @@ export default function LandingPricing() {
           >
             START YOUR TRIAL
           </button>
-          </div>
-        </motion.div>
+        </GlassPricingCard>
 
         {/* MEMBER */}
-        <motion.div
-          className="rounded-2xl p-8 md:p-10 flex flex-col relative overflow-hidden"
-          style={{ backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.25 }}
-        >
-          <div className="absolute inset-0 dark:hidden" style={{ background: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 'inherit', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 32px rgba(0,0,0,0.06)' }} />
-          <div className="absolute inset-0 hidden dark:block" style={{ background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 'inherit', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.3)' }} />
-          <div className="relative z-10 flex flex-col flex-1">
+        <GlassPricingCard delay={0.25} inView={inView}>
           <div className="mb-2">
             <p
               className="text-foreground uppercase tracking-[0.08em]"
@@ -183,7 +200,7 @@ export default function LandingPricing() {
           >
             ENTER TEMPLE
           </button>
-        </motion.div>
+        </GlassPricingCard>
       </div>
     </section>
   );
