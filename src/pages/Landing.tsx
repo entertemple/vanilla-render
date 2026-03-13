@@ -112,7 +112,7 @@ export default function Landing() {
         <LandingHero />
 
         {/* ═══ 2. STATEMENT ═══ */}
-        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={statementRef}>
+        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[1100px] mx-auto" ref={statementRef}>
           <motion.p
             className="text-foreground text-center"
             style={{
