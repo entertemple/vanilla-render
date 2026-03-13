@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.temple-phrases]
 verify_jwt = false
+
+[functions.oracle-card]
+verify_jwt = false

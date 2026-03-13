@@ -73,6 +73,10 @@ export const router = createBrowserRouter([
         element: <Upgrade />,
       },
       {
+        path: "oracle",
+        element: <Oracle />,
+      },
+      {
         path: "learn-more",
         element: <LearnMore />,
       },
