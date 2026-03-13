@@ -310,8 +310,10 @@ function ADoorCard({
       </p>
       <p style={{
         fontSize: '1.1rem',
-        fontFamily: "'DM Sans', 'Inter', sans-serif",
+        fontFamily: "'DM Sans', Arial, sans-serif",
         fontWeight: 400,
+        fontStyle: 'italic',
+        letterSpacing: '-0.01em',
         color: titleColor,
         marginBottom: goDeeper.reason ? '0.3rem' : 0,
       }}>
