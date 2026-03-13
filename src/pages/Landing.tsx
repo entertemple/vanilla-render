@@ -20,11 +20,11 @@ const FONT_BODY = "'Geist Mono', monospace";
 const FONT_SERIF = "'DM Serif Display', Georgia, serif";
 
 const MENU_ITEMS = [
-  { label: 'About', img: menuAbout, action: 'scroll-about' },
-  { label: 'Pricing', img: menuPricing, action: 'scroll-pricing' },
-  { label: 'Events', img: menuEvents, action: 'link', href: '#' },
-  { label: 'Sounds', img: menuSounds, action: 'link', href: '#' },
   { label: 'Shop', img: menuShop, action: 'link', href: '#' },
+  { label: 'About', img: menuAbout, action: 'scroll-about' },
+  { label: 'Events', img: menuEvents, action: 'link', href: '#' },
+  { label: 'Journal', img: menuPricing, action: 'link', href: '#' },
+  { label: 'Sounds', img: menuSounds, action: 'link', href: '#' },
   { label: 'Instagram', img: menuInstagram, action: 'link', href: 'https://instagram.com' },
 ];
 
@@ -123,7 +123,7 @@ export default function Landing() {
       <AnimatePresence>
         {menuOpen && (
           <>
-            {/* Backdrop - below nav z-index so wordmark stays on top */}
+            {/* Backdrop */}
             <motion.div
               className="fixed inset-0 z-[70]"
               initial={{ opacity: 0 }}
@@ -137,7 +137,18 @@ export default function Landing() {
                 WebkitBackdropFilter: 'blur(20px)',
               }}
             />
-            {/* Card */}
+            {/* Close button - top right */}
+            <motion.button
+              className="fixed z-[73] top-6 right-6 w-8 h-8 rounded-full flex items-center justify-center transition-colors text-foreground/60 hover:text-foreground"
+              onClick={() => setMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M4 4L14 14M14 4L4 14"/></svg>
+            </motion.button>
+            {/* Card + close button */}
             <motion.div
               className="fixed z-[72] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               initial={{ opacity: 0, scale: 0.92 }}
@@ -145,20 +156,9 @@ export default function Landing() {
               exit={{ opacity: 0, scale: 0.92 }}
               transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              {/* Close button */}
-              <button
-                onClick={() => setMenuOpen(false)}
-                className={`absolute -top-4 -right-4 w-8 h-8 rounded-full flex items-center justify-center z-10 transition-colors ${
-                  isDark ? 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.15)]' : 'bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.1)]'
-                }`}
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" className="text-foreground">
-                  <path d="M3 3L11 11M11 3L3 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-              </button>
 
               <div
-                className={`rounded-3xl p-8 ${
+                className={`rounded-[28px] p-10 ${
                   isDark
                     ? 'bg-[rgba(30,30,30,0.85)] border border-[rgba(255,255,255,0.08)]'
                     : 'bg-[rgba(255,255,255,0.85)] border border-[rgba(0,0,0,0.06)]'
@@ -171,15 +171,15 @@ export default function Landing() {
                     : '0 24px 80px rgba(0,0,0,0.12)',
                 }}
               >
-                <div className="grid grid-cols-3 gap-5">
+                <div className="grid grid-cols-3 gap-6">
                   {MENU_ITEMS.map((item) => (
                     <button
                       key={item.label}
                       onClick={() => handleMenuItem(item)}
                       className="flex flex-col items-center gap-2.5 group outline-none"
                     >
-                      <div className="w-[120px] h-[120px] rounded-2xl overflow-hidden transition-transform group-hover:scale-[1.03]">
-                        <img src={item.img} alt={item.label} className="w-full h-full object-cover" />
+                      <div className="w-[140px] h-[140px] rounded-[20px] overflow-hidden transition-transform group-hover:scale-[1.03]">
+                        <img src={item.img} alt={item.label} className="w-full h-full object-cover" loading="lazy" />
                       </div>
                       <span
                         className="text-foreground text-sm"

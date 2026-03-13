@@ -69,18 +69,23 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
 
   const handleLearnMore = () => {
     setIsOpen(false);
-    navigate('/learn-more');
+    // No-op: page removed
   };
 
   const handleUpgrade = () => {
     setIsOpen(false);
-    navigate('/upgrade');
+    // No-op: page removed
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsOpen(false);
-    // Navigate to login page
-    navigate('/login');
+    const { signOut } = await import('../contexts/AuthContext').then(m => {
+      // We need to call signOut from supabase directly
+      return { signOut: async () => {} };
+    });
+    const { supabase } = await import('@/integrations/supabase/client');
+    await supabase.auth.signOut();
+    navigate('/');
   };
 
   return (

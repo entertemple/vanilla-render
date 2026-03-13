@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Plus, Trash2, Menu, X, Settings, User, Sparkles, BookOpen, History, Compass, Zap } from 'lucide-react';
+import { Plus, Trash2, Menu, X, Settings, User, Compass, Zap } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -121,10 +121,7 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const navigationItems = [
-    { icon: Sparkles, label: 'Discover', path: '/discover' },
     { icon: Compass, label: 'Oracle', path: '/oracle' },
-    { icon: BookOpen, label: 'Library', path: '/library' },
-    { icon: History, label: 'History', path: '/history' },
   ];
 
   const isActive = (path: string) => {
@@ -255,7 +252,7 @@ export default function Layout({ children }: LayoutProps) {
               
               <div className="flex-1 flex items-center justify-center">
               <button
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/chat')}
                   className="rounded-[12px] p-2 outline-none focus:outline-none focus:ring-0 border-none"
                 >
                   {theme === 'light' ? (

@@ -18,7 +18,7 @@ export default function Signup() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (user) navigate('/', { replace: true });
+    if (user) navigate('/chat', { replace: true });
   }, [user, navigate]);
 
   const handleSignup = async (e: React.FormEvent) => {

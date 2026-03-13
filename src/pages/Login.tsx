@@ -15,7 +15,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) navigate('/', { replace: true });
+    if (user) navigate('/chat', { replace: true });
   }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -27,13 +27,13 @@ export default function Login() {
       setError(error.message);
       setLoading(false);
     } else {
-      navigate('/');
+      navigate('/chat');
     }
   };
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-background px-6">
-      <button onClick={() => navigate('/landing')} className="mb-12 outline-none">
+      <button onClick={() => navigate('/')} className="mb-12 outline-none">
         <WordmarkLight className="h-6 dark:hidden" />
         <WordmarkDark className="h-6 hidden dark:block" />
       </button>
