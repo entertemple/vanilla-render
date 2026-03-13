@@ -48,7 +48,7 @@ export default function LandingHero() {
       <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         {/* LEFT COLUMN — Copy + Signup */}
         <motion.div
-          className="flex flex-col"
+          className="flex flex-col items-center lg:items-center"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
