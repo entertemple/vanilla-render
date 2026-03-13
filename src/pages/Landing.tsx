@@ -8,6 +8,7 @@ import LandingPricing from '@/components/landing/LandingPricing';
 
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
 const FONT_BODY = "'Geist Mono', monospace";
+const FONT_SERIF = "'DM Serif Display', Georgia, serif";
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -232,7 +233,7 @@ export default function Landing() {
           <motion.p
             className="text-foreground text-center"
             style={{
-              fontFamily: FONT_HEADING,
+              fontFamily: FONT_SERIF,
               fontSize: 'clamp(24px, 4vw, 42px)',
               fontWeight: 400,
               lineHeight: 1.35,
@@ -248,7 +249,7 @@ export default function Landing() {
           <motion.p
             className="text-foreground text-center mt-10"
             style={{
-              fontFamily: FONT_HEADING,
+              fontFamily: FONT_SERIF,
               fontSize: 'clamp(20px, 3vw, 32px)',
               fontWeight: 400,
               lineHeight: 1.45,
