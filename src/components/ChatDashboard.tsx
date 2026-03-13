@@ -404,11 +404,11 @@ function AssistantMessage({
 
   const keywordWords = parsed.keywords ? parsed.keywords.split(/\s*·\s*/).slice(0, 3) : [];
 
-  // Blur for Beat 3+
+  // Blur for Beat 5+
   const getBlurStyle = (): React.CSSProperties => {
-    if (beat < 2) return {};
-    const blur = beat === 2 ? 1.5 : beat === 3 ? 3 : 6;
-    const opacity = beat === 2 ? 0.7 : beat === 3 ? 0.5 : 0.3;
+    if (beat <= 4) return {};
+    const blur = beat === 5 ? 1.5 : beat === 6 ? 3 : 6;
+    const opacity = beat === 5 ? 0.8 : beat === 6 ? 0.5 : 0.3;
     return {
       filter: `blur(${blur}px)`,
       opacity,
@@ -416,14 +416,14 @@ function AssistantMessage({
     };
   };
 
-  // Show interactive GO DEEPER reflection card only on Beat 1
-  const showGoDeeperCard = beat === 1 && userMessage && phrases && phrases.length > 0 && onPhraseClick;
-  // Show cultural reference GO DEEPER card on Beat 1
-  const showGoDeeperReference = beat === 1 && parsed.goDeeper.title;
-  // Show A DOOR card only on Beat 2
-  const showADoor = beat === 2 && parsed.goDeeper.title;
-  // Show sharp question on Beat 5+
-  const showSharpQuestion = beat >= 5 && beat2Question;
+  // Show interactive GO DEEPER reflection card on Beats 1–4
+  const showGoDeeperCard = beat >= 1 && beat <= 4 && userMessage && phrases && phrases.length > 0 && onPhraseClick;
+  // Show TO PONDER cultural reference card on Beats 1–4
+  const showGoDeeperReference = beat >= 1 && beat <= 4 && parsed.goDeeper.title;
+  // No separate A DOOR card needed
+  const showADoor = false;
+  // Show sharp question on Beat 7+
+  const showSharpQuestion = beat >= 7 && beat2Question;
 
   // --- Static render ---
   if (!isNew) {
