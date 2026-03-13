@@ -6,6 +6,7 @@ import WordmarkDark from '@/components/WordmarkDark';
 import LandingHero from '@/components/landing/LandingHero';
 import ConversationPreview from '@/components/landing/ConversationPreview';
 import LandingPricing from '@/components/landing/LandingPricing';
+import LandingFooter from '@/components/landing/LandingFooter';
 
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
 const FONT_BODY = "'Geist Mono', monospace";
@@ -38,7 +39,10 @@ export default function Landing() {
     return () => el.removeEventListener('scroll', handler);
   }, []);
 
-  // Detect dark mode for footer wordmark
+  // About dropdown
+  const [aboutOpen, setAboutOpen] = useState(false);
+
+  // Detect dark mode
   const [isDark, setIsDark] = useState(false);
   useEffect(() => {
     const check = () => setIsDark(document.documentElement.classList.contains('dark'));
@@ -48,57 +52,92 @@ export default function Landing() {
     return () => observer.disconnect();
   }, []);
 
-
   return (
     <div className="fixed inset-0 z-50 bg-background">
 
-      {/* ═══ FIXED NAV ═══ */}
+      {/* ═══ FIXED NAV — full width ═══ */}
       <nav
-        className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-center px-6 md:px-12 h-[80px]"
-        style={{ fontFamily: FONT_BODY }}>
-        <div
-          className={`hidden md:flex items-center gap-0 rounded-[100px] transition-all duration-500 ${
-          scrolled ?
-          'backdrop-blur-[10px] bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.3)] shadow-[0_8px_32px_rgba(34,34,34,0.08)]' :
-          'bg-transparent border border-transparent'}`
-          }
-          style={{ padding: '6px 8px' }}>
-          <button
-            onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="px-5 py-2 outline-none focus:outline-none rounded-[100px] hover:bg-muted/50 transition-colors">
-            <WordmarkLight className="h-5 dark:hidden" />
-            <WordmarkDark className="h-5 hidden dark:block" />
-          </button>
-          <button
-            onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-5 py-2 text-foreground rounded-[100px] hover:bg-muted/50 transition-colors"
-            style={{ fontSize: '14px', fontWeight: 400 }}>
-            How It Works
-          </button>
+        className={`fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-6 md:px-12 h-[72px] transition-all duration-500 ${
+          scrolled
+            ? 'backdrop-blur-[16px] bg-background/80 border-b border-border'
+            : 'bg-transparent'
+        }`}
+        style={{ fontFamily: FONT_HEADING }}
+      >
+        {/* Left: Wordmark */}
+        <button
+          onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="outline-none focus:outline-none"
+        >
+          <WordmarkLight className="h-5 dark:hidden" />
+          <WordmarkDark className="h-5 hidden dark:block" />
+        </button>
+
+        {/* Right: Nav items (desktop) */}
+        <div className="hidden md:flex items-center gap-1">
+          {/* About dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setAboutOpen(!aboutOpen)}
+              onBlur={() => setTimeout(() => setAboutOpen(false), 150)}
+              className="px-4 py-2 text-foreground rounded-full hover:bg-muted/50 transition-colors"
+              style={{ fontSize: '14px', fontWeight: 400 }}
+            >
+              About
+            </button>
+            {aboutOpen && (
+              <div
+                className={`absolute top-full mt-2 left-0 rounded-xl border border-border py-2 min-w-[180px] z-[100] ${
+                  isDark ? 'bg-[#111]' : 'bg-background'
+                } shadow-lg`}
+              >
+                <button
+                  onClick={() => { aboutRef.current?.scrollIntoView({ behavior: 'smooth' }); setAboutOpen(false); }}
+                  className="w-full text-left px-4 py-2.5 text-foreground hover:bg-muted/50 transition-colors"
+                  style={{ fontSize: '14px', fontFamily: FONT_HEADING }}
+                >
+                  How It Works
+                </button>
+                <button
+                  onClick={() => { whatRef.current?.scrollIntoView({ behavior: 'smooth' }); setAboutOpen(false); }}
+                  className="w-full text-left px-4 py-2.5 text-foreground hover:bg-muted/50 transition-colors"
+                  style={{ fontSize: '14px', fontFamily: FONT_HEADING }}
+                >
+                  Who It's For
+                </button>
+              </div>
+            )}
+          </div>
+
           <button
             onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-5 py-2 text-foreground rounded-[100px] hover:bg-muted/50 transition-colors"
-            style={{ fontSize: '14px', fontWeight: 400 }}>
+            className="px-4 py-2 text-foreground rounded-full hover:bg-muted/50 transition-colors"
+            style={{ fontSize: '14px', fontWeight: 400 }}
+          >
             Pricing
           </button>
+
           <button
             onClick={() => navigate('/login')}
-            className="px-5 py-2 text-foreground rounded-[100px] border border-border hover:bg-muted/50 transition-colors whitespace-nowrap"
-            style={{ fontSize: '14px', fontWeight: 400 }}>
-            Get Started
+            className="ml-2 px-5 py-2 text-foreground rounded-full border border-border hover:bg-muted/50 transition-colors whitespace-nowrap"
+            style={{ fontSize: '14px', fontWeight: 400 }}
+          >
+            Enter Temple
           </button>
         </div>
 
         {/* Mobile nav */}
         <div
-          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-[100px] p-2 backdrop-blur-[10px] bg-[rgba(255,255,255,0.6)] dark:bg-[rgba(0,0,0,0.6)] border border-border shadow-[0_8px_32px_rgba(34,34,34,0.08)]">
-          <button onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })} className="px-3 py-2 rounded-[100px] hover:bg-muted/50 transition-colors">
+          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full p-2 backdrop-blur-[10px] bg-background/60 border border-border shadow-lg"
+          style={{ fontFamily: FONT_HEADING }}
+        >
+          <button onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })} className="px-3 py-2 rounded-full hover:bg-muted/50 transition-colors">
             <WordmarkLight className="h-4 dark:hidden" />
             <WordmarkDark className="h-4 hidden dark:block" />
           </button>
-          <button onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-foreground rounded-[100px] hover:bg-muted/50 transition-colors" style={{ fontSize: '12px' }}>How It Works</button>
-          <button onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-foreground rounded-[100px] hover:bg-muted/50 transition-colors" style={{ fontSize: '12px' }}>Pricing</button>
-          <button onClick={() => navigate('/login')} className="px-3 py-2 text-foreground rounded-[100px] border border-border hover:bg-muted/50 transition-colors whitespace-nowrap" style={{ fontSize: '12px' }}>Get Started</button>
+          <button onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-foreground rounded-full hover:bg-muted/50 transition-colors" style={{ fontSize: '12px' }}>About</button>
+          <button onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-foreground rounded-full hover:bg-muted/50 transition-colors" style={{ fontSize: '12px' }}>Pricing</button>
+          <button onClick={() => navigate('/login')} className="px-3 py-2 text-foreground rounded-full border border-border hover:bg-muted/50 transition-colors whitespace-nowrap" style={{ fontSize: '12px' }}>Enter Temple</button>
         </div>
       </nav>
 
@@ -126,7 +165,6 @@ export default function Landing() {
             initial={{ opacity: 0, y: 30 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.2 }}>
-            
             Somewhere along the way, thinking got complicated. Tools piled up. Noise crept in. Everyone optimized for more — more output, more answers, more reasons to stay.
           </motion.p>
           <motion.p
@@ -142,7 +180,6 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.5 }}>
-            
             Temple is the room where you can finally listen to yourself.
           </motion.p>
         </section>
@@ -156,31 +193,29 @@ export default function Landing() {
               initial={{ opacity: 0 }}
               animate={howInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6 }}>
-              
               How It Works
             </motion.p>
             {[
-            "You bring what you're carrying.",
-            'Temple reads what lives underneath it.',
-            'Then it leaves you with what matters.'].
-            map((line, i) =>
-            <motion.p
-              key={i}
-              className="text-foreground mb-4"
-              style={{
-                fontFamily: FONT_HEADING,
-                fontSize: 'clamp(20px, 3vw, 32px)',
-                fontWeight: 400,
-                lineHeight: 1.5,
-                mixBlendMode: 'normal'
-              }}
-              initial={{ opacity: 0, y: 16 }}
-              animate={howInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.2 + i * 0.15 }}>
-              
+              "You bring what you're carrying.",
+              'Temple reads what lives underneath it.',
+              'Then it leaves you with what matters.',
+            ].map((line, i) => (
+              <motion.p
+                key={i}
+                className="text-foreground mb-4"
+                style={{
+                  fontFamily: FONT_HEADING,
+                  fontSize: 'clamp(20px, 3vw, 32px)',
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  mixBlendMode: 'normal'
+                }}
+                initial={{ opacity: 0, y: 16 }}
+                animate={howInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.7, delay: 0.2 + i * 0.15 }}>
                 {line}
               </motion.p>
-            )}
+            ))}
           </div>
         </section>
 
@@ -204,7 +239,6 @@ export default function Landing() {
             initial={{ opacity: 0, y: 30 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.2 }}>
-            
             Most AI tells you what to do. Temple shows you what you already know but haven't been able to say.
           </motion.p>
           <motion.p
@@ -219,7 +253,6 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.5 }}>
-            
             It doesn't push you further than you want to go. But if you're ready to look closer, it will go there with you.
           </motion.p>
         </section>
@@ -244,7 +277,6 @@ export default function Landing() {
             initial={{ opacity: 0, y: 40 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}>
-            
             It just works
           </motion.h1>
 
@@ -258,13 +290,12 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}>
-            
             The first AI built for the interior life. Always the first place you go.
           </motion.p>
 
           <motion.button
             onClick={() => navigate('/chat')}
-            className="px-12 py-5 rounded-[100px] bg-foreground text-background transition-all hover:opacity-90 hover:scale-[1.02]"
+            className="px-12 py-5 rounded-full bg-foreground text-background transition-all hover:opacity-90 hover:scale-[1.02]"
             style={{
               fontFamily: FONT_BODY,
               fontSize: '14px',
@@ -274,22 +305,13 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.5 }}>
-            
             Enter Temple
           </motion.button>
         </section>
 
-        {/* ═══ 7. FOOTER — Full-width wordmark ═══ */}
-        <footer className="px-8 md:px-16 pt-24 pb-16">
-          <div className="w-full">
-            {isDark ?
-            <WordmarkDark className="w-full h-auto" /> :
-
-            <WordmarkLight className="w-full h-auto" />
-            }
-          </div>
-        </footer>
+        {/* ═══ 7. FOOTER ═══ */}
+        <LandingFooter />
       </div>
-    </div>);
-
+    </div>
+  );
 }
