@@ -218,7 +218,7 @@ export default function LandingHero() {
               <p
                 style={{
                   fontFamily: FONT_HEADING,
-                  fontSize: '1.3rem',
+                  fontSize: '1.75rem',
                   fontWeight: 300,
                   fontStyle: 'italic',
                   color: 'rgba(255,255,255,0.7)',
