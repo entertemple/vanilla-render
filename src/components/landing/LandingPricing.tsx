@@ -31,6 +31,12 @@ export default function LandingPricing() {
 
   return (
     <section ref={ref} className="py-48 px-6 md:px-12 max-w-[800px] mx-auto">
+      <p
+        className="text-center text-muted-foreground mb-16 uppercase tracking-[0.2em]"
+        style={{ fontFamily: FONT_BODY, fontSize: '0.68rem' }}
+      >
+        For when you need to hear yourself think.
+      </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* TRIAL */}
         <motion.div

@@ -1,83 +1,30 @@
-import { useRef, useEffect, useState, useMemo } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'motion/react';
+import { useRef, useEffect, useState } from 'react';
+import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowDown } from 'lucide-react';
 import WordmarkLight from '@/components/WordmarkLight';
+import WordmarkDark from '@/components/WordmarkDark';
+import LandingHero from '@/components/landing/LandingHero';
 import LandingPricing from '@/components/landing/LandingPricing';
 
-const FONT_FAMILY = "'DM Sans', Arial, sans-serif";
-
-// ─── Shadow Text Row (Createnix double-text reveal) ───
-function ShadowTextRow({ text, inView, delay = 0, className = '' }: {text: string;inView: boolean;delay?: number;className?: string;}) {
-  return (
-    <div className={`relative overflow-hidden ${className}`}>
-      <h2
-        className="text-cnx-grey select-none"
-        style={{
-          fontFamily: FONT_FAMILY,
-          fontSize: 'clamp(32px, 6vw, 80px)',
-          fontWeight: 400,
-          lineHeight: 1.15
-        }}>
-        {text}
-      </h2>
-      <motion.h2
-        className="absolute inset-0 text-cnx-black text-lg"
-        style={{
-          fontFamily: FONT_FAMILY,
-          fontSize: 'clamp(32px, 6vw, 80px)',
-          fontWeight: 400,
-          lineHeight: 1.15
-        }}
-        initial={{ y: '100%' }}
-        animate={inView ? { y: '0%' } : {}}
-        transition={{ duration: 0.8, delay, ease: [0.25, 0.46, 0.45, 0.94] }}>
-        {text}
-      </motion.h2>
-    </div>);
-
-}
-
-// ─── Parallax blank cards ───
-const GRID_PLACEMENTS = [
-{ gridColumn: '1 / 3', gridRow: '1 / 4', minHeight: '400px' },
-{ gridColumn: '3 / 5', gridRow: '2 / 5', minHeight: '380px' },
-{ gridColumn: '5 / 7', gridRow: '1 / 3', minHeight: '280px' },
-{ gridColumn: '7 / 9', gridRow: '2 / 5', minHeight: '400px' },
-{ gridColumn: '2 / 4', gridRow: '5 / 8', minHeight: '380px' },
-{ gridColumn: '5 / 8', gridRow: '4 / 7', minHeight: '350px' },
-{ gridColumn: '1 / 3', gridRow: '8 / 10', minHeight: '300px' },
-{ gridColumn: '6 / 9', gridRow: '7 / 10', minHeight: '340px' }];
-
+const FONT_HEADING = "'DM Sans', Arial, sans-serif";
+const FONT_BODY = "'Geist Mono', monospace";
 
 export default function Landing() {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: containerRef });
-
-  // Parallax transforms
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -400]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, 300]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, -500]);
-  const y4 = useTransform(scrollYProgress, [0, 1], [0, 350]);
-  const y5 = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const y6 = useTransform(scrollYProgress, [0, 1], [0, 450]);
-  const y7 = useTransform(scrollYProgress, [0, 1], [0, -350]);
-  const y8 = useTransform(scrollYProgress, [0, 1], [0, 400]);
-  const parallaxValues = useMemo(() => [y1, y2, y3, y4, y5, y6, y7, y8], [y1, y2, y3, y4, y5, y6, y7, y8]);
 
   // Section refs
-  const heroRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
-  const finalRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const statementRef = useRef<HTMLDivElement>(null);
+  const howRef = useRef<HTMLDivElement>(null);
+  const whatRef = useRef<HTMLDivElement>(null);
+  const closingRef = useRef<HTMLDivElement>(null);
 
-  const heroInView = useInView(heroRef, { once: true, amount: 0.3 });
-  const aboutInView = useInView(aboutRef, { once: true, amount: 0.2 });
-  const pricingInView = useInView(pricingRef, { once: true, amount: 0.3 });
-  const finalInView = useInView(finalRef, { once: true, amount: 0.3 });
-  const ctaInView = useInView(ctaRef, { once: true, amount: 0.3 });
+  const statementInView = useInView(statementRef, { once: true, amount: 0.3 });
+  const howInView = useInView(howRef, { once: true, amount: 0.3 });
+  const whatInView = useInView(whatRef, { once: true, amount: 0.3 });
+  const closingInView = useInView(closingRef, { once: true, amount: 0.3 });
 
   // Nav scroll glassmorphism
   const [scrolled, setScrolled] = useState(false);
@@ -89,12 +36,22 @@ export default function Landing() {
     return () => el.removeEventListener('scroll', handler);
   }, []);
 
+  // Detect dark mode for footer wordmark
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => {
+    const check = () => setIsDark(document.documentElement.classList.contains('dark'));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="fixed inset-0 z-50 bg-cnx-white">
+    <div className="fixed inset-0 z-50 bg-background">
       {/* ═══ FIXED NAV ═══ */}
       <nav
         className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-center px-6 md:px-12 h-[80px]"
-        style={{ fontFamily: FONT_FAMILY }}>
+        style={{ fontFamily: FONT_BODY }}>
         <div
           className={`hidden md:flex items-center gap-0 rounded-[100px] transition-all duration-500 ${
           scrolled ?
@@ -103,25 +60,26 @@ export default function Landing() {
           }
           style={{ padding: '6px 8px' }}>
           <button
-            onClick={() => navigate('/landing')}
-            className="px-5 py-2 outline-none focus:outline-none rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors">
-            <WordmarkLight className="h-5" />
+            onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="px-5 py-2 outline-none focus:outline-none rounded-[100px] hover:bg-muted/50 transition-colors">
+            <WordmarkLight className="h-5 dark:hidden" />
+            <WordmarkDark className="h-5 hidden dark:block" />
           </button>
           <button
             onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-5 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors"
+            className="px-5 py-2 text-foreground rounded-[100px] hover:bg-muted/50 transition-colors"
             style={{ fontSize: '14px', fontWeight: 400 }}>
             How It Works
           </button>
           <button
             onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-5 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors"
+            className="px-5 py-2 text-foreground rounded-[100px] hover:bg-muted/50 transition-colors"
             style={{ fontSize: '14px', fontWeight: 400 }}>
             Pricing
           </button>
           <button
             onClick={() => navigate('/login')}
-            className="px-5 py-2 text-cnx-black rounded-[100px] border border-cnx-border hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap"
+            className="px-5 py-2 text-foreground rounded-[100px] border border-border hover:bg-muted/50 transition-colors whitespace-nowrap"
             style={{ fontSize: '14px', fontWeight: 400 }}>
             Get Started
           </button>
@@ -129,13 +87,14 @@ export default function Landing() {
 
         {/* Mobile nav */}
         <div
-          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-[100px] p-2 backdrop-blur-[10px] bg-[rgba(255,255,255,0.6)] border border-[rgba(255,255,255,0.3)] shadow-[0_8px_32px_rgba(34,34,34,0.08)]">
-          <button onClick={() => navigate('/landing')} className="px-3 py-2 rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors">
-            <WordmarkLight className="h-4" />
+          className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-[100px] p-2 backdrop-blur-[10px] bg-[rgba(255,255,255,0.6)] dark:bg-[rgba(0,0,0,0.6)] border border-border shadow-[0_8px_32px_rgba(34,34,34,0.08)]">
+          <button onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })} className="px-3 py-2 rounded-[100px] hover:bg-muted/50 transition-colors">
+            <WordmarkLight className="h-4 dark:hidden" />
+            <WordmarkDark className="h-4 hidden dark:block" />
           </button>
-          <button onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors" style={{ fontSize: '12px' }}>How It Works</button>
-          <button onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-cnx-black rounded-[100px] hover:bg-cnx-light-grey/50 transition-colors" style={{ fontSize: '12px' }}>Pricing</button>
-          <button onClick={() => navigate('/login')} className="px-3 py-2 text-cnx-black rounded-[100px] border border-cnx-border hover:bg-cnx-light-grey/50 transition-colors whitespace-nowrap" style={{ fontSize: '12px' }}>Get Started</button>
+          <button onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-foreground rounded-[100px] hover:bg-muted/50 transition-colors" style={{ fontSize: '12px' }}>How It Works</button>
+          <button onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })} className="px-3 py-2 text-foreground rounded-[100px] hover:bg-muted/50 transition-colors" style={{ fontSize: '12px' }}>Pricing</button>
+          <button onClick={() => navigate('/login')} className="px-3 py-2 text-foreground rounded-[100px] border border-border hover:bg-muted/50 transition-colors whitespace-nowrap" style={{ fontSize: '12px' }}>Get Started</button>
         </div>
       </nav>
 
@@ -143,150 +102,179 @@ export default function Landing() {
       <div
         ref={containerRef}
         className="w-full h-full overflow-y-auto overflow-x-hidden"
-        style={{ scrollbarWidth: 'thin', scrollbarColor: 'hsl(var(--cnx-border)) transparent' }}>
+        style={{ scrollbarWidth: 'thin', scrollbarColor: 'hsl(var(--border)) transparent' }}>
 
-        {/* ═══ HERO ═══ */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-[80px]" ref={heroRef}>
-          <motion.h1
-            className="text-cnx-black text-center"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(56px, 12vw, 160px)',
-              fontWeight: 400,
-              lineHeight: 0.95,
-              letterSpacing: '-0.02em'
-            }}
-            initial={{ opacity: 0, y: 40 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}>
-            Built for clarity.
-          </motion.h1>
+        {/* ═══ 1. HERO ═══ */}
+        <LandingHero />
 
+        {/* ═══ 2. STATEMENT ═══ */}
+        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={statementRef}>
           <motion.p
-            className="text-cnx-black mt-8 text-center max-w-[640px]"
+            className="text-muted-foreground text-center"
             style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(16px, 2vw, 20px)',
+              fontFamily: FONT_HEADING,
+              fontSize: 'clamp(24px, 4vw, 42px)',
               fontWeight: 400,
-              lineHeight: '1.6'
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}>
-            You know what you want to say. <br />
-            You just can't see what you're actually saying yet.
-          </motion.p>
-
-          <motion.div
-            className="absolute bottom-10 left-1/2 -translate-x-1/2"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2.5 }}>
-            <div className="w-[56px] h-[56px] rounded-full border border-cnx-border flex items-center justify-center bg-cnx-white">
-              <ArrowDown size={20} className="text-cnx-black" />
-            </div>
-          </motion.div>
-        </section>
-
-        {/* ═══ PARALLAX GRID — Blank cards ═══ */}
-        <section className="px-4 md:px-12 pb-32 max-w-[1600px] mx-auto">
-          <div
-            className="hidden md:grid"
-            style={{
-              gridTemplateColumns: 'repeat(8, 1fr)',
-              gridTemplateRows: 'repeat(10, auto)',
-              gap: '16px'
-            }}>
-            {GRID_PLACEMENTS.map((placement, i) =>
-            <motion.div
-              key={i}
-              className="rounded-[24px] bg-cnx-light-grey w-full"
-              style={{
-                gridColumn: placement.gridColumn,
-                gridRow: placement.gridRow,
-                minHeight: placement.minHeight,
-                y: parallaxValues[i],
-                willChange: 'transform'
-              }} />
-            )}
-          </div>
-          <div className="grid grid-cols-2 gap-4 md:hidden">
-            {GRID_PLACEMENTS.map((_, i) =>
-            <div key={i} className="rounded-[24px] bg-cnx-light-grey" style={{ minHeight: '180px' }} />
-            )}
-          </div>
-        </section>
-
-        {/* ═══ ABOUT — Temple introduction ═══ */}
-        <section className="px-6 md:px-12 py-48 max-w-[1200px] mx-auto" ref={aboutRef}>
-          <motion.p
-            className="text-cnx-grey"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(40px, 8vw, 128px)',
-              fontWeight: 400,
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em'
+              lineHeight: 1.35,
+              letterSpacing: '-0.01em',
             }}
             initial={{ opacity: 0, y: 30 }}
-            animate={aboutInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.3 }}>
-            A beautifully designed AI for people who need to think something through.
+            animate={statementInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.2 }}
+          >
+            Somewhere along the way, thinking got complicated. Tools piled up. Noise crept in. Everyone optimized for more — more output, more answers, more reasons to stay.
+          </motion.p>
+          <motion.p
+            className="text-foreground text-center mt-10"
+            style={{
+              fontFamily: FONT_HEADING,
+              fontSize: 'clamp(24px, 4vw, 42px)',
+              fontWeight: 400,
+              lineHeight: 1.35,
+              letterSpacing: '-0.01em',
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={statementInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.5 }}
+          >
+            Temple is the room where you can finally listen to yourself.
           </motion.p>
         </section>
 
-        {/* ═══ PRICING ═══ */}
+        {/* ═══ 3. HOW IT WORKS ═══ */}
+        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[800px] mx-auto text-center" ref={howRef}>
+          <div ref={aboutRef}>
+            <motion.p
+              className="text-muted-foreground uppercase tracking-[0.2em] mb-16"
+              style={{ fontFamily: FONT_BODY, fontSize: '0.68rem' }}
+              initial={{ opacity: 0 }}
+              animate={howInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6 }}
+            >
+              How It Works
+            </motion.p>
+            {[
+              "You bring what you're carrying.",
+              'Temple reads what lives underneath it.',
+              'Then it leaves you with what matters.',
+            ].map((line, i) => (
+              <motion.p
+                key={i}
+                className="text-foreground mb-4"
+                style={{
+                  fontFamily: FONT_HEADING,
+                  fontSize: 'clamp(20px, 3vw, 32px)',
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                }}
+                initial={{ opacity: 0, y: 16 }}
+                animate={howInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.7, delay: 0.2 + i * 0.15 }}
+              >
+                {line}
+              </motion.p>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══ 4. WHAT TEMPLE IS ═══ */}
+        <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={whatRef}>
+          <motion.p
+            className="text-muted-foreground text-center"
+            style={{
+              fontFamily: FONT_HEADING,
+              fontSize: 'clamp(24px, 4vw, 42px)',
+              fontWeight: 400,
+              lineHeight: 1.35,
+              letterSpacing: '-0.01em',
+            }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={whatInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.2 }}
+          >
+            Most AI tells you what to do. Temple shows you what you already know but haven't been able to say.
+          </motion.p>
+          <motion.p
+            className="text-muted-foreground text-center mt-10"
+            style={{
+              fontFamily: FONT_HEADING,
+              fontSize: 'clamp(20px, 3vw, 32px)',
+              fontWeight: 400,
+              lineHeight: 1.45,
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={whatInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.5 }}
+          >
+            It doesn't push you further than you want to go. But if you're ready to look closer, it will go there with you.
+          </motion.p>
+        </section>
+
+        {/* ═══ 5. PRICING ═══ */}
         <div ref={pricingRef}>
           <LandingPricing />
         </div>
 
-        {/* ═══ FINAL STATEMENT ═══ */}
-        <section className="py-48 px-6 flex items-center justify-center min-h-[70vh]" ref={finalRef}>
+        {/* ═══ 6. CLOSING ═══ */}
+        <section className="py-32 md:py-48 px-6 flex flex-col items-center justify-center min-h-[60vh]" ref={closingRef}>
           <motion.h1
-            className="text-cnx-black text-center"
+            className="text-foreground text-center mb-6"
             style={{
-              fontFamily: FONT_FAMILY,
+              fontFamily: FONT_HEADING,
               fontSize: 'clamp(56px, 12vw, 160px)',
               fontWeight: 400,
               lineHeight: 0.95,
-              letterSpacing: '-0.02em'
+              letterSpacing: '-0.02em',
             }}
             initial={{ opacity: 0, y: 40 }}
-            animate={finalInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}>
+            animate={closingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
             It just works.
           </motion.h1>
-        </section>
 
-        {/* ═══ CTA ═══ */}
-        <section className="py-32 px-6 flex justify-center" ref={ctaRef}>
-          <motion.button
-            onClick={() => navigate('/chat')}
-            className="px-12 py-5 rounded-[100px] bg-cnx-black text-cnx-white transition-all hover:shadow-[0_20px_60px_rgba(14,14,14,0.3)] hover:scale-[1.02]"
+          <motion.p
+            className="text-muted-foreground text-center mb-12 max-w-[480px]"
             style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: '16px',
-              fontWeight: 400,
-              letterSpacing: '0.02em'
+              fontFamily: FONT_BODY,
+              fontSize: 'clamp(13px, 1.5vw, 15px)',
+              lineHeight: 1.6,
             }}
             initial={{ opacity: 0, y: 20 }}
-            animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}>
+            animate={closingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            The first AI built for the interior life. Always the first place you go.
+          </motion.p>
+
+          <motion.button
+            onClick={() => navigate('/chat')}
+            className="px-12 py-5 rounded-[100px] bg-foreground text-background transition-all hover:opacity-90 hover:scale-[1.02]"
+            style={{
+              fontFamily: FONT_BODY,
+              fontSize: '14px',
+              fontWeight: 400,
+              letterSpacing: '0.02em',
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={closingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
             Enter Temple
           </motion.button>
         </section>
 
-        {/* ═══ FOOTER ═══ */}
-        <footer className="mx-4 md:mx-12 mb-8 rounded-[32px] border border-cnx-border bg-cnx-white px-8 md:px-16 py-12">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <WordmarkLight className="h-5" />
-            <div className="flex items-center gap-6">
-              <a href="/privacy-policy" className="text-cnx-grey hover:text-cnx-black transition-colors" style={{ fontFamily: FONT_FAMILY, fontSize: '14px' }}>Privacy</a>
-              <a href="/usage-policy" className="text-cnx-grey hover:text-cnx-black transition-colors" style={{ fontFamily: FONT_FAMILY, fontSize: '14px' }}>Usage Policy</a>
-              <a href="/about" className="text-cnx-grey hover:text-cnx-black transition-colors" style={{ fontFamily: FONT_FAMILY, fontSize: '14px' }}>About</a>
-            </div>
-            <p className="text-cnx-grey" style={{ fontFamily: FONT_FAMILY, fontSize: '14px' }}>© 2026 Temple</p>
+        {/* ═══ 7. FOOTER — Full-width wordmark ═══ */}
+        <footer className="px-8 md:px-16 pt-24 pb-16">
+          <div className="w-full">
+            {isDark ? (
+              <WordmarkDark className="w-full h-auto" />
+            ) : (
+              <WordmarkLight className="w-full h-auto" />
+            )}
           </div>
         </footer>
       </div>
-    </div>);
+    </div>
+  );
 }
