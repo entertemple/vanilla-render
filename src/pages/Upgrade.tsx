@@ -1,37 +1,38 @@
+import { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Switch } from '@/components/ui/switch';
 
 const FONT_HEADING = "'DM Sans', Arial, sans-serif";
 const FONT_BODY = "'Geist Mono', monospace";
 
-const FREE_FEATURES = [
-  'Basic spiritual guidance',
-  '10 messages per day',
-  'Access to core teachings',
-  'Community support',
+const TRIAL_FEATURES = [
+  'Every conversation, every beat',
+  'Full beat system',
+  'Daily Oracle card',
+  'Silence timer',
+  'History saved',
 ];
 
-const PRO_FEATURES = [
-  'Unlimited messages',
-  'Advanced spiritual insights',
-  'Priority response times',
-  'Access to all teachings',
-  'Personalized guidance',
-  'Early access to new features',
-  'Download conversation history',
-  'Custom meditation guides',
+const MEMBER_FEATURES = [
+  'Everything in Trial, plus:',
+  'Unlimited conversations',
+  'Full conversation history',
+  'Visual anchor journal',
+  'Your interior life across 365 days',
 ];
 
 export default function Upgrade() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const navigate = useNavigate();
+  const [isAnnual, setIsAnnual] = useState(false);
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 py-16">
       <div className="w-full max-w-[800px] grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* FREE */}
+        {/* TRIAL */}
         <div
           className="rounded-2xl p-8 md:p-10 flex flex-col"
           style={{
@@ -40,7 +41,7 @@ export default function Upgrade() {
             backdropFilter: isDark ? 'blur(40px)' : 'none',
           }}
         >
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-2">
             <p
               style={{
                 fontFamily: FONT_BODY,
@@ -50,7 +51,7 @@ export default function Upgrade() {
                 color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
               }}
             >
-              FREE
+              TRIAL
             </p>
             <span
               className="rounded-full px-4 py-1.5"
@@ -66,6 +67,17 @@ export default function Upgrade() {
               ACTIVE
             </span>
           </div>
+          <p
+            style={{
+              fontFamily: FONT_BODY,
+              fontSize: '0.72rem',
+              lineHeight: 1.5,
+              color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
+              marginBottom: '2rem',
+            }}
+          >
+            Full experience, free for 7 days.
+          </p>
 
           <div className="flex items-baseline gap-2 mb-10">
             <p
@@ -86,12 +98,12 @@ export default function Upgrade() {
                 color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
               }}
             >
-              forever
+              USD
             </p>
           </div>
 
           <ul className="space-y-5 flex-1 mb-10">
-            {FREE_FEATURES.map((f) => (
+            {TRIAL_FEATURES.map((f) => (
               <li
                 key={f}
                 className="flex items-start gap-3"
@@ -130,7 +142,7 @@ export default function Upgrade() {
           </button>
         </div>
 
-        {/* PRO */}
+        {/* MEMBER */}
         <div
           className="rounded-2xl p-8 md:p-10 flex flex-col"
           style={{
@@ -139,7 +151,7 @@ export default function Upgrade() {
             backdropFilter: isDark ? 'blur(40px)' : 'none',
           }}
         >
-          <div className="flex items-center justify-between mb-8">
+          <div className="mb-2">
             <p
               style={{
                 fontFamily: FONT_BODY,
@@ -149,11 +161,22 @@ export default function Upgrade() {
                 color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
               }}
             >
-              PRO
+              MEMBER
             </p>
           </div>
+          <p
+            style={{
+              fontFamily: FONT_BODY,
+              fontSize: '0.72rem',
+              lineHeight: 1.5,
+              color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
+              marginBottom: '2rem',
+            }}
+          >
+            Unlimited access to your interior life.
+          </p>
 
-          <div className="flex items-baseline gap-2 mb-10">
+          <div className="flex items-baseline gap-2 mb-4">
             <p
               style={{
                 fontFamily: FONT_HEADING,
@@ -163,7 +186,7 @@ export default function Upgrade() {
                 color: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
               }}
             >
-              $12
+              {isAnnual ? '$99' : '$15'}
             </p>
             <p
               style={{
@@ -172,12 +195,46 @@ export default function Upgrade() {
                 color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
               }}
             >
-              per month
+              {isAnnual ? 'USD / year · Save $81' : 'USD / month'}
             </p>
           </div>
 
+          <div className="flex items-center gap-3 mb-10">
+            <span
+              style={{
+                fontFamily: FONT_BODY,
+                fontSize: '0.68rem',
+                color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
+              }}
+            >
+              Monthly
+            </span>
+            <Switch checked={isAnnual} onCheckedChange={setIsAnnual} />
+            <span
+              style={{
+                fontFamily: FONT_BODY,
+                fontSize: '0.68rem',
+                color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
+              }}
+            >
+              Annual
+            </span>
+            {!isAnnual && (
+              <span
+                style={{
+                  fontFamily: FONT_BODY,
+                  fontSize: '0.62rem',
+                  color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+                  marginLeft: '0.25rem',
+                }}
+              >
+                Pay annually to save 46%.
+              </span>
+            )}
+          </div>
+
           <ul className="space-y-5 flex-1 mb-10">
-            {PRO_FEATURES.map((f) => (
+            {MEMBER_FEATURES.map((f) => (
               <li
                 key={f}
                 className="flex items-start gap-3"
@@ -203,17 +260,16 @@ export default function Upgrade() {
 
           <button
             onClick={() => navigate('/login')}
-            className="w-full py-4 rounded-full transition-opacity hover:opacity-80 uppercase tracking-[0.1em]"
+            className="w-full py-4 rounded-full transition-opacity hover:opacity-90 uppercase tracking-[0.1em]"
             style={{
               fontFamily: FONT_BODY,
               fontSize: '0.72rem',
               fontWeight: 400,
-              border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'}`,
-              background: 'transparent',
-              color: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.4)',
+              background: isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
+              color: isDark ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.95)',
             }}
           >
-            UPGRADE TO PRO
+            ENTER TEMPLE
           </button>
         </div>
       </div>
