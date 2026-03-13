@@ -214,23 +214,21 @@ function GoDeeperCard({
       className="go-deeper-card"
     >
       <p style={{
-        fontSize: '0.6rem',
-        fontFamily: "'Geist Mono', monospace",
-        letterSpacing: '0.2em',
+        fontSize: '0.65rem',
+        fontFamily: "'Inter', sans-serif",
+        letterSpacing: '0.15em',
         textTransform: 'uppercase',
         color: labelColor,
         marginBottom: '1rem',
-        fontWeight: 400,
+        fontWeight: 500,
       }}>
         GO DEEPER
       </p>
       <p style={{
-        fontFamily: "'Geist Mono', monospace",
-        fontSize: '0.8rem',
+        fontFamily: "'DM Sans', 'Inter', sans-serif",
+        fontSize: '1rem',
         lineHeight: 1.8,
-        fontWeight: 300,
-        letterSpacing: '-0.01em',
-        opacity: 0.5,
+        fontWeight: 400,
       }}>
         {renderHighlightedMessage()}
       </p>
@@ -298,22 +296,20 @@ function ADoorCard({
       }}
     >
       <p style={{
-        fontSize: '0.6rem',
-        fontFamily: "'Geist Mono', monospace",
-        letterSpacing: '0.2em',
+        fontSize: '0.65rem',
+        fontFamily: "'Inter', sans-serif",
+        letterSpacing: '0.15em',
         textTransform: 'uppercase',
         color: labelColor,
         marginBottom: '0.75rem',
-        fontWeight: 400,
+        fontWeight: 500,
       }}>
         {label}
       </p>
       <p style={{
         fontSize: '1.1rem',
-        fontFamily: "'DM Sans', Arial, sans-serif",
+        fontFamily: "'DM Sans', 'Inter', sans-serif",
         fontWeight: 400,
-        fontStyle: 'italic',
-        letterSpacing: '-0.01em',
         color: titleColor,
         marginBottom: goDeeper.reason ? '0.3rem' : 0,
       }}>
@@ -321,11 +317,9 @@ function ADoorCard({
       </p>
       {goDeeper.reason && (
         <p style={{
-          fontSize: '0.75rem',
-          fontFamily: "'Geist Mono', monospace",
-          fontWeight: 300,
-          letterSpacing: '0.01em',
-          lineHeight: 1.7,
+          fontSize: '0.875rem',
+          fontFamily: "'DM Sans', 'Inter', sans-serif",
+          fontWeight: 400,
           color: reasonColor,
         }}>
           {goDeeper.reason}
@@ -378,36 +372,34 @@ function AssistantMessage({
   const anchorColor = isDark ? '#ffffff' : '#0e0e0e';
 
   const anchorStyle: React.CSSProperties = {
-    fontSize: '3rem',
-    fontFamily: "'DM Sans', Arial, sans-serif",
-    fontWeight: 300,
+    fontSize: '2.5rem',
+    fontFamily: "'DM Serif Display', Georgia, serif",
+    fontWeight: 400,
     color: anchorColor,
-    letterSpacing: '-0.03em',
-    lineHeight: 1,
+    letterSpacing: '-0.02em',
+    lineHeight: 1.1,
     marginBottom: '0.75rem',
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: '0.95rem',
-    fontFamily: "'DM Sans', Arial, sans-serif",
-    fontWeight: 300,
+    fontSize: '1rem',
+    fontFamily: "'DM Sans', 'Inter', sans-serif",
+    fontWeight: 600,
     color: bodyColor,
-    lineHeight: 2,
-    letterSpacing: '-0.01em',
+    lineHeight: 1.9,
     marginBottom: '0.75rem',
   };
 
   // Responsive body font size handled via className below
 
   const invitationStyle: React.CSSProperties = {
-    fontSize: '1.2rem',
-    fontFamily: "'DM Sans', Arial, sans-serif",
+    fontSize: '1.75rem',
+    fontFamily: "'DM Serif Display', Georgia, serif",
     fontStyle: 'italic',
-    fontWeight: 300,
+    fontWeight: 400,
     color: invitationColor,
-    letterSpacing: '-0.02em',
     marginTop: '1.5rem',
-    lineHeight: 1.5,
+    lineHeight: 1.4,
   };
 
   const keywordWords = parsed.keywords ? parsed.keywords.split(/\s*·\s*/).slice(0, 3) : [];
@@ -440,7 +432,7 @@ function AssistantMessage({
         <div style={getBlurStyle()}>
           {parsed.anchor && <p style={anchorStyle}>{parsed.anchor}</p>}
           {parsed.keywords && (
-            <p style={{ fontSize: '0.65rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.2em', textTransform: 'uppercase', color: keywordsColor, marginTop: '0.75rem', marginBottom: '2rem', fontWeight: 400 }}>
+            <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginTop: '0.75rem', marginBottom: '2rem', fontWeight: 500 }}>
               {keywordWords.join(' · ')}
             </p>
           )}
@@ -512,7 +504,7 @@ function AssistantMessage({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: kDelay + i * 0.1, ease: oracleEasing }}
-                style={{ fontSize: '0.65rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.2em', textTransform: 'uppercase', color: keywordsColor, fontWeight: 400 }}
+                style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, fontWeight: 500 }}
               >
                 {i > 0 && <span style={{ marginRight: '0.5em' }}>·</span>}
                 {word.trim()}
@@ -1138,7 +1130,7 @@ export default function ChatDashboard() {
                       maxWidth: '75%',
                     }}
                   >
-                    <p style={{ fontSize: '0.9rem', fontFamily: "'Geist Mono', monospace", fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.8, color: userTextColor }}>
+                    <p style={{ fontSize: '0.9375rem', fontFamily: "'DM Sans', 'Inter', sans-serif", color: userTextColor }}>
                       {message.content}
                     </p>
                   </div>
