@@ -15,7 +15,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) navigate('/', { replace: true });
+    if (user) navigate('/chat', { replace: true });
   }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
