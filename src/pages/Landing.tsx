@@ -61,40 +61,7 @@ export default function Landing() {
   };
 
   return (
-    <div className="fixed inset-0 z-50">
-      {/* ═══ SVG DISTORTION FILTER ═══ */}
-      <svg style={{ display: 'none' }}>
-        <filter id="landing-glass-distortion">
-          <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves={2} result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale={77} />
-        </filter>
-      </svg>
-
-      {/* ═══ LIQUID GLASS OVERLAY ═══ */}
-      <div
-        className="fixed inset-0 z-[51] pointer-events-none"
-        onMouseMove={handleGlassMouseMove}
-        onMouseLeave={handleGlassMouseLeave}
-        style={{ pointerEvents: 'auto' }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            backdropFilter: 'blur(12px)',
-            filter: 'url(#landing-glass-distortion) saturate(120%) brightness(1.05)',
-          }}
-        />
-        <div
-          className="absolute inset-0 bg-background/70"
-        />
-        <div
-          ref={specularRef}
-          className="absolute inset-0"
-          style={{
-            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.08)',
-          }}
-        />
-      </div>
+    <div className="fixed inset-0 z-50 bg-background">
 
       {/* ═══ FIXED NAV ═══ */}
       <nav
