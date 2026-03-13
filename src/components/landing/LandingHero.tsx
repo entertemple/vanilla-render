@@ -167,14 +167,32 @@ export default function LandingHero() {
           transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <div
-            className="rounded-[20px] p-6 md:p-8 overflow-hidden max-h-[680px] overflow-y-auto"
+            className="rounded-[20px] p-6 md:p-8 overflow-hidden max-h-[680px] overflow-y-auto relative"
             style={{
-              background: '#0a0a0a',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '0 40px 80px rgba(0,0,0,0.2)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               scrollbarWidth: 'none',
             }}
           >
+            <div
+              className="absolute inset-0 dark:hidden"
+              style={{
+                background: 'rgba(255,255,255,0.5)',
+                border: '1px solid rgba(0,0,0,0.08)',
+                borderRadius: 'inherit',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7), 0 40px 80px rgba(0,0,0,0.08)',
+              }}
+            />
+            <div
+              className="absolute inset-0 hidden dark:block"
+              style={{
+                background: 'rgba(0,0,0,0.45)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 'inherit',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 40px 80px rgba(0,0,0,0.3)',
+              }}
+            />
+            <div className="relative z-10">
             {/* User message */}
             <div className="flex justify-end mb-8">
               <div
