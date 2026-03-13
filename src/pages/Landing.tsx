@@ -235,72 +235,9 @@ export default function Landing() {
         </section>
 
         {/* ═══ PRICING ═══ */}
-        <section className="py-48 px-6 md:px-12 max-w-[1200px] mx-auto" ref={pricingRef}>
-          <motion.h2
-            className="text-cnx-black text-center mb-24"
-            style={{
-              fontFamily: FONT_FAMILY,
-              fontSize: 'clamp(40px, 8vw, 128px)',
-              fontWeight: 400,
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em'
-            }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={pricingInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}>
-            Pricing
-          </motion.h2>
-
-          <div className="grid md:grid-cols-2 gap-6 max-w-[900px] mx-auto">
-            {/* Free */}
-            <motion.div
-              className="rounded-[24px] border border-cnx-border bg-cnx-white p-10 flex flex-col"
-              initial={{ opacity: 0, y: 24 }}
-              animate={pricingInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.2 }}>
-              <p className="text-cnx-grey uppercase tracking-[0.12em] mb-6" style={{ fontFamily: FONT_FAMILY, fontSize: '12px', fontWeight: 500 }}>Free</p>
-              <p className="text-cnx-black mb-2" style={{ fontFamily: FONT_FAMILY, fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: 400, lineHeight: 1 }}>$0</p>
-              <p className="text-cnx-grey mb-10" style={{ fontFamily: FONT_FAMILY, fontSize: '14px' }}>Forever</p>
-              <ul className="space-y-4 flex-1 mb-10">
-                {['Basic reflections', 'Light & dark themes', 'Limited daily messages'].map((f) => (
-                  <li key={f} className="text-cnx-black flex items-start gap-3" style={{ fontFamily: FONT_FAMILY, fontSize: '15px', lineHeight: '1.5' }}>
-                    <span className="text-cnx-grey mt-0.5">—</span>{f}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => navigate('/login')}
-                className="w-full py-4 rounded-[100px] border border-cnx-border text-cnx-black hover:bg-cnx-light-grey transition-colors"
-                style={{ fontFamily: FONT_FAMILY, fontSize: '15px', fontWeight: 400 }}>
-                Get Started
-              </button>
-            </motion.div>
-
-            {/* Pro */}
-            <motion.div
-              className="rounded-[24px] border border-cnx-black bg-cnx-black p-10 flex flex-col"
-              initial={{ opacity: 0, y: 24 }}
-              animate={pricingInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.35 }}>
-              <p className="text-cnx-grey uppercase tracking-[0.12em] mb-6" style={{ fontFamily: FONT_FAMILY, fontSize: '12px', fontWeight: 500 }}>Pro</p>
-              <p className="text-cnx-white mb-2" style={{ fontFamily: FONT_FAMILY, fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: 400, lineHeight: 1 }}>$20</p>
-              <p className="text-cnx-grey mb-10" style={{ fontFamily: FONT_FAMILY, fontSize: '14px' }}>per month</p>
-              <ul className="space-y-4 flex-1 mb-10">
-                {['Unlimited reflections', 'All typeface pairings', 'Unlimited messages', 'Priority processing'].map((f) => (
-                  <li key={f} className="text-cnx-white flex items-start gap-3" style={{ fontFamily: FONT_FAMILY, fontSize: '15px', lineHeight: '1.5' }}>
-                    <span className="text-cnx-grey mt-0.5">—</span>{f}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => navigate('/login')}
-                className="w-full py-4 rounded-[100px] bg-cnx-white text-cnx-black hover:bg-cnx-light-grey transition-colors"
-                style={{ fontFamily: FONT_FAMILY, fontSize: '15px', fontWeight: 400 }}>
-                Upgrade to Pro
-              </button>
-            </motion.div>
-          </div>
-        </section>
+        <div ref={pricingRef}>
+          <LandingPricing />
+        </div>
 
         {/* ═══ FINAL STATEMENT ═══ */}
         <section className="py-48 px-6 flex items-center justify-center min-h-[70vh]" ref={finalRef}>
