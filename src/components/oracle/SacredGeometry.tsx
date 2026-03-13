@@ -242,7 +242,7 @@ function KrysticMerkaba({ stroke }: { stroke: string }) {
 
 const GEOMETRIES = [KatharaGrid, ReucheFormation, KrystalSpiral, EckashaSymbol, MaharicShield, StarCrystalSeal, KrysticMerkaba];
 
-export default function SacredGeometry({ dayIndex, className, strokeColor = 'rgba(255,255,255,0.25)' }: SacredGeometryProps) {
+export default function SacredGeometry({ dayIndex, className, strokeColor = 'rgba(255,255,255,0.25)', strokeWidth }: SacredGeometryProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const GeometryComponent = GEOMETRIES[dayIndex % 7];
 
