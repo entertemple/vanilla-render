@@ -158,7 +158,7 @@ export default function Landing() {
               </button>
 
               <div
-                className={`rounded-3xl p-8 ${
+                className={`rounded-[28px] p-10 ${
                   isDark
                     ? 'bg-[rgba(30,30,30,0.85)] border border-[rgba(255,255,255,0.08)]'
                     : 'bg-[rgba(255,255,255,0.85)] border border-[rgba(0,0,0,0.06)]'
