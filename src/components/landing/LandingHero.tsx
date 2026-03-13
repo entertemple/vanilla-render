@@ -53,6 +53,33 @@ export default function LandingHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
+          {/* Glass wrapper for signup form */}
+          <div
+            className="relative rounded-3xl overflow-hidden p-8 md:p-10"
+            style={{
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+            }}
+          >
+            <div
+              className="absolute inset-0 dark:hidden"
+              style={{
+                background: 'rgba(255,255,255,0.4)',
+                border: '1px solid rgba(0,0,0,0.06)',
+                borderRadius: 'inherit',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 32px rgba(0,0,0,0.06)',
+              }}
+            />
+            <div
+              className="absolute inset-0 hidden dark:block"
+              style={{
+                background: 'rgba(0,0,0,0.35)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 'inherit',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.3)',
+              }}
+            />
+            <div className="relative z-10 flex flex-col">
           <h1
             className="text-foreground mb-4"
             style={{
