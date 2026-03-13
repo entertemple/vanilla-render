@@ -206,7 +206,7 @@ export default function LandingHero() {
                       {kw}
                     </span>
                     {i < PREVIEW_KEYWORDS.length - 1 && (
-                      <span style={{ color: 'rgba(255,255,255,0.25)', margin: '0 6px' }}>·</span>
+                      <span className="text-muted-foreground/40" style={{ margin: '0 6px' }}>·</span>
                     )}
                   </span>
                 ))}
