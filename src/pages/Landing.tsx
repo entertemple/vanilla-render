@@ -79,15 +79,12 @@ export default function Landing() {
         <div
           className="absolute inset-0"
           style={{
-            backdropFilter: 'blur(4px)',
-            filter: 'url(#landing-glass-distortion) saturate(120%) brightness(1.15)',
+            backdropFilter: 'blur(12px)',
+            filter: 'url(#landing-glass-distortion) saturate(120%) brightness(1.05)',
           }}
         />
         <div
-          className="absolute inset-0"
-          style={{
-            background: 'var(--bg-color, rgba(255,255,255,0.03))',
-          }}
+          className="absolute inset-0 bg-background/70"
         />
         <div
           ref={specularRef}
