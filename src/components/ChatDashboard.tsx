@@ -434,7 +434,7 @@ function AssistantMessage({
         <div style={getBlurStyle()}>
           {parsed.anchor && <p style={anchorStyle}>{parsed.anchor}</p>}
           {parsed.keywords && (
-            <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginTop: '0.75rem', marginBottom: '2rem', fontWeight: 500 }}>
+            <p style={{ fontSize: '0.65rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.2em', textTransform: 'uppercase', color: keywordsColor, marginTop: '0.75rem', marginBottom: '2rem', fontWeight: 400 }}>
               {keywordWords.join(' · ')}
             </p>
           )}
