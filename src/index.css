@@ -174,11 +174,11 @@ label,
   --bg-color: rgba(40, 40, 40, 0.75);
   --highlight: rgba(255, 255, 255, 0.08);
   --text: #ffffff;
-  --input-bg: rgba(0, 0, 0, 0.35);
+  --input-bg: rgba(255, 255, 255, 0.08);
   --input-border: rgba(255, 255, 255, 0.2);
-  --input-focus: rgba(0, 0, 0, 0.5);
+  --input-focus: rgba(255, 255, 255, 0.12);
   background: rgba(40, 40, 40, 0.75);
-  backdrop-filter: blur(120px);
+  backdrop-filter: blur(64px);
   border-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
