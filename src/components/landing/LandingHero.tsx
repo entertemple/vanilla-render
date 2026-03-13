@@ -155,6 +155,8 @@ export default function LandingHero() {
             {' '}and{' '}
             <a href="/privacy-policy" className="underline hover:text-foreground transition-colors">Privacy Policy</a>
           </p>
+            </div>
+          </div>
         </motion.div>
 
         {/* RIGHT COLUMN — Conversation Preview Card */}
