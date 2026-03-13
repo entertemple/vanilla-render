@@ -252,7 +252,7 @@ export default function Layout({ children }: LayoutProps) {
               
               <div className="flex-1 flex items-center justify-center">
               <button
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/chat')}
                   className="rounded-[12px] p-2 outline-none focus:outline-none focus:ring-0 border-none"
                 >
                   {theme === 'light' ? (
