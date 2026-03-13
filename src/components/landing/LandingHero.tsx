@@ -138,21 +138,16 @@ export default function LandingHero() {
           transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <div
-            className="rounded-[20px] p-6 md:p-8 overflow-hidden max-h-[680px] overflow-y-auto"
+            className="rounded-2xl p-6 md:p-8 overflow-hidden max-h-[680px] overflow-y-auto bg-card border border-border dark:bg-[rgba(255,255,255,0.06)] dark:border-[rgba(255,255,255,0.12)] dark:backdrop-blur-xl"
             style={{
-              background: '#0a0a0a',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '0 40px 80px rgba(0,0,0,0.2)',
               scrollbarWidth: 'none',
             }}
           >
             {/* User message */}
             <div className="flex justify-end mb-8">
               <div
-                className="rounded-2xl px-5 py-3.5 max-w-[85%]"
+                className="rounded-2xl px-5 py-3.5 max-w-[85%] dark:bg-[rgba(255,255,255,0.06)] dark:border-[rgba(255,255,255,0.08)] border"
                 style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.08)',
                   fontFamily: FONT_BODY,
                   fontSize: '0.9rem',
                   color: 'rgba(255,255,255,0.85)',
@@ -169,8 +164,8 @@ export default function LandingHero() {
               <h2
                 style={{
                   fontFamily: FONT_HEADING,
-                  fontSize: 'clamp(1.8rem, 3vw, 3rem)',
-                  fontWeight: 300,
+                  fontSize: '2.5rem',
+                  fontWeight: 400,
                   color: 'rgba(255,255,255,0.9)',
                   lineHeight: 1.15,
                 }}
@@ -185,7 +180,7 @@ export default function LandingHero() {
                     <span
                       style={{
                         fontFamily: FONT_BODY,
-                        fontSize: '0.65rem',
+                        fontSize: '0.7rem',
                         fontWeight: 500,
                         color: 'rgba(255,255,255,0.45)',
                         letterSpacing: '0.08em',
@@ -207,8 +202,8 @@ export default function LandingHero() {
                   <p
                     key={line}
                     style={{
-                      fontFamily: FONT_BODY,
-                      fontSize: '0.82rem',
+                      fontFamily: FONT_HEADING,
+                      fontSize: '1rem',
                       fontWeight: 600,
                       color: 'rgba(255,255,255,0.8)',
                       lineHeight: 1.9,
@@ -223,7 +218,7 @@ export default function LandingHero() {
               <p
                 style={{
                   fontFamily: FONT_HEADING,
-                  fontSize: '1.3rem',
+                  fontSize: '1.75rem',
                   fontWeight: 300,
                   fontStyle: 'italic',
                   color: 'rgba(255,255,255,0.7)',
