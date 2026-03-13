@@ -157,13 +157,14 @@ export default function Landing() {
         {/* ═══ 2. STATEMENT ═══ */}
         <section className="py-32 md:py-48 px-6 md:px-12 max-w-[900px] mx-auto" ref={statementRef}>
           <motion.p
-            className="text-muted-foreground text-center"
+            className="text-foreground text-center"
             style={{
               fontFamily: FONT_HEADING,
               fontSize: 'clamp(24px, 4vw, 42px)',
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
+              mixBlendMode: 'normal',
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
