@@ -123,7 +123,7 @@ export default function Landing() {
       <AnimatePresence>
         {menuOpen && (
           <>
-            {/* Backdrop - below nav z-index so wordmark stays on top */}
+            {/* Backdrop */}
             <motion.div
               className="fixed inset-0 z-[70]"
               initial={{ opacity: 0 }}
@@ -137,6 +137,17 @@ export default function Landing() {
                 WebkitBackdropFilter: 'blur(20px)',
               }}
             />
+            {/* Close button - top right */}
+            <motion.button
+              className="fixed z-[73] top-6 right-6 w-8 h-8 rounded-full flex items-center justify-center transition-colors text-foreground/60 hover:text-foreground"
+              onClick={() => setMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <X size={18} strokeWidth={1.5} />
+            </motion.button>
             {/* Card + close button */}
             <motion.div
               className="fixed z-[72] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
