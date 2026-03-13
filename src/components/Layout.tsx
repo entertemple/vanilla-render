@@ -156,7 +156,7 @@ export default function Layout({ children }: LayoutProps) {
                 className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] border ${borderColor} ${hoverBg} transition-colors`}
               >
                 <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
-                <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[16px] tracking-[-0.22px] uppercase`}>
+                <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[13px] tracking-[-0.22px] uppercase`}>
                   New Chat
                 </span>
               </button>
@@ -177,8 +177,8 @@ export default function Layout({ children }: LayoutProps) {
                       ${active ? `${activeBg} border ${borderColor}` : hoverBg}
                     `}
                   >
-                    <Icon className={`w-3.5 h-3.5 ${textColor}`} strokeWidth={1.5} />
-                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[16px]`}>
+                    <Icon className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />
+                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px]`}>
                       {item.label}
                     </span>
                   </button>
@@ -194,7 +194,7 @@ export default function Layout({ children }: LayoutProps) {
                 scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent'
               }}
             >
-              <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[12px] tracking-[0.1em] uppercase px-3 py-2`}>
+              <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[11px] tracking-[0.1em] uppercase px-3 py-2`}>
                 Recent Chats
               </div>
               {conversations.map((conv) => (
@@ -209,7 +209,7 @@ export default function Layout({ children }: LayoutProps) {
                     }
                   `}
                 >
-                  <span className={`font-['Inter',_sans-serif] ${textColor} text-[16px] truncate flex-1`}>
+                  <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px] truncate flex-1`}>
                     {conv.title}
                   </span>
                   <button
