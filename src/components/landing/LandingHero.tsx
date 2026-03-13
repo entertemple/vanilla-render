@@ -70,7 +70,7 @@ export default function LandingHero() {
               letterSpacing: '-0.02em',
             }}
           >
-            Built for clarity.
+            Built for clarity
           </h1>
 
           <p
@@ -81,7 +81,7 @@ export default function LandingHero() {
               lineHeight: 1.6,
             }}
           >
-            Unravel with Temple.
+            Unravel with Temple
           </p>
 
           {/* Google button */}
