@@ -243,9 +243,9 @@ export default function LandingHero() {
                   fontSize: '1.75rem',
                   fontWeight: 400,
                   fontStyle: 'italic',
-                  color: 'rgba(255,255,255,0.7)',
                   lineHeight: 1.4,
                 }}
+                className="text-foreground/70"
               >
                 {PREVIEW_INVITATION}
               </motion.p>
