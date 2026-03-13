@@ -273,14 +273,13 @@ export default function LandingHero() {
                 <p className="text-foreground/80" style={{ fontFamily: FONT_BODY, fontSize: '0.8rem', lineHeight: 1.8 }}>
                   {PREVIEW_USER_MSG.split(/(\bsomething to say\b|\bwithout it going wrong\b|\bI don't know how to say it\b)/g).map((part, i) => {
                     const isHighlighted = GO_DEEPER_PHRASES.some(p => p.text === part);
-                    return (
-                      <span
-                        key={i}
-                        style={{
-                          color: isHighlighted ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.25)',
-                          fontWeight: isHighlighted ? 600 : 400,
-                          cursor: isHighlighted ? 'pointer' : 'default',
-                        }}
+                      return (
+                        <span
+                          key={i}
+                          className={isHighlighted ? 'text-foreground font-semibold' : 'text-muted-foreground/50'}
+                          style={{
+                            cursor: isHighlighted ? 'pointer' : 'default',
+                          }}
                       >
                         {part}
                       </span>
