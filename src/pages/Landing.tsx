@@ -120,12 +120,12 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
-              mixBlendMode: 'normal',
+              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.2 }}
-          >
+            transition={{ duration: 0.9, delay: 0.2 }}>
+            
             Somewhere along the way, thinking got complicated. Tools piled up. Noise crept in. Everyone optimized for more — more output, more answers, more reasons to stay.
           </motion.p>
           <motion.p
@@ -136,12 +136,12 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
-              mixBlendMode: 'normal',
+              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={statementInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.5 }}
-          >
+            transition={{ duration: 0.9, delay: 0.5 }}>
+            
             Temple is the room where you can finally listen to yourself.
           </motion.p>
         </section>
@@ -154,32 +154,32 @@ export default function Landing() {
               style={{ fontFamily: FONT_BODY, fontSize: '0.68rem' }}
               initial={{ opacity: 0 }}
               animate={howInView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.6 }}
-            >
+              transition={{ duration: 0.6 }}>
+              
               How It Works
             </motion.p>
             {[
-              "You bring what you're carrying.",
-              'Temple reads what lives underneath it.',
-              'Then it leaves you with what matters.',
-            ].map((line, i) => (
-              <motion.p
-                key={i}
-                className="text-foreground mb-4"
-                style={{
-                  fontFamily: FONT_HEADING,
-                  fontSize: 'clamp(20px, 3vw, 32px)',
-                  fontWeight: 400,
-                  lineHeight: 1.5,
-                  mixBlendMode: 'normal',
-                }}
-                initial={{ opacity: 0, y: 16 }}
-                animate={howInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.2 + i * 0.15 }}
-              >
+            "You bring what you're carrying.",
+            'Temple reads what lives underneath it.',
+            'Then it leaves you with what matters.'].
+            map((line, i) =>
+            <motion.p
+              key={i}
+              className="text-foreground mb-4"
+              style={{
+                fontFamily: FONT_HEADING,
+                fontSize: 'clamp(20px, 3vw, 32px)',
+                fontWeight: 400,
+                lineHeight: 1.5,
+                mixBlendMode: 'normal'
+              }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={howInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 + i * 0.15 }}>
+              
                 {line}
               </motion.p>
-            ))}
+            )}
           </div>
         </section>
 
@@ -193,12 +193,12 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: '-0.01em',
-              mixBlendMode: 'normal',
+              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.2 }}
-          >
+            transition={{ duration: 0.9, delay: 0.2 }}>
+            
             Most AI tells you what to do. Temple shows you what you already know but haven't been able to say.
           </motion.p>
           <motion.p
@@ -208,12 +208,12 @@ export default function Landing() {
               fontSize: 'clamp(20px, 3vw, 32px)',
               fontWeight: 400,
               lineHeight: 1.45,
-              mixBlendMode: 'normal',
+              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={whatInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.5 }}
-          >
+            transition={{ duration: 0.9, delay: 0.5 }}>
+            
             It doesn't push you further than you want to go. But if you're ready to look closer, it will go there with you.
           </motion.p>
         </section>
@@ -233,13 +233,13 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 0.95,
               letterSpacing: '-0.02em',
-              mixBlendMode: 'normal',
+              mixBlendMode: 'normal'
             }}
             initial={{ opacity: 0, y: 40 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            It just works.
+            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}>
+            
+            It just works
           </motion.h1>
 
           <motion.p
@@ -247,12 +247,12 @@ export default function Landing() {
             style={{
               fontFamily: FONT_BODY,
               fontSize: 'clamp(13px, 1.5vw, 15px)',
-              lineHeight: 1.6,
+              lineHeight: 1.6
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
+            transition={{ duration: 0.8, delay: 0.3 }}>
+            
             The first AI built for the interior life. Always the first place you go.
           </motion.p>
 
@@ -263,12 +263,12 @@ export default function Landing() {
               fontFamily: FONT_BODY,
               fontSize: '14px',
               fontWeight: 400,
-              letterSpacing: '0.02em',
+              letterSpacing: '0.02em'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
+            transition={{ duration: 0.6, delay: 0.5 }}>
+            
             Enter Temple
           </motion.button>
         </section>
@@ -276,14 +276,14 @@ export default function Landing() {
         {/* ═══ 7. FOOTER — Full-width wordmark ═══ */}
         <footer className="px-8 md:px-16 pt-24 pb-16">
           <div className="w-full">
-            {isDark ? (
-              <WordmarkDark className="w-full h-auto" />
-            ) : (
-              <WordmarkLight className="w-full h-auto" />
-            )}
+            {isDark ?
+            <WordmarkDark className="w-full h-auto" /> :
+
+            <WordmarkLight className="w-full h-auto" />
+            }
           </div>
         </footer>
       </div>
-    </div>
-  );
+    </div>);
+
 }
