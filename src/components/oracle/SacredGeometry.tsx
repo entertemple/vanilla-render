@@ -4,6 +4,7 @@ interface SacredGeometryProps {
   dayIndex: number;
   className?: string;
   strokeColor?: string;
+  strokeWidth?: number;
 }
 
 function KatharaGrid({ stroke }: { stroke: string }) {
