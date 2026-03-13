@@ -153,17 +153,12 @@ export default function Layout({ children }: LayoutProps) {
             <div className={`flex-shrink-0 p-4 border-b ${borderColor} space-y-3`}>
               <button
                 onClick={createNewChat}
-                className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] glass-new-chat border ${borderColor} ${hoverBg} transition-colors relative`}
+                className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] border ${borderColor} ${hoverBg} transition-colors`}
               >
-                <div className="glass-filter" />
-                <div className="glass-overlay" />
-                <div className="glass-specular" />
-                <div className="glass-content flex items-center gap-2">
-                  <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
-                  <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[11px] tracking-[-0.22px] uppercase`}>
-                    New Chat
-                  </span>
-                </div>
+                <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
+                <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[16px] tracking-[-0.22px] uppercase`}>
+                  New Chat
+                </span>
               </button>
             </div>
 
@@ -183,7 +178,7 @@ export default function Layout({ children }: LayoutProps) {
                     `}
                   >
                     <Icon className={`w-3.5 h-3.5 ${textColor}`} strokeWidth={1.5} />
-                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[11px]`}>
+                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[16px]`}>
                       {item.label}
                     </span>
                   </button>
@@ -199,7 +194,7 @@ export default function Layout({ children }: LayoutProps) {
                 scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent'
               }}
             >
-              <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[9px] tracking-[0.1em] uppercase px-3 py-2`}>
+              <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[12px] tracking-[0.1em] uppercase px-3 py-2`}>
                 Recent Chats
               </div>
               {conversations.map((conv) => (
@@ -214,7 +209,7 @@ export default function Layout({ children }: LayoutProps) {
                     }
                   `}
                 >
-                  <span className={`font-['Inter',_sans-serif] ${textColor} text-[11px] truncate flex-1`}>
+                  <span className={`font-['Inter',_sans-serif] ${textColor} text-[16px] truncate flex-1`}>
                     {conv.title}
                   </span>
                   <button
