@@ -224,9 +224,9 @@ export default function LandingHero() {
                       fontFamily: FONT_HEADING,
                       fontSize: '1rem',
                       fontWeight: 600,
-                      color: 'rgba(255,255,255,0.8)',
                       lineHeight: 1.9,
                     }}
+                    className="text-foreground/80"
                   >
                     {line}
                   </motion.p>
