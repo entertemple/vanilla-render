@@ -379,30 +379,35 @@ label,
   z-index: 0;
 }
 
-/* SVG geometry — dark mode */
-.oracle-svg {
-  filter:
-    drop-shadow(0 0 8px rgba(255,255,255,0.18))
-    drop-shadow(0 0 24px rgba(255,255,255,0.08));
+/* Oracle image container */
+.oracle-image-container {
+  width: 100%;
+  height: 55%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
 }
 
-/* SVG geometry — light mode */
-:root:not(.dark) .oracle-svg,
-[data-theme="light"] .oracle-svg {
-  filter:
-    drop-shadow(0 0 6px rgba(0,0,0,0.1))
-    drop-shadow(0 0 16px rgba(0,0,0,0.05));
+:root:not(.dark) .oracle-image-container,
+[data-theme="light"] .oracle-image-container {
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
-/* Light mode SVG strokes */
-:root:not(.dark) .oracle-svg path,
-:root:not(.dark) .oracle-svg circle,
-:root:not(.dark) .oracle-svg line,
-:root:not(.dark) .oracle-svg polyline,
-:root:not(.dark) .oracle-svg rect,
-:root:not(.dark) .oracle-svg polygon,
-[data-theme="light"] .oracle-svg * {
-  stroke: rgba(0,0,0,0.6) !important;
+.oracle-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 1.5rem;
+  mix-blend-mode: screen;
+}
+
+:root:not(.dark) .oracle-image,
+[data-theme="light"] .oracle-image {
+  mix-blend-mode: multiply;
+  opacity: 0.9;
 }
 
 .oracle-divider {
