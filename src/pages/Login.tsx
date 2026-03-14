@@ -30,7 +30,13 @@ export default function Login() {
       setError(error.message);
       setLoading(false);
     } else {
-      navigate('/chat');
+      const { data: { session } } = await (await import('@/integrations/supabase/client')).supabase.auth.getSession();
+      if (session) {
+        const isComplete = await checkOnboarding(session.user.id);
+        navigate(isComplete ? '/chat' : '/onboarding', { replace: true });
+      } else {
+        navigate('/chat', { replace: true });
+      }
     }
   };
 
