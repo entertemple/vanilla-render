@@ -20,6 +20,28 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+// Inline SVG icons for nav items
+const OracleIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.2"/>
+    <circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+  </svg>
+);
+
+const HistoryIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.2"/>
+    <path d="M7 4v3.5l2 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+  </svg>
+);
+
+const JournalIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 3v8M2 3h5v8H2a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+    <path d="M7 3h5a1 1 0 011 1v6a1 1 0 01-1 1H7" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+  </svg>
+);
+
 export default function Layout({ children }: LayoutProps) {
   const { theme, userPlan } = useTheme();
   const { user } = useAuth();
@@ -45,7 +67,6 @@ export default function Layout({ children }: LayoutProps) {
     };
     loadConversations();
 
-    // Subscribe to realtime changes
     const channel = supabase
       .channel('conversations-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'conversations', filter: `user_id=eq.${user.id}` }, () => {
@@ -65,26 +86,24 @@ export default function Layout({ children }: LayoutProps) {
         setSidebarOpen(true);
       }
     };
-
-    handleResize(); // Check on mount
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Theme-based colors
   const bgPrimary = theme === 'light' 
-    ? 'bg-[rgba(255,255,255,0.75)]'  // More opaque for light theme
-    : 'bg-[rgba(81,81,81,0.08)]';    // Almost transparent glassmorphism
+    ? 'bg-[rgba(255,255,255,0.75)]'
+    : 'bg-[rgba(81,81,81,0.08)]';
   
   const bgSecondary = theme === 'light' 
-    ? 'bg-[rgba(255,255,255,0.75)]'  // More opaque for light theme
-    : 'bg-[rgba(81,81,81,0.08)]';    // Almost transparent glassmorphism
+    ? 'bg-[rgba(255,255,255,0.75)]'
+    : 'bg-[rgba(81,81,81,0.08)]';
   
   const textColor = theme === 'light' ? 'text-gray-900' : 'text-white';
   const textSecondary = theme === 'light' ? 'text-gray-600' : 'text-[rgba(255,255,255,0.6)]';
   const borderColor = theme === 'light' 
-    ? 'border-[rgba(255,255,255,0.6)]'  // Lighter border for glass effect
-    : 'border-[rgba(255,255,255,0.18)]'; // Lighter border for glass effect
+    ? 'border-[rgba(255,255,255,0.6)]'
+    : 'border-[rgba(255,255,255,0.18)]';
   
   const hoverBg = theme === 'light' 
     ? 'hover:bg-[rgba(255,255,255,0.15)]' 
@@ -93,10 +112,6 @@ export default function Layout({ children }: LayoutProps) {
   const activeBg = theme === 'light' 
     ? 'bg-[rgba(255,255,255,0.2)]' 
     : 'bg-[rgba(255,255,255,0.15)]';
-  
-  const inputBg = theme === 'light' 
-    ? 'bg-[rgba(255,255,255,0.1)]' 
-    : 'bg-[rgba(255,255,255,0.05)]';
 
   const createNewChat = async () => {
     if (!user) return;
@@ -121,9 +136,9 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const navigationItems = [
-    { label: 'Oracle', path: '/oracle' },
-    { label: 'History', path: '/history' },
-    { label: 'Journal', path: '/journal' },
+    { label: 'Oracle', path: '/oracle', icon: <OracleIcon /> },
+    { label: 'History', path: '/history', icon: <HistoryIcon /> },
+    { label: 'Journal', path: '/journal', icon: <JournalIcon /> },
   ];
 
   const isActive = (path: string) => {
@@ -176,6 +191,7 @@ export default function Layout({ children }: LayoutProps) {
                       ${active ? `${activeBg} border ${borderColor}` : hoverBg}
                     `}
                   >
+                    <span className={`${textColor} opacity-60`}>{item.icon}</span>
                     <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px]`}>
                       {item.label}
                     </span>
@@ -193,7 +209,7 @@ export default function Layout({ children }: LayoutProps) {
               }}
             >
               <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[11px] tracking-[0.1em] uppercase px-3 py-2`}>
-                Recent Chats
+                Recents
               </div>
               {conversations.map((conv) => (
                 <div
@@ -207,12 +223,20 @@ export default function Layout({ children }: LayoutProps) {
                     }
                   `}
                 >
-                  <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px] truncate flex-1`}>
+                  <span
+                    className={`font-['Inter',_sans-serif] ${textColor} text-[13px] flex-1 min-w-0`}
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      wordBreak: 'keep-all',
+                    }}
+                  >
                     {conv.title}
                   </span>
                   <button
                     onClick={(e) => deleteConversation(conv.id, e)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
                   >
                     <Trash2 className={`w-3 h-3 ${textSecondary} hover:text-red-400`} strokeWidth={1.5} />
                   </button>
@@ -222,7 +246,6 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* Sidebar Footer */}
             <div className={`flex-shrink-0 p-4 border-t ${borderColor}`}>
-              {/* Profile Popup with Avatar + Username */}
               <ProfilePopup 
                 onSettingsClick={() => setSettingsOpen(true)}
                 onProfileClick={() => setProfileOpen(true)}
@@ -251,7 +274,7 @@ export default function Layout({ children }: LayoutProps) {
               </button>
               
               <div className="flex-1 flex items-center justify-center">
-              <button
+                <button
                   onClick={() => navigate('/chat')}
                   className="rounded-[12px] p-2 outline-none focus:outline-none focus:ring-0 border-none"
                 >
@@ -263,7 +286,7 @@ export default function Layout({ children }: LayoutProps) {
                 </button>
               </div>
 
-              <div className="w-8" /> {/* Spacer for centering */}
+              <div className="w-8" />
             </div>
 
             {/* Scrollable Content Area */}
