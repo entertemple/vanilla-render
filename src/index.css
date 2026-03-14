@@ -37,34 +37,24 @@ label,
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
-
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-
     --radius: 0.5rem;
-
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -73,8 +63,6 @@ label,
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-
-    /* Createnix design tokens */
     --cnx-black: 0 0% 5.5%;
     --cnx-grey: 0 0% 70.6%;
     --cnx-light-grey: 0 0% 96.9%;
@@ -86,28 +74,20 @@ label,
   .dark {
     --background: 0 0% 0%;
     --foreground: 210 40% 98%;
-
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
@@ -126,7 +106,6 @@ label,
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
     margin: 0;
@@ -136,22 +115,10 @@ label,
 }
 
 /* Custom scrollbar styles */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
 
 /* Liquid Glass Chat Input */
 .glass-search {
@@ -216,14 +183,8 @@ label,
 
 /* Anchor reveal animation */
 @keyframes anchorReveal {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .anchor-text {
@@ -252,21 +213,9 @@ label,
   filter: url(#glass-distortion) saturate(120%) brightness(1.15);
 }
 
-.glass-overlay {
-  z-index: 2;
-  background: var(--bg-color);
-}
-
-.glass-specular {
-  z-index: 3;
-  box-shadow: inset 1px 1px 1px var(--highlight);
-}
-
-.glass-content {
-  position: relative;
-  z-index: 4;
-  color: var(--text);
-}
+.glass-overlay { z-index: 2; background: var(--bg-color); }
+.glass-specular { z-index: 3; box-shadow: inset 1px 1px 1px var(--highlight); }
+.glass-content { position: relative; z-index: 4; color: var(--text); }
 
 /* Sharp question line — blur anchor */
 .blur-anchor-question {
@@ -299,12 +248,12 @@ label,
 }
 
 @keyframes svgDraw {
-  to {
-    stroke-dashoffset: 0;
-  }
+  to { stroke-dashoffset: 0; }
 }
 
-/* Oracle page styles */
+/* ===================== ORACLE PAGE STYLES ===================== */
+
+/* Background orbs — dark mode */
 .oracle-bg-orb-1 {
   position: fixed;
   width: 600px;
@@ -333,6 +282,16 @@ label,
   z-index: 0;
 }
 
+/* Background orbs — light mode */
+:root:not(.dark) .oracle-bg-orb-1,
+[data-theme="light"] .oracle-bg-orb-1 {
+  background: radial-gradient(circle, rgba(0,0,0,0.04) 0%, transparent 70%);
+}
+:root:not(.dark) .oracle-bg-orb-2,
+[data-theme="light"] .oracle-bg-orb-2 {
+  background: radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%);
+}
+
 .oracle-grain {
   position: fixed;
   inset: 0;
@@ -342,6 +301,7 @@ label,
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* Oracle card — dark mode (default) */
 .oracle-card {
   width: 380px;
   min-height: 560px;
@@ -349,10 +309,10 @@ label,
   position: relative;
   z-index: 10;
   background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(40px) saturate(180%) brightness(1.1);
-  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.1);
+  backdrop-filter: blur(60px) saturate(200%) brightness(1.08) contrast(1.02);
+  -webkit-backdrop-filter: blur(60px) saturate(200%) brightness(1.08) contrast(1.02);
   border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.1);
   box-shadow:
     0 0 0 0.5px rgba(255,255,255,0.06) inset,
     0 1px 0 rgba(255,255,255,0.15) inset,
@@ -368,6 +328,19 @@ label,
   max-height: calc(100vh - 12rem);
 }
 
+/* Oracle card — light mode */
+:root:not(.dark) .oracle-card,
+[data-theme="light"] .oracle-card {
+  background: rgba(255,255,255,0.45);
+  border: 1px solid rgba(0,0,0,0.07);
+  box-shadow:
+    0 0 0 0.5px rgba(255,255,255,0.8) inset,
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 32px 64px rgba(0,0,0,0.08),
+    0 8px 24px rgba(0,0,0,0.05);
+}
+
+/* Top specular edge — dark mode */
 .oracle-card::before {
   content: '';
   position: absolute;
@@ -378,13 +351,26 @@ label,
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255,255,255,0.35) 30%,
-    rgba(255,255,255,0.5) 50%,
-    rgba(255,255,255,0.35) 70%,
+    rgba(255,255,255,0.55) 25%,
+    rgba(255,255,255,0.75) 50%,
+    rgba(255,255,255,0.55) 75%,
     transparent 100%
   );
   border-radius: 1px;
   z-index: 1;
+}
+
+/* Top specular edge — light mode */
+:root:not(.dark) .oracle-card::before,
+[data-theme="light"] .oracle-card::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.95) 25%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.95) 75%,
+    transparent 100%
+  );
 }
 
 .oracle-card::after {
@@ -402,10 +388,30 @@ label,
   z-index: 0;
 }
 
+/* SVG geometry — dark mode */
 .oracle-svg {
   filter:
-    drop-shadow(0 0 6px rgba(255,255,255,0.12))
-    drop-shadow(0 0 20px rgba(255,255,255,0.05));
+    drop-shadow(0 0 8px rgba(255,255,255,0.18))
+    drop-shadow(0 0 24px rgba(255,255,255,0.08));
+}
+
+/* SVG geometry — light mode */
+:root:not(.dark) .oracle-svg,
+[data-theme="light"] .oracle-svg {
+  filter:
+    drop-shadow(0 0 6px rgba(0,0,0,0.1))
+    drop-shadow(0 0 16px rgba(0,0,0,0.05));
+}
+
+/* Light mode SVG strokes */
+:root:not(.dark) .oracle-svg path,
+:root:not(.dark) .oracle-svg circle,
+:root:not(.dark) .oracle-svg line,
+:root:not(.dark) .oracle-svg polyline,
+:root:not(.dark) .oracle-svg rect,
+:root:not(.dark) .oracle-svg polygon,
+[data-theme="light"] .oracle-svg * {
+  stroke: rgba(0,0,0,0.6) !important;
 }
 
 .oracle-divider {
@@ -417,4 +423,146 @@ label,
     rgba(255,255,255,0.25) 50%,
     transparent
   );
+}
+
+:root:not(.dark) .oracle-divider,
+[data-theme="light"] .oracle-divider {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0,0,0,0.15) 50%,
+    transparent
+  );
+}
+
+/* Liquid glass outer wrapper */
+.oracle-card-outer {
+  filter: url(#liquid-glass);
+}
+
+/* ===================== JOURNAL PAGE STYLES ===================== */
+
+.journal-entry-card {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+.journal-entry-card:hover {
+  background: rgba(255,255,255,0.03);
+}
+.journal-entry-card.active {
+  background: rgba(255,255,255,0.05);
+}
+
+:root:not(.dark) .journal-entry-card {
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+:root:not(.dark) .journal-entry-card:hover {
+  background: rgba(0,0,0,0.02);
+}
+:root:not(.dark) .journal-entry-card.active {
+  background: rgba(0,0,0,0.04);
+}
+
+.journal-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 4rem;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.entry-title {
+  font-family: "DM Sans", Arial, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 200;
+  font-style: italic;
+  color: rgba(255,255,255,0.9);
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  margin-bottom: 1.25rem;
+  caret-color: rgba(255,255,255,0.6);
+}
+.entry-title::placeholder { color: rgba(255,255,255,0.2); }
+
+:root:not(.dark) .entry-title {
+  color: rgba(0,0,0,0.85);
+  caret-color: rgba(0,0,0,0.5);
+}
+:root:not(.dark) .entry-title::placeholder { color: rgba(0,0,0,0.2); }
+
+.entry-body {
+  font-family: "Geist Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.6);
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  width: 100%;
+  flex: 1;
+  min-height: 300px;
+  caret-color: rgba(255,255,255,0.6);
+}
+.entry-body::placeholder { color: rgba(255,255,255,0.2); }
+
+:root:not(.dark) .entry-body {
+  color: rgba(0,0,0,0.5);
+  caret-color: rgba(0,0,0,0.5);
+}
+:root:not(.dark) .entry-body::placeholder { color: rgba(0,0,0,0.2); }
+
+.attachment-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: auto;
+}
+:root:not(.dark) .attachment-bar {
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.attach-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  opacity: 0.35;
+  transition: opacity 200ms, background 200ms;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: inherit;
+}
+.attach-btn:hover {
+  opacity: 0.8;
+  background: rgba(255,255,255,0.06);
+}
+:root:not(.dark) .attach-btn:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+.attachment-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  font-family: "Geist Mono", monospace;
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+:root:not(.dark) .attachment-chip {
+  border: 1px solid rgba(0,0,0,0.08);
 }
