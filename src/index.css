@@ -328,8 +328,9 @@ label,
   max-width: calc(100vw - 3rem);
 }
 
-/* Top specular edge — dark mode */
-.oracle-card::before {
+/* Top specular edge — always light */
+.oracle-card::before,
+.dark .oracle-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -339,26 +340,13 @@ label,
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255,255,255,0.55) 25%,
-    rgba(255,255,255,0.75) 50%,
-    rgba(255,255,255,0.55) 75%,
+    rgba(255,255,255,0.95) 30%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.95) 70%,
     transparent 100%
-  );
+  ) !important;
   border-radius: 1px;
   z-index: 1;
-}
-
-/* Top specular edge — light mode */
-:root:not(.dark) .oracle-card::before,
-[data-theme="light"] .oracle-card::before {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0.95) 25%,
-    rgba(255,255,255,1) 50%,
-    rgba(255,255,255,0.95) 75%,
-    transparent 100%
-  );
 }
 
 .oracle-card::after {
