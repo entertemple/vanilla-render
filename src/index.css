@@ -301,38 +301,36 @@ label,
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Oracle card — dark mode (default) — matches chat input surface */
-.oracle-card {
-  width: 380px;
-  height: 580px;
+/* Oracle card — always light, regardless of theme */
+.oracle-card,
+.dark .oracle-card,
+[data-theme="dark"] .oracle-card {
+  width: 440px;
+  height: 600px;
   overflow: hidden;
   flex-shrink: 0;
   position: relative;
   z-index: 10;
-  /* Match dark chat input: #1a1a1a flat */
-  background: #1a1a1a;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  background: rgba(255,255,255,0.72) !important;
+  backdrop-filter: blur(60px) saturate(200%) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(200%) brightness(1.08) !important;
   border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: none;
-  padding: 2.5rem 2rem;
+  border: 1px solid rgba(255,255,255,0.9) !important;
+  box-shadow:
+    0 0 0 0.5px rgba(255,255,255,0.9) inset,
+    0 1px 0 rgba(255,255,255,1) inset,
+    0 32px 64px rgba(0,0,0,0.12),
+    0 8px 24px rgba(0,0,0,0.08) !important;
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   max-width: calc(100vw - 3rem);
 }
 
-/* Oracle card — light mode — matches chat input surface */
-:root:not(.dark) .oracle-card,
-[data-theme="light"] .oracle-card {
-  background: #ededed;
-  border: 1px solid rgba(0,0,0,0.06);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.2);
-}
-
-/* Top specular edge — dark mode */
-.oracle-card::before {
+/* Top specular edge — always light */
+.oracle-card::before,
+.dark .oracle-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -342,26 +340,13 @@ label,
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255,255,255,0.55) 25%,
-    rgba(255,255,255,0.75) 50%,
-    rgba(255,255,255,0.55) 75%,
+    rgba(255,255,255,0.95) 30%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.95) 70%,
     transparent 100%
-  );
+  ) !important;
   border-radius: 1px;
   z-index: 1;
-}
-
-/* Top specular edge — light mode */
-:root:not(.dark) .oracle-card::before,
-[data-theme="light"] .oracle-card::before {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0.95) 25%,
-    rgba(255,255,255,1) 50%,
-    rgba(255,255,255,0.95) 75%,
-    transparent 100%
-  );
 }
 
 .oracle-card::after {
@@ -379,7 +364,7 @@ label,
   z-index: 0;
 }
 
-/* Oracle image container */
+/* Oracle image container — no border */
 .oracle-image-container {
   width: 100%;
   height: 55%;
@@ -387,48 +372,26 @@ label,
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
   flex-shrink: 0;
 }
 
-:root:not(.dark) .oracle-image-container,
-[data-theme="light"] .oracle-image-container {
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
-
-.oracle-image {
+/* Oracle image — always multiply (light card) */
+.oracle-image,
+.dark .oracle-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
   padding: 1.5rem;
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply !important;
+  opacity: 0.92 !important;
 }
 
-:root:not(.dark) .oracle-image,
-[data-theme="light"] .oracle-image {
-  mix-blend-mode: multiply;
-  opacity: 0.9;
-}
-
-.oracle-divider {
+/* Oracle divider — always dark text on light card */
+.oracle-divider,
+.dark .oracle-divider {
   height: 1px;
   margin: 1rem auto;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,255,255,0.25) 50%,
-    transparent
-  );
-}
-
-:root:not(.dark) .oracle-divider,
-[data-theme="light"] .oracle-divider {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0,0,0,0.15) 50%,
-    transparent
-  );
+  background: rgba(0,0,0,0.12) !important;
 }
 
 /* Oracle card outer wrapper — no distortion filter */

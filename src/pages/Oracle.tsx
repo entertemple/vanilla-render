@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
-import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { TextShimmer } from '../components/ui/text-shimmer';
 
@@ -12,7 +11,6 @@ interface OracleCard {
 
 export default function Oracle() {
   const { theme } = useTheme();
-  const { user } = useAuth();
   const [card, setCard] = useState<OracleCard | null>(null);
   const [loading, setLoading] = useState(true);
   const [cardVisible, setCardVisible] = useState(false);
@@ -26,37 +24,20 @@ export default function Oracle() {
 
   const dateStr = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
-    month: 'long',
     day: 'numeric',
+    month: 'long',
   });
 
   useEffect(() => {
     const fetchCard = async () => {
       try {
-        let recentAnchors = '';
-        if (user) {
-          const { data: messages } = await supabase
-            .from('messages')
-            .select('content, conversation_id')
-            .eq('role', 'assistant')
-            .order('created_at', { ascending: false })
-            .limit(10);
-
-          if (messages && messages.length > 0) {
-            const anchors = messages
-              .map((m) => {
-                const match = m.content.match(/ANCHOR:\s*(.+)/);
-                return match ? match[1].trim() : null;
-              })
-              .filter(Boolean);
-            if (anchors.length > 0) {
-              recentAnchors = anchors.join(', ');
-            }
-          }
-        }
+        // Image index: daily base + random rotation
+        const dayBase = new Date().getDay() % 9;
+        const offset = Math.floor(Math.random() * 8) + 1;
+        const imageIndex = (dayBase + offset) % 9;
 
         const { data, error } = await supabase.functions.invoke('oracle-card', {
-          body: { recentAnchors },
+          body: { imageIndex },
         });
 
         if (error) throw error;
@@ -64,7 +45,7 @@ export default function Oracle() {
           setCard({
             anchor: data.anchor,
             body: data.body,
-            imageIndex: typeof data.imageIndex === 'number' ? data.imageIndex : Math.floor(Math.random() * 9),
+            imageIndex: typeof data.imageIndex === 'number' ? data.imageIndex : imageIndex,
           });
         }
       } catch (err) {
@@ -80,7 +61,7 @@ export default function Oracle() {
     };
 
     fetchCard();
-  }, [user]);
+  }, []);
 
   // Staggered reveal
   useEffect(() => {
@@ -133,7 +114,7 @@ export default function Oracle() {
               alt=""
               className={`oracle-image ${loading ? 'loading' : ''}`}
               style={{
-                opacity: loading ? 0.15 : imageVisible ? 0.85 : 0,
+                opacity: loading ? 0.15 : imageVisible ? 0.92 : 0,
                 filter: loading ? 'blur(12px)' : 'none',
                 transition: 'opacity 900ms ease, filter 900ms ease',
               }}
@@ -149,12 +130,13 @@ export default function Oracle() {
               alignItems: 'center',
               justifyContent: 'center',
               width: '100%',
+              padding: '1.75rem 2.25rem 2rem',
             }}
           >
             {loading ? (
               <TextShimmer
                 duration={3}
-                className="font-['DM_Sans'] italic font-extralight text-[1.875rem] tracking-[0.05em] [--base-color:rgba(255,255,255,0.1)] [--base-gradient-color:rgba(255,255,255,0.55)]"
+                className="font-['DM_Sans'] italic font-extralight text-[1.875rem] tracking-[0.05em] [--base-color:rgba(0,0,0,0.08)] [--base-gradient-color:rgba(0,0,0,0.4)]"
               >
                 Reading...
               </TextShimmer>
@@ -169,10 +151,7 @@ export default function Oracle() {
                     fontStyle: 'italic',
                     textAlign: 'center',
                     letterSpacing: '0.05em',
-                    color: isDark ? 'rgba(255,255,255,0.95)' : 'rgba(0,0,0,0.85)',
-                    textShadow: isDark
-                      ? '0 0 30px rgba(255,255,255,0.2), 0 1px 0 rgba(255,255,255,0.1)'
-                      : '0 0 30px rgba(0,0,0,0.05), 0 1px 0 rgba(0,0,0,0.03)',
+                    color: 'rgba(0,0,0,0.88)',
                     lineHeight: 1.1,
                     opacity: anchorVisible ? 1 : 0,
                     transform: anchorVisible ? 'translateY(0)' : 'translateY(8px)',
@@ -198,8 +177,8 @@ export default function Oracle() {
                     fontSize: '0.75rem',
                     lineHeight: 1.9,
                     textAlign: 'center',
-                    color: isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.4)',
-                    maxWidth: 260,
+                    color: 'rgba(0,0,0,0.45)',
+                    maxWidth: 280,
                     margin: '0 auto',
                     letterSpacing: '0.025em',
                     opacity: bodyVisible ? 1 : 0,
@@ -214,27 +193,24 @@ export default function Oracle() {
         </div>
       </div>
 
-      {/* Bottom Bar */}
+      {/* Bottom Bar — date only */}
       <div
         style={{
           fontFamily: '"Geist Mono", monospace',
           fontSize: '0.65rem',
-          letterSpacing: '0.12em',
+          letterSpacing: '0.1em',
           textTransform: 'uppercase' as const,
-          color: isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.2)',
+          color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
           padding: '0 2.5rem 2rem',
           position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
-          display: 'flex',
-          justifyContent: 'space-between',
           opacity: bottomVisible ? 1 : 0,
           transition: 'opacity 500ms ease',
         }}
       >
         <span>{dateStr}</span>
-        <span>A new card on every visit</span>
       </div>
     </div>
   );
