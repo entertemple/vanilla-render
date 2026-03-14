@@ -250,8 +250,8 @@ export default function ThreadHistory() {
                 ) : (
                   <div
                     style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: '0.95rem',
+                      fontFamily: "'DM Serif Display', Georgia, serif",
+                      fontSize: '1.35rem',
                       fontWeight: 400,
                       color: textColor,
                       paddingRight: '2rem',
@@ -269,7 +269,7 @@ export default function ThreadHistory() {
                   <div
                     style={{
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: '0.8rem',
+                      fontSize: '0.95rem',
                       fontWeight: 300,
                       opacity: 0.45,
                       color: textColor,
