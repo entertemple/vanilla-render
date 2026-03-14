@@ -323,16 +323,12 @@ label,
   max-width: calc(100vw - 3rem);
 }
 
-/* Oracle card — light mode */
+/* Oracle card — light mode — matches chat input surface */
 :root:not(.dark) .oracle-card,
 [data-theme="light"] .oracle-card {
-  background: rgba(255,255,255,0.45);
-  border: 1px solid rgba(0,0,0,0.07);
-  box-shadow:
-    0 0 0 0.5px rgba(255,255,255,0.8) inset,
-    0 1px 0 rgba(255,255,255,0.9) inset,
-    0 32px 64px rgba(0,0,0,0.08),
-    0 8px 24px rgba(0,0,0,0.05);
+  background: #ededed;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.2);
 }
 
 /* Top specular edge — dark mode */
