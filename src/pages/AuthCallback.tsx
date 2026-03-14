@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { checkOnboarding } from '@/utils/checkOnboarding';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -18,18 +19,8 @@ export default function AuthCallback() {
           return;
         }
 
-        // Check if user has completed onboarding
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('display_name, onboarding_complete')
-          .eq('user_id', session.user.id)
-          .single();
-
-        if (!profile || !profile.onboarding_complete) {
-          navigate('/onboarding', { replace: true });
-        } else {
-          navigate('/chat', { replace: true });
-        }
+        const isComplete = await checkOnboarding(session.user.id);
+        navigate(isComplete ? '/chat' : '/onboarding', { replace: true });
       } catch {
         setError('Something went wrong.');
         setTimeout(() => navigate('/login', { replace: true }), 2000);

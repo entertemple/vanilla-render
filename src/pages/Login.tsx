@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { checkOnboarding } from '@/utils/checkOnboarding';
 import WordmarkLight from '@/components/WordmarkLight';
 import WordmarkDark from '@/components/WordmarkDark';
 import GoogleButton from '@/components/GoogleButton';
@@ -29,7 +30,13 @@ export default function Login() {
       setError(error.message);
       setLoading(false);
     } else {
-      navigate('/chat');
+      const { data: { session } } = await (await import('@/integrations/supabase/client')).supabase.auth.getSession();
+      if (session) {
+        const isComplete = await checkOnboarding(session.user.id);
+        navigate(isComplete ? '/chat' : '/onboarding', { replace: true });
+      } else {
+        navigate('/chat', { replace: true });
+      }
     }
   };
 
