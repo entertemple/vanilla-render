@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import SacredGeometry from '../components/oracle/SacredGeometry';
 import { TextShimmer } from '../components/ui/text-shimmer';
 
 interface OracleCard {
   anchor: string;
   body: string;
+  imageIndex: number;
 }
 
 export default function Oracle() {
@@ -16,14 +16,13 @@ export default function Oracle() {
   const [card, setCard] = useState<OracleCard | null>(null);
   const [loading, setLoading] = useState(true);
   const [cardVisible, setCardVisible] = useState(false);
+  const [imageVisible, setImageVisible] = useState(false);
   const [anchorVisible, setAnchorVisible] = useState(false);
   const [dividerVisible, setDividerVisible] = useState(false);
   const [bodyVisible, setBodyVisible] = useState(false);
   const [bottomVisible, setBottomVisible] = useState(false);
 
-  const dayIndex = new Date().getDay();
   const isDark = theme === 'dark';
-  const strokeColor = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.6)';
 
   const dateStr = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -62,13 +61,18 @@ export default function Oracle() {
 
         if (error) throw error;
         if (data?.anchor && data?.body) {
-          setCard({ anchor: data.anchor, body: data.body });
+          setCard({
+            anchor: data.anchor,
+            body: data.body,
+            imageIndex: typeof data.imageIndex === 'number' ? data.imageIndex : Math.floor(Math.random() * 9),
+          });
         }
       } catch (err) {
         console.error('Oracle card error:', err);
         setCard({
           anchor: 'Stillness',
           body: 'What you are looking for is not ahead of you. It has been here the entire time, waiting for you to stop moving long enough to notice.',
+          imageIndex: 0,
         });
       } finally {
         setLoading(false);
@@ -82,12 +86,14 @@ export default function Oracle() {
   useEffect(() => {
     if (loading) return;
     const t1 = setTimeout(() => setCardVisible(true), 300);
+    const t1b = setTimeout(() => setImageVisible(true), 700);
     const t2 = setTimeout(() => setAnchorVisible(true), 2100);
     const t3 = setTimeout(() => setDividerVisible(true), 2500);
     const t4 = setTimeout(() => setBodyVisible(true), 2750);
     const t5 = setTimeout(() => setBottomVisible(true), 3100);
     return () => {
       clearTimeout(t1);
+      clearTimeout(t1b);
       clearTimeout(t2);
       clearTimeout(t3);
       clearTimeout(t4);
@@ -100,30 +106,6 @@ export default function Oracle() {
       className="w-full h-full flex flex-col items-center justify-center relative"
       style={{ minHeight: '100%' }}
     >
-      {/* SVG Liquid Glass Distortion Filter */}
-      <svg style={{ display: 'none' }} aria-hidden="true">
-        <defs>
-          <filter id="liquid-glass">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.012 0.008"
-              numOctaves={3}
-              seed={2}
-              result="noise"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale={6}
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="displaced"
-            />
-            <feGaussianBlur in="displaced" stdDeviation={0.4} />
-          </filter>
-        </defs>
-      </svg>
-
       {/* Ambient orbs */}
       <div className="oracle-bg-orb-1" />
       <div className="oracle-bg-orb-2" />
@@ -131,7 +113,7 @@ export default function Oracle() {
       {/* Grain overlay */}
       <div className="oracle-grain" />
 
-      {/* Oracle Card — liquid glass outer wrapper */}
+      {/* Oracle Card */}
       <div className="oracle-card-outer">
         <div
           className="oracle-card"
@@ -144,23 +126,18 @@ export default function Oracle() {
               'opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1), transform 1200ms cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
-          {/* SVG Geometry — top 55% */}
-          <div
-            className="oracle-svg-container"
-            style={{
-              flex: '0 0 55%',
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.06)',
-              paddingBottom: '1.5rem',
-              marginBottom: '1.5rem',
-            }}
-          >
-            <div className="oracle-svg">
-              <SacredGeometry dayIndex={dayIndex} strokeColor={strokeColor} strokeWidth={5.5} />
-            </div>
+          {/* Image area — top 55% */}
+          <div className="oracle-image-container">
+            <img
+              src={`/oracle/symbol-${card?.imageIndex ?? 0}.jpg`}
+              alt=""
+              className={`oracle-image ${loading ? 'loading' : ''}`}
+              style={{
+                opacity: loading ? 0.15 : imageVisible ? 0.85 : 0,
+                filter: loading ? 'blur(12px)' : 'none',
+                transition: 'opacity 900ms ease, filter 900ms ease',
+              }}
+            />
           </div>
 
           {/* Anchor + Body */}

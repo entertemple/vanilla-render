@@ -57,10 +57,26 @@ The card is not fortune telling. It is a reflection — a mirror held up to what
 
 ${contextBlock}
 
+Also choose an imageIndex from 0 to 8 that best matches the energy of this card.
+
+Image guide:
+0 — tension held in stillness, 4-lobed symmetry, interference
+1 — radiance, activation, starburst — something awakening
+2 — expansion, many petals radiating from one point, seeking
+3 — complexity, layered beauty, depth within depth
+4 — density, mass, the weight of something fully formed
+5 — containment, the torus, energy that returns to itself
+6 — the flower, 6-fold, opening, the organic
+7 — asymmetry, the unexpected, off-balance but intentional
+8 — the diamond, duality held in form, above and below
+
+Choose based on the emotional and energetic core of this card — not the surface topic.
+
 Respond with ONLY valid JSON, no preamble, no backticks:
 {
   "anchor": "one word",
-  "body": "Two or three sentences. Quiet. True. Written as if the card has been waiting for the person. Never instructive. Never urgent."
+  "body": "Two or three sentences. Quiet. True. Written as if the card has been waiting for the person. Never instructive. Never urgent.",
+  "imageIndex": 3
 }`;
 
     const response = await fetch("https://api.perplexity.ai/chat/completions", {
@@ -93,17 +109,20 @@ Respond with ONLY valid JSON, no preamble, no backticks:
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content?.trim();
 
-    // Parse JSON from response
-    let parsed: { anchor: string; body: string };
+    let parsed: { anchor: string; body: string; imageIndex: number };
     try {
-      // Try to extract JSON if wrapped in backticks
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       parsed = JSON.parse(jsonMatch ? jsonMatch[0] : content);
+      // Clamp imageIndex
+      if (typeof parsed.imageIndex !== 'number' || parsed.imageIndex < 0 || parsed.imageIndex > 8) {
+        parsed.imageIndex = Math.floor(Math.random() * 9);
+      }
     } catch {
       console.error("Failed to parse oracle response:", content);
       parsed = {
         anchor: "Presence",
         body: "The question you are holding does not need an answer right now. It needs your attention. Sit with it a moment longer.",
+        imageIndex: 0,
       };
     }
 
