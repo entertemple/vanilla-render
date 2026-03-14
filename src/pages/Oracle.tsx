@@ -31,7 +31,6 @@ export default function Oracle() {
   useEffect(() => {
     const fetchCard = async () => {
       try {
-        // Image index: daily base + random rotation
         const dayBase = new Date().getDay() % 9;
         const offset = Math.floor(Math.random() * 8) + 1;
         const imageIndex = (dayBase + offset) % 9;
@@ -95,7 +94,7 @@ export default function Oracle() {
       <div className="oracle-grain" />
 
       {/* Oracle Card */}
-      <div className="oracle-card-outer">
+      <div>
         <div
           className="oracle-card"
           style={{
@@ -109,16 +108,35 @@ export default function Oracle() {
         >
           {/* Image area — top 55% */}
           <div className="oracle-image-container">
-            <img
-              src={`/oracle/symbol-${card?.imageIndex ?? 0}.jpg`}
-              alt=""
-              className={`oracle-image ${loading ? 'loading' : ''}`}
-              style={{
-                opacity: loading ? 0.15 : imageVisible ? 0.92 : 0,
-                filter: loading ? 'blur(12px)' : 'none',
-                transition: 'opacity 900ms ease, filter 900ms ease',
-              }}
-            />
+            {loading ? (
+              /* Centered "Reading" loader — no image during loading */
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  height: '100%',
+                }}
+              >
+                <TextShimmer
+                  duration={3}
+                  className="font-['Geist_Mono'] text-[0.75rem] tracking-[0.1em] uppercase [--base-color:rgba(0,0,0,0.08)] [--base-gradient-color:rgba(0,0,0,0.35)]"
+                >
+                  Reading
+                </TextShimmer>
+              </div>
+            ) : (
+              <img
+                src={`/oracle/symbol-${card?.imageIndex ?? 0}.jpg`}
+                alt=""
+                className="oracle-image"
+                style={{
+                  opacity: imageVisible ? 0.92 : 0,
+                  transition: 'opacity 900ms ease',
+                }}
+              />
+            )}
           </div>
 
           {/* Anchor + Body */}
@@ -134,12 +152,7 @@ export default function Oracle() {
             }}
           >
             {loading ? (
-              <TextShimmer
-                duration={3}
-                className="font-['DM_Sans'] italic font-extralight text-[1.875rem] tracking-[0.05em] [--base-color:rgba(0,0,0,0.08)] [--base-gradient-color:rgba(0,0,0,0.4)]"
-              >
-                Reading...
-              </TextShimmer>
+              <div style={{ opacity: 0 }}>Loading</div>
             ) : (
               <>
                 {/* Anchor Word */}
@@ -193,24 +206,21 @@ export default function Oracle() {
         </div>
       </div>
 
-      {/* Bottom Bar — date only */}
+      {/* Date — centered below card */}
       <div
         style={{
           fontFamily: '"Geist Mono", monospace',
           fontSize: '0.65rem',
           letterSpacing: '0.1em',
           textTransform: 'uppercase' as const,
-          color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
-          padding: '0 2.5rem 2rem',
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
+          color: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.4)',
+          marginTop: '1.5rem',
+          textAlign: 'center',
           opacity: bottomVisible ? 1 : 0,
           transition: 'opacity 500ms ease',
         }}
       >
-        <span>{dateStr}</span>
+        {dateStr}
       </div>
     </div>
   );
