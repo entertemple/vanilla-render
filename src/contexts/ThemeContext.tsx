@@ -6,6 +6,7 @@ type Plan = 'free' | 'pro';
 
 interface ThemeContextType {
   theme: Theme;
+  setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   shaderColors: [string, string, string];
   setShaderColors: (colors: [string, string, string]) => void;
