@@ -84,6 +84,11 @@ export default function Login() {
             className="w-full h-[52px] px-5 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground outline-none focus:border-foreground transition-colors"
             style={{ fontFamily: FONT, fontSize: '15px' }}
           />
+          <div className="flex justify-end">
+            <Link to="/reset-password" className="text-muted-foreground hover:text-foreground transition-colors" style={{ fontFamily: FONT, fontSize: '12px' }}>
+              Forgot password?
+            </Link>
+          </div>
 
           {error && (
             <p className="text-destructive text-center" style={{ fontFamily: FONT, fontSize: '13px' }}>
