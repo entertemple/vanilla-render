@@ -135,36 +135,42 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          display_name: string | null
           email: string | null
           font_preference: string
           id: string
           language: string
           model_settings: Json
           notifications_enabled: boolean
+          onboarding_complete: boolean | null
           shader_colors: Json
           theme_preference: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          display_name?: string | null
           email?: string | null
           font_preference?: string
           id?: string
           language?: string
           model_settings?: Json
           notifications_enabled?: boolean
+          onboarding_complete?: boolean | null
           shader_colors?: Json
           theme_preference?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          display_name?: string | null
           email?: string | null
           font_preference?: string
           id?: string
           language?: string
           model_settings?: Json
           notifications_enabled?: boolean
+          onboarding_complete?: boolean | null
           shader_colors?: Json
           theme_preference?: string
           user_id?: string
