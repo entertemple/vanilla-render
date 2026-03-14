@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import WordmarkLight from '@/components/WordmarkLight';
 import WordmarkDark from '@/components/WordmarkDark';
+import GoogleButton from '@/components/GoogleButton';
+import AuthDivider from '@/components/AuthDivider';
 
 const FONT = "'DM Sans', Arial, sans-serif";
 
