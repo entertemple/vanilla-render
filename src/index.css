@@ -431,9 +431,9 @@ label,
   );
 }
 
-/* Liquid glass outer wrapper */
+/* Oracle card outer wrapper — no distortion filter */
 .oracle-card-outer {
-  filter: url(#liquid-glass);
+  /* Clean wrapper, no filter */
 }
 
 /* ===================== JOURNAL PAGE STYLES ===================== */
