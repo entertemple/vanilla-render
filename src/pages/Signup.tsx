@@ -113,6 +113,8 @@ export default function Signup() {
         className="w-full max-w-[400px] rounded-3xl border border-border p-7"
         style={{ background: 'transparent' }}
       >
+        <GoogleButton />
+        <AuthDivider />
         <form onSubmit={handleSignup} className="space-y-3">
           <input
             type="email"
