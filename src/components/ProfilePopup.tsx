@@ -23,7 +23,7 @@ function getInitials(name: string, email: string): string {
 
 export default function ProfilePopup({ onSettingsClick, onProfileClick }: ProfilePopupProps) {
   const { theme } = useTheme();
-  const { display_name, avatar_url, email } = useProfile();
+  const { display_name, avatar_url, email, plan } = useProfile();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -31,6 +31,7 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
   const initials = getInitials(display_name, email);
   const displayLabel = display_name || email || 'User';
   const isDark = theme === 'dark';
+  const planText = (plan === 'pro' || plan === 'pro_annual') ? 'Pro' : 'Free Trial';
 
   const textColor = isDark ? 'text-white' : 'text-gray-900';
   const textSecondary = isDark ? 'text-[rgba(255,255,255,0.7)]' : 'text-gray-600';
