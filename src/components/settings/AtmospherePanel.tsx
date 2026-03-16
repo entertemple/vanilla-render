@@ -32,24 +32,42 @@ interface AtmospherePanelProps {
   theme: 'light' | 'dark';
 }
 
+function isNearBlack(hex: string): boolean {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return r + g + b < 60;
+}
+
 export default function AtmospherePanel({ textColor, textSecondary, borderColor, inputBg, theme }: AtmospherePanelProps) {
   const { shaderConfig, setShaderConfig } = useTheme();
   const isDark = theme === 'dark';
   const presets = isDark ? DARK_PRESETS : LIGHT_PRESETS;
   const dimColor = isDark ? '#fff' : '#000';
 
-  const [previewSize, setPreviewSize] = useState({ width: 400, height: 80 });
+  const [previewSize, setPreviewSize] = useState({ width: 400, height: 225 });
   const previewContainerRef = useRef<HTMLDivElement>(null);
+  const [screenAspect, setScreenAspect] = useState(window.innerWidth / window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => setScreenAspect(window.innerWidth / window.innerHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (!previewContainerRef.current) return;
     const obs = new ResizeObserver(entries => {
       const entry = entries[0];
-      if (entry) setPreviewSize({ width: Math.round(entry.contentRect.width), height: 80 });
+      if (entry) {
+        const w = Math.round(entry.contentRect.width);
+        const h = Math.round(w / screenAspect);
+        setPreviewSize({ width: w, height: h });
+      }
     });
     obs.observe(previewContainerRef.current);
     return () => obs.disconnect();
-  }, []);
+  }, [screenAspect]);
 
   const applyPreset = (preset: typeof presets[0]) => {
     setShaderConfig({
@@ -85,7 +103,7 @@ export default function AtmospherePanel({ textColor, textSecondary, borderColor,
           ref={previewContainerRef}
           className="w-full rounded-[10px] overflow-hidden mb-5 relative"
           style={{
-            height: 80,
+            aspectRatio: screenAspect,
             border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
           }}
         >
@@ -136,13 +154,17 @@ export default function AtmospherePanel({ textColor, textSecondary, borderColor,
           <div className="flex gap-3">
             {(['color1', 'color2', 'color3'] as const).map((key) => (
               <label key={key} className="relative cursor-pointer group">
-                <div
-                  className="w-8 h-8 rounded-full transition-transform group-hover:scale-110"
-                  style={{
-                    background: shaderConfig[key],
-                    border: `2px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}`,
-                  }}
-                />
+                    <div
+                    className="w-8 h-8 rounded-full transition-transform group-hover:scale-110"
+                    style={{
+                      background: shaderConfig[key],
+                      border: `2px solid ${
+                        isNearBlack(shaderConfig[key])
+                          ? (isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.3)')
+                          : (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)')
+                      }`,
+                    }}
+                  />
                 <input
                   type="color"
                   value={shaderConfig[key]}
