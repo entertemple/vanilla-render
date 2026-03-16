@@ -30,13 +30,24 @@ export default function Login() {
       setError(error.message);
       setLoading(false);
     } else {
-      const { data: { session } } = await (await import('@/integrations/supabase/client')).supabase.auth.getSession();
-      if (session) {
-        const isComplete = await checkOnboarding(session.user.id);
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const { data: { session: retrySession } } = await supabase.auth.getSession();
+        if (!retrySession) {
+          setLoading(false);
+          return;
+        }
+
+        const isComplete = await checkOnboarding(retrySession.user.id);
         navigate(isComplete ? '/chat' : '/onboarding', { replace: true });
-      } else {
-        navigate('/chat', { replace: true });
+        return;
       }
+
+      const isComplete = await checkOnboarding(session.user.id);
+      navigate(isComplete ? '/chat' : '/onboarding', { replace: true });
     }
   };
 
