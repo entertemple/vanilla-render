@@ -87,8 +87,8 @@ export default function Layout({ children }: LayoutProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const bgPrimary = theme === 'light' ? 'bg-[rgba(255,255,255,0.75)]' : 'bg-[rgba(81,81,81,0.08)]';
-  const bgSecondary = theme === 'light' ? 'bg-[rgba(255,255,255,0.75)]' : 'bg-[rgba(81,81,81,0.08)]';
+  const bgPrimary = theme === 'light' ? 'bg-[rgba(255,255,255,0.70)]' : 'bg-[rgba(26,26,28,0.13)]';
+  const bgSecondary = theme === 'light' ? 'bg-[rgba(255,255,255,0.70)]' : 'bg-[rgba(26,26,28,0.13)]';
   const textColor = theme === 'light' ? 'text-gray-900' : 'text-white';
   const textSecondary = theme === 'light' ? 'text-gray-600' : 'text-[rgba(255,255,255,0.6)]';
   const borderColor = theme === 'light' ? 'border-[rgba(255,255,255,0.6)]' : 'border-[rgba(255,255,255,0.18)]';
