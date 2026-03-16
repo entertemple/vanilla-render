@@ -176,13 +176,22 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex-1 overflow-y-auto p-2" style={{ scrollbarWidth: 'thin', scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent' }}>
               <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[11px] tracking-[0.1em] uppercase px-3 py-2`}>Recents</div>
               {conversations.map((conv) => (
-                <div key={conv.id} onClick={() => navigate(`/chat/${conv.id}`)}
-                  className={`group relative flex items-center gap-2 px-3 py-2.5 mb-1 rounded-[12px] cursor-pointer transition-colors ${location.pathname === `/chat/${conv.id}` ? `${activeBg} border ${borderColor}` : hoverBg}`}>
-                  <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px] flex-1 min-w-0`}
-                    style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', wordBreak: 'keep-all' }}>{conv.title}</span>
-                  <button onClick={(e) => deleteConversation(conv.id, e)} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                    <Trash2 className={`w-3 h-3 ${textSecondary} hover:text-red-400`} strokeWidth={1.5} />
-                  </button>
+                <div key={conv.id}>
+                  <div onClick={() => navigate(`/chat/${conv.id}`)}
+                    className={`group relative flex items-center gap-2 px-3 py-2.5 mb-0.5 rounded-[12px] cursor-pointer transition-colors ${location.pathname === `/chat/${conv.id}` ? `${activeBg} border ${borderColor}` : hoverBg}`}>
+                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px] flex-1 min-w-0`}
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', wordBreak: 'keep-all' }}>{conv.title}</span>
+                    <button onClick={(e) => handleDeleteClick(conv.id, e)} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                      <Trash2 className={`w-3 h-3 ${textSecondary} hover:text-red-400`} strokeWidth={1.5} />
+                    </button>
+                  </div>
+                  {confirmDeleteId === conv.id && (
+                    <div className="px-3 py-1.5 mb-1 flex items-center gap-2">
+                      <span className={`font-['Geist_Mono',_monospace] text-[0.72rem] ${textSecondary}`}>Delete?</span>
+                      <button onClick={cancelDelete} className={`font-['Geist_Mono',_monospace] text-[0.72rem] ${textSecondary} hover:opacity-80`}>Cancel</button>
+                      <button onClick={(e) => confirmDelete(conv.id, e)} className="font-['Geist_Mono',_monospace] text-[0.72rem] text-red-400 hover:text-red-300">Delete</button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

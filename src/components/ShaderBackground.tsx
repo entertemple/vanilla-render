@@ -179,7 +179,7 @@ const ShaderBackground = ({ config, theme, width, height, inline }: ShaderBackgr
       const hsl3 = hexToHsl(cfg.color3);
       const hueShift = hsl1[0];
       const saturation = th === 'light' ? hsl2[1] * 0.4 : hsl2[1] * 0.6;
-      const brightness = th === 'light' ? hsl3[2] + 1.2 : hsl3[2] + 0.8;
+      const brightness = th === 'light' ? hsl3[2] + 1.4 : hsl3[2] + 0.8;
 
       if (th === 'light') gl.clearColor(1, 1, 1, 1);
       else gl.clearColor(0, 0, 0, 1);

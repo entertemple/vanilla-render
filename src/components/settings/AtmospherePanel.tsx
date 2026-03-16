@@ -32,6 +32,13 @@ interface AtmospherePanelProps {
   theme: 'light' | 'dark';
 }
 
+function isNearBlack(hex: string): boolean {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return r + g + b < 60;
+}
+
 export default function AtmospherePanel({ textColor, textSecondary, borderColor, inputBg, theme }: AtmospherePanelProps) {
   const { shaderConfig, setShaderConfig } = useTheme();
   const isDark = theme === 'dark';
