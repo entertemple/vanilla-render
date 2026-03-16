@@ -9,7 +9,7 @@ export default function About() {
   const mutedColor = isDark ? 'text-[rgba(255,255,255,0.3)]' : 'text-[rgba(0,0,0,0.3)]';
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center">
+    <div className="flex-1 relative flex flex-col items-center">
       <div className="relative z-10 w-full max-w-[580px] px-8 pt-20 pb-20 text-center">
         {/* Wordmark */}
         <div className="flex justify-center mb-16">
