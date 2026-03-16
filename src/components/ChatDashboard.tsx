@@ -602,6 +602,17 @@ export default function ChatDashboard() {
   const specularRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
 
+  // Mirror mode state
+  const [mirrorEnabled, setMirrorEnabled] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('profiles').select('mirror_enabled').eq('user_id', user.id).single()
+      .then(({ data }) => {
+        if (data) setMirrorEnabled((data as any).mirror_enabled ?? false);
+      });
+  }, [user]);
+
   useEffect(() => {
     setCurrentConversationId(conversationId || null);
     if (!conversationId) {
