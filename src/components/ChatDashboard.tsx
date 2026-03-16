@@ -1132,18 +1132,84 @@ export default function ChatDashboard() {
       </AnimatePresence>
     </div>;
 
+  // Permission prompt component
+  const renderPermissionPrompt = () => {
+    if (!showPermissionPrompt) return null;
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+          zIndex: 10,
+          maxWidth: '280px',
+          padding: '2rem',
+          background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
+          backdropFilter: 'blur(40px)',
+          WebkitBackdropFilter: 'blur(40px)',
+          border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'}`,
+          borderRadius: '16px',
+        }}
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.2"
+          style={{ margin: '0 auto 0.75rem', opacity: 0.45, color: isDark ? '#ffffff' : '#000000' }}>
+          <rect x="2" y="5" width="16" height="11" rx="2" />
+          <circle cx="10" cy="10.5" r="3" />
+          <circle cx="14.5" cy="7.5" r="0.8" fill="currentColor" />
+        </svg>
+        <p style={{ fontFamily: "'DM Sans', 'Inter', sans-serif", fontStyle: 'italic', fontWeight: 200, fontSize: '1rem', color: isDark ? '#ffffff' : '#000000' }}>
+          Temple works as a mirror.
+        </p>
+        <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: '0.72rem', opacity: 0.38, lineHeight: 1.7, marginTop: '0.5rem', color: isDark ? '#ffffff' : '#000000' }}>
+          Your camera is never recorded or stored.<br />It exists only while you are here.
+        </p>
+        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginTop: '1.25rem' }}>
+          <button onClick={handlePermissionAllow} style={{
+            fontFamily: "'Geist Mono', monospace", fontSize: '0.75rem', letterSpacing: '0.05em',
+            padding: '0.5rem 1.25rem', borderRadius: '12px',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'}`,
+            background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
+            color: isDark ? '#ffffff' : '#000000', cursor: 'pointer',
+          }}>Allow</button>
+          <button onClick={handlePermissionDeny} style={{
+            fontFamily: "'Geist Mono', monospace", fontSize: '0.75rem', letterSpacing: '0.05em',
+            padding: '0.5rem 1.25rem', borderRadius: '12px', border: 'none', background: 'transparent',
+            color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)', cursor: 'pointer',
+          }}>Not now</button>
+        </div>
+      </div>
+    );
+  };
 
-  // Welcome state — same bottom-anchored input as conversation state
+  // Welcome state — centered input with fade-in
   if (!hasConversation) {
     return (
       <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
         <MirrorWebcam mirrorEnabled={mirrorEnabled} />
+        {renderPermissionPrompt()}
         <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
-          <div className="flex flex-col h-full">
-            <div className="flex-1" />
-            <div className="flex-shrink-0 px-6 py-4 max-w-[680px] mx-auto w-full">
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="px-6 max-w-[680px] w-full" style={{
+              animation: 'input-fade-in 1200ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              animationDelay: '400ms',
+              opacity: 0,
+            }}>
               {renderChatInput()}
             </div>
+            <p style={{
+              position: 'absolute',
+              bottom: '1.5rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              fontFamily: "'Geist Mono', monospace",
+              fontSize: '0.65rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              opacity: 0.3,
+              color: isDark ? '#ffffff' : '#000000',
+            }}>BUILT FOR CLARITY</p>
           </div>
         </div>
       </div>);
