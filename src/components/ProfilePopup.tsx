@@ -173,6 +173,12 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
         <AvatarCircle size={28} textSize="11px" />
         <div className="flex-1 min-w-0 text-left">
           <div className={`${textColor} text-[12px] font-medium truncate`}>{displayLabel}</div>
+          <div
+            className="font-['Geist_Mono',_monospace] text-[0.6rem] tracking-[0.08em] uppercase"
+            style={{ color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)' }}
+          >
+            {planText}
+          </div>
         </div>
       </button>
     </div>
