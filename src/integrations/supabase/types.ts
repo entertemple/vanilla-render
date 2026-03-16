@@ -147,6 +147,7 @@ export type Database = {
           notifications_enabled: boolean
           onboarding_complete: boolean | null
           oracle_history_enabled: boolean
+          orb_settings: Json | null
           plan: string
           plan_expires_at: string | null
           shader_colors: Json
@@ -168,6 +169,7 @@ export type Database = {
           notifications_enabled?: boolean
           onboarding_complete?: boolean | null
           oracle_history_enabled?: boolean
+          orb_settings?: Json | null
           plan?: string
           plan_expires_at?: string | null
           shader_colors?: Json
@@ -189,6 +191,7 @@ export type Database = {
           notifications_enabled?: boolean
           onboarding_complete?: boolean | null
           oracle_history_enabled?: boolean
+          orb_settings?: Json | null
           plan?: string
           plan_expires_at?: string | null
           shader_colors?: Json

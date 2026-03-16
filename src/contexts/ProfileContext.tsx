@@ -6,6 +6,7 @@ interface ProfileData {
   display_name: string;
   avatar_url: string | null;
   email: string;
+  plan: string;
 }
 
 interface ProfileContextType extends ProfileData {
@@ -21,13 +22,14 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     display_name: '',
     avatar_url: null,
     email: '',
+    plan: 'free',
   });
 
   const refresh = useCallback(async () => {
     if (!user) return;
     const { data } = await supabase
       .from('profiles')
-      .select('display_name, avatar_url')
+      .select('display_name, avatar_url, plan')
       .eq('user_id', user.id)
       .single();
 
@@ -35,6 +37,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       display_name: (data as any)?.display_name || '',
       avatar_url: (data as any)?.avatar_url || null,
       email: user.email || '',
+      plan: (data as any)?.plan || 'free',
     });
   }, [user]);
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Sun, Moon, Bell, Globe, Key, HelpCircle, FileText, Zap, Sliders, Palette, Check, User, Trash2 } from 'lucide-react';
+import { X, Sun, Moon, Bell, Globe, Key, HelpCircle, FileText, Sliders, Check, User, Trash2 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProfile } from '../contexts/ProfileContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import PrivacyTab from './settings/PrivacyTab';
 import BillingTab from './settings/BillingTab';
 import UsageTab from './settings/UsageTab';
+import AtmospherePanel from './settings/AtmospherePanel';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -14,10 +15,9 @@ interface SettingsModalProps {
   initialTab?: string;
 }
 
-const DEFAULT_SHADER_COLORS: [string, string, string] = ['#0000ff', '#ff00ff', '#ffffff'];
 const DEFAULT_MODEL_SETTINGS = { model: 'gpt-4', temperature: 0.7, maxTokens: 2048, topP: 1.0 };
 
-// Inline SVG icons for new tabs
+// Inline SVG icons for tabs
 const ShieldIcon = ({ className }: { className?: string }) => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
     <path d="M8 2L3 4.5v4C3 11.5 5.5 14 8 14s5-2.5 5-5.5v-4L8 2z" />
@@ -48,18 +48,15 @@ function getInitials(name: string, email: string): string {
   return '?';
 }
 
-type TabId = 'general' | 'model' | 'account' | 'privacy' | 'billing' | 'usage';
+type TabId = 'general' | 'account' | 'privacy' | 'billing' | 'usage';
 
 export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsModalProps) {
   const { theme, toggleTheme, shaderColors, setShaderColors } = useTheme();
   const { display_name, avatar_url, email, refresh: refreshProfile, updateProfile } = useProfile();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>('general');
-  const [modelSettings, setModelSettings] = useState(DEFAULT_MODEL_SETTINGS);
   const [notifications, setNotifications] = useState(true);
   const [language, setLanguage] = useState('en');
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const [tempColors, setTempColors] = useState<[string, string, string]>(shaderColors);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -81,19 +78,10 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
         setNotifications((data as any).notifications_enabled ?? true);
         setLanguage((data as any).language ?? 'en');
         setDisplayName((data as any).display_name || '');
-        const colors = (data as any).shader_colors;
-        if (colors && Array.isArray(colors) && colors.length === 3) {
-          setTempColors(colors as [string, string, string]);
-          setShaderColors(colors as [string, string, string]);
-        }
-        const model = (data as any).model_settings;
-        if (model) setModelSettings(model);
       }
     };
     load();
   }, [isOpen, user]);
-
-  useEffect(() => { setTempColors(shaderColors); }, [shaderColors]);
 
   const showSaved = (msg = 'Saved') => {
     setSaveMessage(msg);
@@ -120,7 +108,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
 
   const tabs: { id: TabId; label: string; icon: any }[] = [
     { id: 'general', label: 'General', icon: Sliders },
-    { id: 'model', label: 'Model', icon: Zap },
     { id: 'account', label: 'Account', icon: User },
     { id: 'privacy', label: 'Privacy', icon: ShieldIcon },
     { id: 'billing', label: 'Billing', icon: CreditCardIcon },
@@ -148,22 +135,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
   const handleLanguageChange = async (val: string) => {
     setLanguage(val);
     await saveToProfile({ language: val });
-  };
-
-  const handleApplyColors = async () => {
-    setShaderColors(tempColors);
-    setShowColorPicker(false);
-    await saveToProfile({ shader_colors: tempColors });
-  };
-
-  const handleResetColors = async () => {
-    setTempColors(DEFAULT_SHADER_COLORS);
-    setShaderColors(DEFAULT_SHADER_COLORS);
-    await saveToProfile({ shader_colors: DEFAULT_SHADER_COLORS });
-  };
-
-  const handleSaveModelSettings = async () => {
-    await saveToProfile({ model_settings: modelSettings });
   };
 
   const handleNameBlur = () => {
@@ -294,86 +265,9 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
                     </select>
                   </div>
                 </div>
-                <div>
-                  <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Shader Colors</h3>
-                  <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
-                    <div className="flex items-center gap-3">
-                      <Palette className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />
-                      <div>
-                        <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Customize Shader Colors</p>
-                        <p className={`font-['Inter',_sans-serif] text-[11px] ${textSecondary}`}>Choose colors for the background shader</p>
-                      </div>
-                    </div>
-                    <Toggle enabled={showColorPicker} onToggle={() => setShowColorPicker(!showColorPicker)} />
-                  </div>
-                </div>
-                {showColorPicker && (
-                  <div className={`p-4 rounded-[16px] ${inputBg} border ${borderColor} space-y-4`}>
-                    <div className="flex items-center gap-4">
-                      {['Hue Shift', 'Saturation', 'Brightness'].map((label, i) => (
-                        <div key={label} className="flex flex-col items-center gap-1.5">
-                          <input
-                            type="color"
-                            value={tempColors[i]}
-                            onChange={(e) => {
-                              const next = [...tempColors] as [string, string, string];
-                              next[i] = e.target.value;
-                              setTempColors(next);
-                              setShaderColors(next);
-                            }}
-                            className="w-10 h-10 rounded-lg border-0 cursor-pointer"
-                          />
-                          <span className={`text-[11px] ${textSecondary}`}>{label}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      <button onClick={handleApplyColors} className={`flex-1 px-4 py-2 rounded-[12px] ${inputBg} border ${borderColor} ${hoverBg} transition-colors`}>
-                        <span className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Save Colors</span>
-                      </button>
-                      <button onClick={handleResetColors} className={`px-4 py-2 rounded-[12px] ${inputBg} border ${borderColor} ${hoverBg} transition-colors`}>
-                        <span className={`font-['Inter',_sans-serif] text-[13px] ${textSecondary}`}>Reset</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
 
-            {/* MODEL TAB */}
-            {activeTab === 'model' && (
-              <>
-                <div>
-                  <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Model Selection</h3>
-                  <select
-                    value={modelSettings.model}
-                    onChange={(e) => setModelSettings({ ...modelSettings, model: e.target.value })}
-                    className={`w-full px-4 py-3 rounded-[16px] ${inputBg} border ${borderColor} ${textColor} text-[13px] focus:outline-none`}
-                  >
-                    <option value="gpt-4">GPT-4 (Most Capable)</option>
-                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
-                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Faster)</option>
-                    <option value="claude-3">Claude 3 Opus</option>
-                  </select>
-                </div>
-                {[
-                  { key: 'temperature', label: 'Temperature', min: 0, max: 2, step: 0.1, desc: 'Higher values make output more random, lower values more focused' },
-                  { key: 'maxTokens', label: 'Max Tokens', min: 256, max: 4096, step: 256, desc: "Maximum length of the model's response" },
-                  { key: 'topP', label: 'Top P', min: 0, max: 1, step: 0.1, desc: 'Nucleus sampling parameter' },
-                ].map(({ key, label, min, max, step, desc }) => (
-                  <div key={key}>
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] ${textColor}`}>{label}</h3>
-                      <span className={`font-['Geist_Mono',_monospace] text-[12px] ${textSecondary}`}>{(modelSettings as any)[key]}</span>
-                    </div>
-                    <input type="range" min={min} max={max} step={step} value={(modelSettings as any)[key]}
-                      onChange={(e) => setModelSettings({ ...modelSettings, [key]: parseFloat(e.target.value) })} className="w-full" />
-                    <p className={`text-[11px] ${textSecondary} mt-1`}>{desc}</p>
-                  </div>
-                ))}
-                <button onClick={handleSaveModelSettings} className={`w-full px-4 py-3 rounded-[16px] ${inputBg} border ${borderColor} ${hoverBg} transition-colors`}>
-                  <span className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Save Model Settings</span>
-                </button>
+                {/* Atmosphere Panel */}
+                <AtmospherePanel textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} theme={theme} />
               </>
             )}
 
