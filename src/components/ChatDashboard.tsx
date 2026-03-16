@@ -1219,6 +1219,7 @@ export default function ChatDashboard() {
   return (
     <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
       <MirrorWebcam mirrorEnabled={mirrorEnabled} />
+      {renderPermissionPrompt()}
       <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
         <div className="flex flex-col h-full">
       <div
