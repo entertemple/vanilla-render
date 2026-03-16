@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'motion/react';
 import { TextShimmer } from '@/components/ui/text-shimmer';
+import MirrorWebcam from './MirrorWebcam';
 
 interface Message {
   id: string;
@@ -601,6 +602,17 @@ export default function ChatDashboard() {
   const specularRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
 
+  // Mirror mode state
+  const [mirrorEnabled, setMirrorEnabled] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('profiles').select('mirror_enabled').eq('user_id', user.id).single()
+      .then(({ data }) => {
+        if (data) setMirrorEnabled((data as any).mirror_enabled ?? false);
+      });
+  }, [user]);
+
   useEffect(() => {
     setCurrentConversationId(conversationId || null);
     if (!conversationId) {
@@ -1085,27 +1097,31 @@ export default function ChatDashboard() {
   // Welcome state
   if (!hasConversation) {
     return (
-      <div className="flex flex-col h-full relative">
-        <div className="flex-1 flex flex-col items-center justify-center px-6">
-          
-
-          
-          <div className="w-full max-w-[640px]">
-            {renderChatInput()}
+      <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
+        <MirrorWebcam mirrorEnabled={mirrorEnabled} />
+        <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
+          <div className="flex flex-col h-full relative">
+            <div className="flex-1 flex flex-col items-center justify-center px-6">
+              <div className="w-full max-w-[640px]">
+                {renderChatInput()}
+              </div>
+            </div>
+            <div className="flex-shrink-0 pb-6 flex justify-center">
+              <span className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[10px] tracking-[0.2em] uppercase`}>
+                A deeper kind of search
+              </span>
+            </div>
           </div>
         </div>
-        <div className="flex-shrink-0 pb-6 flex justify-center">
-          <span className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[10px] tracking-[0.2em] uppercase`}>
-            A deeper kind of search
-          </span>
-        </div>
       </div>);
-
   }
 
   // Conversation state
   return (
-    <div className="flex flex-col h-full">
+    <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
+      <MirrorWebcam mirrorEnabled={mirrorEnabled} />
+      <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
+        <div className="flex flex-col h-full">
       <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto"
@@ -1169,6 +1185,8 @@ export default function ChatDashboard() {
 
       <div className="flex-shrink-0 px-6 py-4 max-w-[680px] mx-auto w-full">
         {renderChatInput()}
+      </div>
+    </div>
       </div>
     </div>);
 
