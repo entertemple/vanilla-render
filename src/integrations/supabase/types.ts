@@ -143,7 +143,6 @@ export type Database = {
           id: string
           language: string
           memory_enabled: boolean
-          mirror_enabled: boolean
           model_settings: Json
           notifications_enabled: boolean
           onboarding_complete: boolean | null
@@ -167,7 +166,6 @@ export type Database = {
           id?: string
           language?: string
           memory_enabled?: boolean
-          mirror_enabled?: boolean
           model_settings?: Json
           notifications_enabled?: boolean
           onboarding_complete?: boolean | null
@@ -191,7 +189,6 @@ export type Database = {
           id?: string
           language?: string
           memory_enabled?: boolean
-          mirror_enabled?: boolean
           model_settings?: Json
           notifications_enabled?: boolean
           onboarding_complete?: boolean | null
