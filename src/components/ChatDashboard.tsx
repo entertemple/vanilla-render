@@ -585,25 +585,17 @@ export default function ChatDashboard() {
   const [isWaiting, setIsWaiting] = useState(false);
   const [newestMessageId, setNewestMessageId] = useState<string | null>(null);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(conversationId || null);
-  // Beat system state
   const [phrases, setPhrases] = useState<string[]>([]);
   const [firstUserMessage, setFirstUserMessage] = useState<string>('');
   const [beat2Question, setBeat2Question] = useState<string>('');
-  // File upload state
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
-  // Voice input state
   const [isRecording, setIsRecording] = useState(false);
   const [voiceUnsupported, setVoiceUnsupported] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const glassRef = useRef<HTMLDivElement>(null);
-  const specularRef = useRef<HTMLDivElement>(null);
-  const recognitionRef = useRef<any>(null);
 
-  // Mirror mode state
+  // Mirror / permission state
   const [mirrorEnabled, setMirrorEnabled] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState('');
+  const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
 
   useEffect(() => {
     if (!user) return;
