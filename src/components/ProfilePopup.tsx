@@ -23,7 +23,7 @@ function getInitials(name: string, email: string): string {
 
 export default function ProfilePopup({ onSettingsClick, onProfileClick }: ProfilePopupProps) {
   const { theme } = useTheme();
-  const { display_name, avatar_url, email } = useProfile();
+  const { display_name, avatar_url, email, plan } = useProfile();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
