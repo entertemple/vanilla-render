@@ -14,6 +14,8 @@ import Onboarding from "./pages/Onboarding";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import UsagePolicy from "./pages/UsagePolicy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 export const router = createBrowserRouter([
   {
