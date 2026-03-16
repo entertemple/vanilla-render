@@ -84,6 +84,26 @@ export default function PrivacyTab({ textColor, textSecondary, borderColor, inpu
       enabled: memoryEnabled,
       onToggle: () => { setMemoryEnabled(!memoryEnabled); saveField('memory_enabled', !memoryEnabled); },
     },
+    {
+      icon: <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="12" height="9" rx="1.5"/><circle cx="8" cy="8.5" r="2.2"/><circle cx="11.5" cy="6" r="0.6" fill="currentColor"/></svg>,
+      label: 'Mirror Mode',
+      sub: 'Use your camera as the chat background',
+      enabled: mirrorEnabled,
+      onToggle: () => {
+        const newValue = !mirrorEnabled;
+        setMirrorEnabled(newValue);
+        saveField('mirror_enabled', newValue);
+        if (newValue) {
+          // Clear any previous denial so the prompt can show again
+          const current = localStorage.getItem('temple_mirror_permission');
+          if (current === 'denied') {
+            localStorage.removeItem('temple_mirror_permission');
+          }
+        } else {
+          // Toggling off doesn't clear permission, just disables mirror
+        }
+      },
+    },
   ];
 
   return (
