@@ -134,44 +134,65 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string
           display_name: string | null
           email: string | null
           font_preference: string
+          history_enabled: boolean
           id: string
           language: string
+          memory_enabled: boolean
           model_settings: Json
           notifications_enabled: boolean
           onboarding_complete: boolean | null
+          oracle_history_enabled: boolean
+          plan: string
+          plan_expires_at: string | null
           shader_colors: Json
+          stripe_customer_id: string | null
           theme_preference: string
           user_id: string
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
           font_preference?: string
+          history_enabled?: boolean
           id?: string
           language?: string
+          memory_enabled?: boolean
           model_settings?: Json
           notifications_enabled?: boolean
           onboarding_complete?: boolean | null
+          oracle_history_enabled?: boolean
+          plan?: string
+          plan_expires_at?: string | null
           shader_colors?: Json
+          stripe_customer_id?: string | null
           theme_preference?: string
           user_id: string
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
           font_preference?: string
+          history_enabled?: boolean
           id?: string
           language?: string
+          memory_enabled?: boolean
           model_settings?: Json
           notifications_enabled?: boolean
           onboarding_complete?: boolean | null
+          oracle_history_enabled?: boolean
+          plan?: string
+          plan_expires_at?: string | null
           shader_colors?: Json
+          stripe_customer_id?: string | null
           theme_preference?: string
           user_id?: string
         }
