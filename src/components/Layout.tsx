@@ -264,7 +264,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
 
           {/* Main Content */}
-          <div className={`flex-1 flex flex-col backdrop-blur-[10px] backdrop-filter ${bgSecondary}`}>
+          <div className={`flex-1 flex flex-col backdrop-blur-[15px] backdrop-filter ${bgSecondary}`}>
             <div
               className={`flex-shrink-0 px-4 md:px-6 py-4 border-b ${borderColor} flex items-center justify-between`}
             >
