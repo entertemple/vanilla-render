@@ -151,6 +151,7 @@ export type Database = {
           plan: string
           plan_expires_at: string | null
           shader_colors: Json
+          shader_config: Json | null
           stripe_customer_id: string | null
           theme_preference: string
           user_id: string
@@ -173,6 +174,7 @@ export type Database = {
           plan?: string
           plan_expires_at?: string | null
           shader_colors?: Json
+          shader_config?: Json | null
           stripe_customer_id?: string | null
           theme_preference?: string
           user_id: string
@@ -195,6 +197,7 @@ export type Database = {
           plan?: string
           plan_expires_at?: string | null
           shader_colors?: Json
+          shader_config?: Json | null
           stripe_customer_id?: string | null
           theme_preference?: string
           user_id?: string
