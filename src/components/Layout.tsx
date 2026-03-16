@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Plus, Trash2, Menu, X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useProfile } from '../contexts/ProfileContext';
 import { supabase } from '@/integrations/supabase/client';
 import SettingsModal from './SettingsModal';
 import ProfileModal from './ProfileModal';

@@ -3,7 +3,6 @@ import { useProfile } from '../contexts/ProfileContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import ShaderBackground from '../components/ShaderBackground';
 import WordmarkLight from '../components/WordmarkLight';
 import WordmarkDark from '../components/WordmarkDark';
 
@@ -16,7 +15,7 @@ const features = [
 ];
 
 export default function Pricing() {
-  const { theme, shaderColors } = useTheme();
+  const { theme } = useTheme();
   const { user } = useAuth();
   const { plan } = useProfile();
   const navigate = useNavigate();
@@ -29,8 +28,6 @@ export default function Pricing() {
 
   return (
     <div className="min-h-screen relative flex flex-col">
-      <ShaderBackground width={window.innerWidth} height={window.innerHeight} colors={shaderColors} theme={theme} />
-
       {/* Nav */}
       <nav className="relative z-10 flex items-center justify-between px-6 py-5">
         <Link to="/" className="w-[100px]">
@@ -64,7 +61,6 @@ export default function Pricing() {
             <button
               onClick={() => navigate('/chat')}
               className={`font-['Geist_Mono',_monospace] text-[0.75rem] px-5 py-2 rounded-full border ${isDark ? 'border-[rgba(255,255,255,0.15)] text-white hover:bg-[rgba(255,255,255,0.06)]' : 'border-[rgba(0,0,0,0.15)] text-gray-900 hover:bg-[rgba(0,0,0,0.04)]'} transition-colors`}
-              style={{ textDecoration: 'none' }}
             >
               Manage subscription →
             </button>

@@ -51,7 +51,7 @@ function getInitials(name: string, email: string): string {
 type TabId = 'general' | 'account' | 'privacy' | 'billing' | 'usage';
 
 export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsModalProps) {
-  const { theme, toggleTheme, shaderColors, setShaderColors } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const { display_name, avatar_url, email, refresh: refreshProfile, updateProfile } = useProfile();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>('general');
