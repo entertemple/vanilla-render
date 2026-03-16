@@ -96,7 +96,7 @@ export default function AtmospherePanel({ textColor, textSecondary, borderColor,
           ref={previewContainerRef}
           className="w-full rounded-[10px] overflow-hidden mb-5 relative"
           style={{
-            height: 80,
+            aspectRatio: screenAspect,
             border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
           }}
         >
