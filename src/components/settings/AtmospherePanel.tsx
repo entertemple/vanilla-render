@@ -147,13 +147,17 @@ export default function AtmospherePanel({ textColor, textSecondary, borderColor,
           <div className="flex gap-3">
             {(['color1', 'color2', 'color3'] as const).map((key) => (
               <label key={key} className="relative cursor-pointer group">
-                <div
-                  className="w-8 h-8 rounded-full transition-transform group-hover:scale-110"
-                  style={{
-                    background: shaderConfig[key],
-                    border: `2px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}`,
-                  }}
-                />
+                    <div
+                    className="w-8 h-8 rounded-full transition-transform group-hover:scale-110"
+                    style={{
+                      background: shaderConfig[key],
+                      border: `2px solid ${
+                        isNearBlack(shaderConfig[key])
+                          ? (isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.3)')
+                          : (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)')
+                      }`,
+                    }}
+                  />
                 <input
                   type="color"
                   value={shaderConfig[key]}
