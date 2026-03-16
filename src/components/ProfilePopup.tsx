@@ -21,39 +21,28 @@ function getInitials(name: string, email: string): string {
   return '?';
 }
 
-function getPlanLabel(plan: string): { label: string; isProPlan: boolean } {
-  if (plan === 'pro') return { label: 'Pro Plan', isProPlan: true };
-  if (plan === 'pro_annual') return { label: 'Pro Annual', isProPlan: true };
-  return { label: 'Free Trial', isProPlan: false };
-}
-
 export default function ProfilePopup({ onSettingsClick, onProfileClick }: ProfilePopupProps) {
   const { theme } = useTheme();
-  const { display_name, avatar_url, email, plan } = useProfile();
+  const { display_name, avatar_url, email } = useProfile();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const initials = getInitials(display_name, email);
   const displayLabel = display_name || email || 'User';
-  const { label: planLabel, isProPlan } = getPlanLabel(plan);
+  const isDark = theme === 'dark';
 
-  const textColor = theme === 'light' ? 'text-gray-900' : 'text-white';
-  const textSecondary = theme === 'light' ? 'text-gray-600' : 'text-[rgba(255,255,255,0.7)]';
-  const textDim = theme === 'light' ? 'text-gray-500' : 'text-[rgba(255,255,255,0.5)]';
-  const popupBg = theme === 'light'
-    ? 'bg-[rgba(255,255,255,0.55)]'
-    : 'bg-[rgba(40,40,40,0.75)]';
-  const borderColor = theme === 'light'
-    ? 'border-[rgba(200,200,200,0.4)]'
-    : 'border-[rgba(255,255,255,0.2)]';
-  const hoverBg = theme === 'light'
-    ? 'hover:bg-[rgba(255,255,255,0.4)]'
-    : 'hover:bg-[rgba(255,255,255,0.1)]';
-  const footerBg = theme === 'light'
-    ? 'bg-[rgba(255,255,255,0.3)]'
-    : 'bg-[rgba(255,255,255,0.05)]';
-  const sectionLabelColor = theme === 'light' ? 'text-gray-400' : 'text-[rgba(255,255,255,0.3)]';
+  const textColor = isDark ? 'text-white' : 'text-gray-900';
+  const textSecondary = isDark ? 'text-[rgba(255,255,255,0.7)]' : 'text-gray-600';
+  const textDim = isDark ? 'text-[rgba(255,255,255,0.5)]' : 'text-gray-500';
+  const borderColor = isDark
+    ? 'border-[rgba(255,255,255,0.1)]'
+    : 'border-[rgba(0,0,0,0.08)]';
+  const hoverBg = isDark
+    ? 'hover:bg-[rgba(255,255,255,0.06)]'
+    : 'hover:bg-[rgba(0,0,0,0.04)]';
+  const dividerBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+  const sectionLabelColor = isDark ? 'text-[rgba(255,255,255,0.3)]' : 'text-gray-400';
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -93,25 +82,19 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className={`absolute bottom-full left-0 mb-3 w-[220px] ${popupBg} backdrop-blur-[120px] border ${borderColor} rounded-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.2)] overflow-hidden z-[200]`}
-            style={{ transformOrigin: 'bottom left' }}
+            className={`absolute bottom-full left-0 mb-3 w-[220px] border ${borderColor} rounded-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.25)] overflow-hidden z-[200]`}
+            style={{
+              transformOrigin: 'bottom left',
+              background: isDark ? '#1a1a1c' : '#ffffff',
+            }}
           >
             {/* Profile Header */}
-            <div className={`px-4 py-4 border-b ${borderColor}`}>
+            <div className="px-4 py-4" style={{ borderBottom: `1px solid ${dividerBg}` }}>
               <div className="flex items-center gap-3">
                 <AvatarCircle size={48} textSize="16px" />
                 <div className="flex-1 min-w-0">
                   <div className={`${textColor} text-[14px] font-medium truncate`}>{displayLabel}</div>
-                  <div
-                    className="font-['Geist_Mono',_monospace] text-[0.62rem] tracking-[0.08em] uppercase mt-[1px]"
-                    style={isProPlan
-                      ? { color: 'rgba(200,150,60,1)', opacity: 0.8 }
-                      : { color: theme === 'dark' ? '#fff' : '#000', opacity: 0.45 }
-                    }
-                  >
-                    {planLabel}
-                  </div>
-                  <div className={`${textSecondary} text-[12px] mt-0.5 truncate`}>{email}</div>
+                  <div className={`${textDim} text-[12px] mt-0.5 truncate`}>{email}</div>
                 </div>
               </div>
             </div>
@@ -127,7 +110,7 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
               </button>
             </div>
 
-            <div className={`h-px ${footerBg}`} />
+            <div style={{ height: 1, background: dividerBg }} />
 
             {/* Upgrade */}
             <div className="py-1.5">
@@ -142,7 +125,7 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
               </button>
             </div>
 
-            <div className={`h-px ${footerBg}`} />
+            <div style={{ height: 1, background: dividerBg }} />
 
             {/* Learn More */}
             <div className="py-1.5">
@@ -150,9 +133,9 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
                 Learn More
               </p>
               {[
-                { label: 'About Temple', path: '/about' },
+                { label: 'About', path: '/about' },
+                { label: 'Usage Policy', path: '/terms' },
                 { label: 'Privacy Policy', path: '/privacy' },
-                { label: 'Usage Policy', path: '/usage-policy' },
               ].map(item => (
                 <button
                   key={item.path}
@@ -165,7 +148,7 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
               ))}
             </div>
 
-            <div className={`h-px ${footerBg}`} />
+            <div style={{ height: 1, background: dividerBg }} />
 
             {/* Log Out */}
             <div className="py-1.5">
@@ -186,7 +169,7 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full flex items-center gap-3 px-2 py-2 rounded-[12px] ${hoverBg} transition-all hover:scale-[1.02]`}
       >
-        <AvatarCircle size={40} textSize="14px" />
+        <AvatarCircle size={28} textSize="11px" />
         <div className="flex-1 min-w-0 text-left">
           <div className={`${textColor} text-[12px] font-medium truncate`}>{displayLabel}</div>
         </div>
