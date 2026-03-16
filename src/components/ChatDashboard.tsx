@@ -671,9 +671,15 @@ export default function ChatDashboard() {
   const buttonBg = isDark ? 'bg-white' : 'bg-gray-900';
   const buttonText = isDark ? 'text-gray-900' : 'text-white';
 
-  const userBubbleBg = isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.55)';
-  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  // Unified bubble system — same shape/blur, different opacity
+  const templeBubbleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.45)';
+  const templeBubbleBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)';
+  const userBubbleBg = isDark ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.75)';
+  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)';
   const userTextColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)';
+  const bubbleBlur = 'blur(24px) saturate(160%)';
+  const bubbleRadius = '16px';
+  const bubblePadding = '1.25rem 1.5rem';
 
   // Get current beat number (count of assistant messages)
   const getAssistantCount = useCallback(() => {
@@ -1094,22 +1100,16 @@ export default function ChatDashboard() {
     </div>;
 
 
-  // Welcome state
+  // Welcome state — same bottom-anchored input as conversation state
   if (!hasConversation) {
     return (
       <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
         <MirrorWebcam mirrorEnabled={mirrorEnabled} />
         <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
-          <div className="flex flex-col h-full relative">
-            <div className="flex-1 flex flex-col items-center justify-center px-6">
-              <div className="w-full max-w-[640px]">
-                {renderChatInput()}
-              </div>
-            </div>
-            <div className="flex-shrink-0 pb-6 flex justify-center">
-              <span className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[10px] tracking-[0.2em] uppercase`}>
-                A deeper kind of search
-              </span>
+          <div className="flex flex-col h-full">
+            <div className="flex-1" />
+            <div className="flex-shrink-0 px-6 py-4 max-w-[680px] mx-auto w-full">
+              {renderChatInput()}
             </div>
           </div>
         </div>
@@ -1136,15 +1136,13 @@ export default function ChatDashboard() {
                 style={{
                   background: userBubbleBg,
                   border: `1px solid ${userBubbleBorder}`,
-                  backdropFilter: isDark ? 'blur(12px)' : 'saturate(180%) blur(20px)',
-                  WebkitBackdropFilter: isDark ? 'blur(12px)' : 'saturate(180%) blur(20px)',
-                  boxShadow: isDark ?
-                  '0 8px 32px rgba(0,0,0,0.2)' :
-                  '0 8px 32px rgba(0,0,0,0.06)',
-                  borderRadius: '16px',
-                  padding: '1rem 1.25rem',
+                  backdropFilter: bubbleBlur,
+                  WebkitBackdropFilter: bubbleBlur,
+                  borderRadius: bubbleRadius,
+                  padding: bubblePadding,
                   maxWidth: '75%'
-                }}>
+                }}
+                className="user-bubble">
                 
                     <p style={{ fontSize: '0.9375rem', fontFamily: "'DM Sans', 'Inter', sans-serif", color: userTextColor }}>
                       {message.content}
@@ -1153,6 +1151,16 @@ export default function ChatDashboard() {
                 </div> :
 
             <div className="mb-16">
+                  <div
+                style={{
+                  background: templeBubbleBg,
+                  border: `1px solid ${templeBubbleBorder}`,
+                  backdropFilter: bubbleBlur,
+                  WebkitBackdropFilter: bubbleBlur,
+                  borderRadius: bubbleRadius,
+                  padding: bubblePadding,
+                }}
+                className="temple-bubble">
                   <AssistantMessage
                 content={message.content}
                 theme={theme}
@@ -1162,7 +1170,7 @@ export default function ChatDashboard() {
                 phrases={message.beat === 1 ? phrases : undefined}
                 onPhraseClick={message.beat === 1 ? handlePhraseClick : undefined}
                 beat2Question={beat2Question} />
-              
+                  </div>
                 </div>
             }
             </div>
