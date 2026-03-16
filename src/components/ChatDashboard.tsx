@@ -1100,22 +1100,16 @@ export default function ChatDashboard() {
     </div>;
 
 
-  // Welcome state
+  // Welcome state — same bottom-anchored input as conversation state
   if (!hasConversation) {
     return (
       <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
         <MirrorWebcam mirrorEnabled={mirrorEnabled} />
         <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
-          <div className="flex flex-col h-full relative">
-            <div className="flex-1 flex flex-col items-center justify-center px-6">
-              <div className="w-full max-w-[640px]">
-                {renderChatInput()}
-              </div>
-            </div>
-            <div className="flex-shrink-0 pb-6 flex justify-center">
-              <span className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[10px] tracking-[0.2em] uppercase`}>
-                A deeper kind of search
-              </span>
+          <div className="flex flex-col h-full">
+            <div className="flex-1" />
+            <div className="flex-shrink-0 px-6 py-4 max-w-[680px] mx-auto w-full">
+              {renderChatInput()}
             </div>
           </div>
         </div>
