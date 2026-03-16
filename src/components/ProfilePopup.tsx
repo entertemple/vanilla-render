@@ -170,7 +170,7 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
               color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
             }}
           >
-            {useProfile().plan === 'pro' || useProfile().plan === 'pro_annual' ? 'Pro' : 'Free Trial'}
+            {plan === 'pro' || plan === 'pro_annual' ? 'Pro' : 'Free Trial'}
           </div>
         </div>
       </button>
