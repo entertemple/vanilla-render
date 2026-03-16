@@ -944,6 +944,42 @@ export default function ChatDashboard() {
     setIsWaiting(false);
   };
 
+  // Permission-aware send wrapper
+  const handleSend = async () => {
+    if (!input.trim() || isWaiting || !user) return;
+    const permission = localStorage.getItem('temple_mirror_permission');
+    if (!permission && mirrorEnabled) {
+      setPendingMessage(input.trim());
+      setShowPermissionPrompt(true);
+      return;
+    }
+    const msg = input.trim();
+    setInput('');
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
+    await sendMessage(msg);
+  };
+
+  const handlePermissionAllow = async () => {
+    localStorage.setItem('temple_mirror_permission', 'granted');
+    setShowPermissionPrompt(false);
+    // Camera will activate via MirrorWebcam reacting to mirrorEnabled + localStorage
+    const msg = pendingMessage;
+    setPendingMessage('');
+    setInput('');
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
+    await sendMessage(msg);
+  };
+
+  const handlePermissionDeny = async () => {
+    localStorage.setItem('temple_mirror_permission', 'denied');
+    setShowPermissionPrompt(false);
+    const msg = pendingMessage;
+    setPendingMessage('');
+    setInput('');
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
+    await sendMessage(msg);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {e.preventDefault();handleSend();}
   };
