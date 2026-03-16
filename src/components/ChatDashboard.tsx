@@ -671,9 +671,15 @@ export default function ChatDashboard() {
   const buttonBg = isDark ? 'bg-white' : 'bg-gray-900';
   const buttonText = isDark ? 'text-gray-900' : 'text-white';
 
-  const userBubbleBg = isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.55)';
-  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  // Unified bubble system — same shape/blur, different opacity
+  const templeBubbleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.45)';
+  const templeBubbleBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)';
+  const userBubbleBg = isDark ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.75)';
+  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)';
   const userTextColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)';
+  const bubbleBlur = 'blur(24px) saturate(160%)';
+  const bubbleRadius = '16px';
+  const bubblePadding = '1.25rem 1.5rem';
 
   // Get current beat number (count of assistant messages)
   const getAssistantCount = useCallback(() => {
