@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'motion/react';
 import { TextShimmer } from '@/components/ui/text-shimmer';
+import MirrorWebcam from './MirrorWebcam';
 
 interface Message {
   id: string;
