@@ -38,18 +38,29 @@ export default function AtmospherePanel({ textColor, textSecondary, borderColor,
   const presets = isDark ? DARK_PRESETS : LIGHT_PRESETS;
   const dimColor = isDark ? '#fff' : '#000';
 
-  const [previewSize, setPreviewSize] = useState({ width: 400, height: 80 });
+  const [previewSize, setPreviewSize] = useState({ width: 400, height: 225 });
   const previewContainerRef = useRef<HTMLDivElement>(null);
+  const [screenAspect, setScreenAspect] = useState(window.innerWidth / window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => setScreenAspect(window.innerWidth / window.innerHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (!previewContainerRef.current) return;
     const obs = new ResizeObserver(entries => {
       const entry = entries[0];
-      if (entry) setPreviewSize({ width: Math.round(entry.contentRect.width), height: 80 });
+      if (entry) {
+        const w = Math.round(entry.contentRect.width);
+        const h = Math.round(w / screenAspect);
+        setPreviewSize({ width: w, height: h });
+      }
     });
     obs.observe(previewContainerRef.current);
     return () => obs.disconnect();
-  }, []);
+  }, [screenAspect]);
 
   const applyPreset = (preset: typeof presets[0]) => {
     setShaderConfig({
