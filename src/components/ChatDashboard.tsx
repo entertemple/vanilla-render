@@ -585,15 +585,17 @@ export default function ChatDashboard() {
   const [isWaiting, setIsWaiting] = useState(false);
   const [newestMessageId, setNewestMessageId] = useState<string | null>(null);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(conversationId || null);
-  // Beat system state
   const [phrases, setPhrases] = useState<string[]>([]);
   const [firstUserMessage, setFirstUserMessage] = useState<string>('');
   const [beat2Question, setBeat2Question] = useState<string>('');
-  // File upload state
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
-  // Voice input state
   const [isRecording, setIsRecording] = useState(false);
   const [voiceUnsupported, setVoiceUnsupported] = useState(false);
+
+  // Mirror / permission state
+  const [mirrorEnabled, setMirrorEnabled] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState('');
+  const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -601,9 +603,6 @@ export default function ChatDashboard() {
   const glassRef = useRef<HTMLDivElement>(null);
   const specularRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
-
-  // Mirror mode state
-  const [mirrorEnabled, setMirrorEnabled] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -671,11 +670,11 @@ export default function ChatDashboard() {
   const buttonBg = isDark ? 'bg-white' : 'bg-gray-900';
   const buttonText = isDark ? 'text-gray-900' : 'text-white';
 
-  // Unified bubble system — same shape/blur, different opacity
-  const templeBubbleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.45)';
-  const templeBubbleBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)';
-  const userBubbleBg = isDark ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.75)';
-  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)';
+  // Unified bubble system — same shape/blur, different opacity (darkened 20%)
+  const templeBubbleBg = isDark ? 'rgba(255,255,255,0.072)' : 'rgba(255,255,255,0.54)';
+  const templeBubbleBorder = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.084)';
+  const userBubbleBg = isDark ? 'rgba(255,255,255,0.168)' : 'rgba(255,255,255,0.90)';
+  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.216)' : 'rgba(0,0,0,0.144)';
   const userTextColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)';
   const bubbleBlur = 'blur(24px) saturate(160%)';
   const bubbleRadius = '16px';
@@ -841,13 +840,13 @@ export default function ChatDashboard() {
     setIsWaiting(false);
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || isWaiting || !user) return;
+  const sendMessage = async (messageText: string) => {
+    if (!messageText.trim() || isWaiting || !user) return;
 
     let activeConversationId = currentConversationId;
 
     if (!activeConversationId) {
-      const title = input.trim().split(/\s+/).slice(0, 4).join(' ');
+      const title = messageText.trim().split(/\s+/).slice(0, 4).join(' ');
       const { data: conv, error } = await supabase.
       from('conversations').
       insert({ user_id: user.id, title }).
@@ -859,7 +858,7 @@ export default function ChatDashboard() {
       navigate(`/chat/${conv.id}`, { replace: true });
     }
 
-    const userContent = input.trim();
+    const userContent = messageText.trim();
     const currentBeat = getAssistantCount();
 
     const { data: savedUserMsg } = await supabase.
@@ -877,9 +876,7 @@ export default function ChatDashboard() {
       setFirstUserMessage(userContent);
     }
 
-    setInput('');
     setIsWaiting(true);
-    if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
     try {
       const history = messages.map((m) => ({ role: m.role, content: m.content }));
@@ -943,6 +940,42 @@ export default function ChatDashboard() {
     }
 
     setIsWaiting(false);
+  };
+
+  // Permission-aware send wrapper
+  const handleSend = async () => {
+    if (!input.trim() || isWaiting || !user) return;
+    const permission = localStorage.getItem('temple_mirror_permission');
+    if (!permission && mirrorEnabled) {
+      setPendingMessage(input.trim());
+      setShowPermissionPrompt(true);
+      return;
+    }
+    const msg = input.trim();
+    setInput('');
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
+    await sendMessage(msg);
+  };
+
+  const handlePermissionAllow = async () => {
+    localStorage.setItem('temple_mirror_permission', 'granted');
+    setShowPermissionPrompt(false);
+    // Camera will activate via MirrorWebcam reacting to mirrorEnabled + localStorage
+    const msg = pendingMessage;
+    setPendingMessage('');
+    setInput('');
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
+    await sendMessage(msg);
+  };
+
+  const handlePermissionDeny = async () => {
+    localStorage.setItem('temple_mirror_permission', 'denied');
+    setShowPermissionPrompt(false);
+    const msg = pendingMessage;
+    setPendingMessage('');
+    setInput('');
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
+    await sendMessage(msg);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -1099,18 +1132,84 @@ export default function ChatDashboard() {
       </AnimatePresence>
     </div>;
 
+  // Permission prompt component
+  const renderPermissionPrompt = () => {
+    if (!showPermissionPrompt) return null;
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+          zIndex: 10,
+          maxWidth: '280px',
+          padding: '2rem',
+          background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
+          backdropFilter: 'blur(40px)',
+          WebkitBackdropFilter: 'blur(40px)',
+          border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'}`,
+          borderRadius: '16px',
+        }}
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.2"
+          style={{ margin: '0 auto 0.75rem', opacity: 0.45, color: isDark ? '#ffffff' : '#000000' }}>
+          <rect x="2" y="5" width="16" height="11" rx="2" />
+          <circle cx="10" cy="10.5" r="3" />
+          <circle cx="14.5" cy="7.5" r="0.8" fill="currentColor" />
+        </svg>
+        <p style={{ fontFamily: "'DM Sans', 'Inter', sans-serif", fontStyle: 'italic', fontWeight: 200, fontSize: '1rem', color: isDark ? '#ffffff' : '#000000' }}>
+          Temple works as a mirror.
+        </p>
+        <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: '0.72rem', opacity: 0.38, lineHeight: 1.7, marginTop: '0.5rem', color: isDark ? '#ffffff' : '#000000' }}>
+          Your camera is never recorded or stored.<br />It exists only while you are here.
+        </p>
+        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginTop: '1.25rem' }}>
+          <button onClick={handlePermissionAllow} style={{
+            fontFamily: "'Geist Mono', monospace", fontSize: '0.75rem', letterSpacing: '0.05em',
+            padding: '0.5rem 1.25rem', borderRadius: '12px',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'}`,
+            background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
+            color: isDark ? '#ffffff' : '#000000', cursor: 'pointer',
+          }}>Allow</button>
+          <button onClick={handlePermissionDeny} style={{
+            fontFamily: "'Geist Mono', monospace", fontSize: '0.75rem', letterSpacing: '0.05em',
+            padding: '0.5rem 1.25rem', borderRadius: '12px', border: 'none', background: 'transparent',
+            color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)', cursor: 'pointer',
+          }}>Not now</button>
+        </div>
+      </div>
+    );
+  };
 
-  // Welcome state — same bottom-anchored input as conversation state
+  // Welcome state — centered input with fade-in
   if (!hasConversation) {
     return (
       <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
         <MirrorWebcam mirrorEnabled={mirrorEnabled} />
+        {renderPermissionPrompt()}
         <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
-          <div className="flex flex-col h-full">
-            <div className="flex-1" />
-            <div className="flex-shrink-0 px-6 py-4 max-w-[680px] mx-auto w-full">
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="px-6 max-w-[680px] w-full" style={{
+              animation: 'input-fade-in 1200ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              animationDelay: '400ms',
+              opacity: 0,
+            }}>
               {renderChatInput()}
             </div>
+            <p style={{
+              position: 'absolute',
+              bottom: '1.5rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              fontFamily: "'Geist Mono', monospace",
+              fontSize: '0.65rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              opacity: 0.3,
+              color: isDark ? '#ffffff' : '#000000',
+            }}>BUILT FOR CLARITY</p>
           </div>
         </div>
       </div>);
@@ -1120,6 +1219,7 @@ export default function ChatDashboard() {
   return (
     <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
       <MirrorWebcam mirrorEnabled={mirrorEnabled} />
+      {renderPermissionPrompt()}
       <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
         <div className="flex flex-col h-full">
       <div
