@@ -16,6 +16,7 @@ import About from "./pages/About";
 import UsagePolicy from "./pages/UsagePolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import LearnMore from "./pages/LearnMore";
 
 export const router = createBrowserRouter([
   {
@@ -45,30 +46,6 @@ export const router = createBrowserRouter([
   {
     path: "/pricing",
     element: <Pricing />,
-  },
-  {
-    path: "/about",
-    element: <About />,
-  },
-  {
-    path: "/usage-policy",
-    element: <UsagePolicy />,
-  },
-  {
-    path: "/privacy",
-    element: <PrivacyPolicy />,
-  },
-  {
-    path: "/privacy-policy",
-    element: <PrivacyPolicy />,
-  },
-  {
-    path: "/terms",
-    element: <TermsOfService />,
-  },
-  {
-    path: "/terms-of-service",
-    element: <TermsOfService />,
   },
   {
     path: "/app",
@@ -132,6 +109,76 @@ export const router = createBrowserRouter([
       <ProtectedRoute>
         <Layout>
           <Journal />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/learn-more",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <LearnMore />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/about",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <About />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/usage-policy",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <UsagePolicy />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/privacy",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <PrivacyPolicy />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/privacy-policy",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <PrivacyPolicy />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/terms",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <TermsOfService />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/terms-of-service",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <TermsOfService />
         </Layout>
       </ProtectedRoute>
     ),

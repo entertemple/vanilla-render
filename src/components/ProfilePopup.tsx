@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProfile } from '../contexts/ProfileContext';
-import { Settings, LogOut, ChevronRight } from 'lucide-react';
+import { Settings, LogOut, ChevronRight, Info, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -23,7 +23,7 @@ function getInitials(name: string, email: string): string {
 
 export default function ProfilePopup({ onSettingsClick, onProfileClick }: ProfilePopupProps) {
   const { theme } = useTheme();
-  const { display_name, avatar_url, email, plan } = useProfile();
+  const { display_name, avatar_url, email } = useProfile();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -31,7 +31,6 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
   const initials = getInitials(display_name, email);
   const displayLabel = display_name || email || 'User';
   const isDark = theme === 'dark';
-  const planText = (plan === 'pro' || plan === 'pro_annual') ? 'Pro' : 'Free Trial';
 
   const textColor = isDark ? 'text-white' : 'text-gray-900';
   const textSecondary = isDark ? 'text-[rgba(255,255,255,0.7)]' : 'text-gray-600';
@@ -43,7 +42,6 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
     ? 'hover:bg-[rgba(255,255,255,0.06)]'
     : 'hover:bg-[rgba(0,0,0,0.04)]';
   const dividerBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
-  const sectionLabelColor = isDark ? 'text-[rgba(255,255,255,0.3)]' : 'text-gray-400';
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -61,6 +59,11 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
     navigate('/');
   };
 
+  const handleNavigate = (path: string) => {
+    setIsOpen(false);
+    navigate(path);
+  };
+
   const AvatarCircle = ({ size = 40, textSize = '14px' }: { size?: number; textSize?: string }) => (
     <div
       className="rounded-full bg-gradient-to-br from-[#5b8dee] to-[#9b59b6] flex items-center justify-center flex-shrink-0 overflow-hidden"
@@ -73,6 +76,24 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
       )}
     </div>
   );
+
+  const menuItems = [
+    {
+      label: 'Settings',
+      icon: <Settings className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />,
+      action: () => { setIsOpen(false); onSettingsClick?.(); },
+    },
+    {
+      label: 'Learn More',
+      icon: <Info className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />,
+      action: () => handleNavigate('/learn-more'),
+    },
+    {
+      label: 'Upgrade',
+      icon: <Zap className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />,
+      action: () => handleNavigate('/pricing'),
+    },
+  ];
 
   return (
     <div className="relative w-full" ref={popupRef}>
@@ -94,57 +115,23 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
               <div className="flex items-center gap-3">
                 <AvatarCircle size={48} textSize="16px" />
                 <div className="flex-1 min-w-0">
-                  <div className={`${textColor} text-[14px] font-medium truncate`}>{displayLabel}</div>
-                  <div className={`${textDim} text-[12px] mt-0.5 truncate`}>{email}</div>
+                  <div className={`${textColor} text-[14px] font-medium truncate`} style={{ fontFamily: "'Inter', sans-serif" }}>{displayLabel}</div>
+                  <div className={`${textDim} text-[12px] mt-0.5 truncate`} style={{ fontFamily: "'Inter', sans-serif" }}>{email}</div>
                 </div>
               </div>
             </div>
 
-            {/* Settings */}
+            {/* Menu Items */}
             <div className="py-1.5">
-              <button
-                onClick={() => { setIsOpen(false); onSettingsClick?.(); }}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left ${textColor} text-[13px] transition-colors ${hoverBg}`}
-              >
-                <Settings className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />
-                <span className="flex-1">Settings</span>
-              </button>
-            </div>
-
-            <div style={{ height: 1, background: dividerBg }} />
-
-            {/* Upgrade */}
-            <div className="py-1.5">
-              <button
-                onClick={() => { setIsOpen(false); navigate('/pricing'); }}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left ${textColor} text-[13px] transition-colors ${hoverBg}`}
-              >
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" className={textSecondary}>
-                  <path d="M9 2l2.5 4.5L16 8l-3.5 3.5L13.5 16 9 13.5 4.5 16l1-4.5L2 8l4.5-1.5z" />
-                </svg>
-                <span className="flex-1">Upgrade Plan</span>
-              </button>
-            </div>
-
-            <div style={{ height: 1, background: dividerBg }} />
-
-            {/* Learn More */}
-            <div className="py-1.5">
-              <p className={`px-4 pt-1.5 pb-1 font-['Geist_Mono',_monospace] text-[0.6rem] uppercase tracking-[0.1em] ${sectionLabelColor}`}>
-                Learn More
-              </p>
-              {[
-                { label: 'About', path: '/about' },
-                { label: 'Usage Policy', path: '/terms' },
-                { label: 'Privacy Policy', path: '/privacy' },
-              ].map(item => (
+              {menuItems.map((item, i) => (
                 <button
-                  key={item.path}
-                  onClick={() => { setIsOpen(false); navigate(item.path); }}
-                  className={`w-full flex items-center justify-between px-4 py-2 text-left ${textDim} text-[13px] transition-colors ${hoverBg}`}
+                  key={item.label}
+                  onClick={item.action}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-left ${textColor} text-[13px] transition-colors ${hoverBg}`}
+                  style={{ fontFamily: "'Inter', sans-serif" }}
                 >
-                  <span>{item.label}</span>
-                  <ChevronRight className="w-3.5 h-3.5 opacity-40" strokeWidth={1.5} />
+                  {item.icon}
+                  <span className="flex-1">{item.label}</span>
                 </button>
               ))}
             </div>
@@ -156,6 +143,7 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
               <button
                 onClick={handleLogout}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 text-left ${textDim} text-[13px] transition-colors ${hoverBg}`}
+                style={{ fontFamily: "'Inter', sans-serif" }}
               >
                 <LogOut className={`w-[18px] h-[18px] ${textDim}`} strokeWidth={1.5} />
                 <span className="flex-1">Log out</span>
@@ -172,12 +160,17 @@ export default function ProfilePopup({ onSettingsClick, onProfileClick }: Profil
       >
         <AvatarCircle size={28} textSize="11px" />
         <div className="flex-1 min-w-0 text-left">
-          <div className={`${textColor} text-[12px] font-medium truncate`}>{displayLabel}</div>
+          <div className={`${textColor} text-[12px] font-medium truncate`} style={{ fontFamily: "'Inter', sans-serif" }}>{displayLabel}</div>
           <div
-            className="font-['Geist_Mono',_monospace] text-[0.6rem] tracking-[0.08em] uppercase"
-            style={{ color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)' }}
+            style={{
+              fontFamily: "'Geist Mono', monospace",
+              fontSize: '0.6rem',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase' as const,
+              color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+            }}
           >
-            {planText}
+            {useProfile().plan === 'pro' || useProfile().plan === 'pro_annual' ? 'Pro' : 'Free Trial'}
           </div>
         </div>
       </button>
