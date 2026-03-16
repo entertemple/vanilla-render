@@ -11,6 +11,9 @@ import Landing from "./pages/Landing";
 import AuthCallback from "./pages/AuthCallback";
 import ResetPassword from "./pages/ResetPassword";
 import Onboarding from "./pages/Onboarding";
+import Pricing from "./pages/Pricing";
+import About from "./pages/About";
+import UsagePolicy from "./pages/UsagePolicy";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +39,18 @@ export const router = createBrowserRouter([
   {
     path: "/onboarding",
     element: <Onboarding />,
+  },
+  {
+    path: "/pricing",
+    element: <Pricing />,
+  },
+  {
+    path: "/about",
+    element: <About />,
+  },
+  {
+    path: "/usage-policy",
+    element: <UsagePolicy />,
   },
   {
     path: "/app",
