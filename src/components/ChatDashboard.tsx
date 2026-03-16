@@ -1136,15 +1136,13 @@ export default function ChatDashboard() {
                 style={{
                   background: userBubbleBg,
                   border: `1px solid ${userBubbleBorder}`,
-                  backdropFilter: isDark ? 'blur(12px)' : 'saturate(180%) blur(20px)',
-                  WebkitBackdropFilter: isDark ? 'blur(12px)' : 'saturate(180%) blur(20px)',
-                  boxShadow: isDark ?
-                  '0 8px 32px rgba(0,0,0,0.2)' :
-                  '0 8px 32px rgba(0,0,0,0.06)',
-                  borderRadius: '16px',
-                  padding: '1rem 1.25rem',
+                  backdropFilter: bubbleBlur,
+                  WebkitBackdropFilter: bubbleBlur,
+                  borderRadius: bubbleRadius,
+                  padding: bubblePadding,
                   maxWidth: '75%'
-                }}>
+                }}
+                className="user-bubble">
                 
                     <p style={{ fontSize: '0.9375rem', fontFamily: "'DM Sans', 'Inter', sans-serif", color: userTextColor }}>
                       {message.content}
@@ -1153,6 +1151,16 @@ export default function ChatDashboard() {
                 </div> :
 
             <div className="mb-16">
+                  <div
+                style={{
+                  background: templeBubbleBg,
+                  border: `1px solid ${templeBubbleBorder}`,
+                  backdropFilter: bubbleBlur,
+                  WebkitBackdropFilter: bubbleBlur,
+                  borderRadius: bubbleRadius,
+                  padding: bubblePadding,
+                }}
+                className="temple-bubble">
                   <AssistantMessage
                 content={message.content}
                 theme={theme}
@@ -1162,7 +1170,7 @@ export default function ChatDashboard() {
                 phrases={message.beat === 1 ? phrases : undefined}
                 onPhraseClick={message.beat === 1 ? handlePhraseClick : undefined}
                 beat2Question={beat2Question} />
-              
+                  </div>
                 </div>
             }
             </div>
