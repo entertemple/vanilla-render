@@ -840,8 +840,8 @@ export default function ChatDashboard() {
     setIsWaiting(false);
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || isWaiting || !user) return;
+  const sendMessage = async (messageText: string) => {
+    if (!messageText.trim() || isWaiting || !user) return;
 
     let activeConversationId = currentConversationId;
 
