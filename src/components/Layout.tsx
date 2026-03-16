@@ -202,7 +202,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
 
           {/* Main Content */}
-          <div className={`flex-1 flex flex-col backdrop-blur-[64px] backdrop-filter ${bgSecondary}`}>
+          <div className={`flex-1 flex flex-col backdrop-blur-[64px] backdrop-filter`} style={{ background: theme === 'light' ? 'rgba(255,255,255,0.9)' : 'rgba(81,81,81,0.08)' }}>
             <div className={`flex-shrink-0 px-4 md:px-6 py-4 border-b ${borderColor} flex items-center justify-between`}>
               <button onClick={() => setSidebarOpen(!sidebarOpen)}
                 className={`w-8 h-8 rounded-[12px] flex items-center justify-center ${hoverBg} transition-all duration-200 ease-out hover:scale-110 hover:rotate-90`}>
