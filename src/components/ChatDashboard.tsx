@@ -670,11 +670,11 @@ export default function ChatDashboard() {
   const buttonBg = isDark ? 'bg-white' : 'bg-gray-900';
   const buttonText = isDark ? 'text-gray-900' : 'text-white';
 
-  // Unified bubble system — same shape/blur, different opacity
-  const templeBubbleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.45)';
-  const templeBubbleBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)';
-  const userBubbleBg = isDark ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.75)';
-  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)';
+  // Unified bubble system — same shape/blur, different opacity (darkened 20%)
+  const templeBubbleBg = isDark ? 'rgba(255,255,255,0.072)' : 'rgba(255,255,255,0.54)';
+  const templeBubbleBorder = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.084)';
+  const userBubbleBg = isDark ? 'rgba(255,255,255,0.168)' : 'rgba(255,255,255,0.90)';
+  const userBubbleBorder = isDark ? 'rgba(255,255,255,0.216)' : 'rgba(0,0,0,0.144)';
   const userTextColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)';
   const bubbleBlur = 'blur(24px) saturate(160%)';
   const bubbleRadius = '16px';
