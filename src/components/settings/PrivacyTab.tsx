@@ -19,15 +19,17 @@ export default function PrivacyTab({ textColor, textSecondary, borderColor, inpu
   const [historyEnabled, setHistoryEnabled] = useState(true);
   const [oracleHistoryEnabled, setOracleHistoryEnabled] = useState(true);
   const [memoryEnabled, setMemoryEnabled] = useState(true);
+  const [mirrorEnabled, setMirrorEnabled] = useState(false);
 
   useEffect(() => {
     if (!user) return;
-    supabase.from('profiles').select('history_enabled, oracle_history_enabled, memory_enabled').eq('user_id', user.id).single()
+    supabase.from('profiles').select('history_enabled, oracle_history_enabled, memory_enabled, mirror_enabled').eq('user_id', user.id).single()
       .then(({ data }) => {
         if (data) {
           setHistoryEnabled((data as any).history_enabled ?? true);
           setOracleHistoryEnabled((data as any).oracle_history_enabled ?? true);
           setMemoryEnabled((data as any).memory_enabled ?? true);
+          setMirrorEnabled((data as any).mirror_enabled ?? false);
         }
       });
   }, [user]);
