@@ -846,7 +846,7 @@ export default function ChatDashboard() {
     let activeConversationId = currentConversationId;
 
     if (!activeConversationId) {
-      const title = input.trim().split(/\s+/).slice(0, 4).join(' ');
+      const title = messageText.trim().split(/\s+/).slice(0, 4).join(' ');
       const { data: conv, error } = await supabase.
       from('conversations').
       insert({ user_id: user.id, title }).
@@ -858,7 +858,7 @@ export default function ChatDashboard() {
       navigate(`/chat/${conv.id}`, { replace: true });
     }
 
-    const userContent = input.trim();
+    const userContent = messageText.trim();
     const currentBeat = getAssistantCount();
 
     const { data: savedUserMsg } = await supabase.
