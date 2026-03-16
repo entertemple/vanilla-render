@@ -8,40 +8,30 @@ export default function AuthCallback() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const handleCallback = async () => {
-      try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    let handled = false;
 
-        if (sessionError) {
-          setError('Authentication failed. Please try again.');
-          setTimeout(() => navigate('/login', { replace: true }), 2000);
-          return;
-        }
-
-        if (!session) {
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          const { data: { session: retrySession } } = await supabase.auth.getSession();
-
-          if (!retrySession) {
-            setError('Authentication failed. Please try again.');
-            setTimeout(() => navigate('/login', { replace: true }), 2000);
-            return;
+    const handleAuthCallback = async () => {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          if (event === 'SIGNED_IN' && session && !handled) {
+            handled = true;
+            subscription.unsubscribe();
+            const isComplete = await checkOnboarding(session.user.id);
+            navigate(isComplete ? '/chat' : '/onboarding', { replace: true });
           }
-
-          const isComplete = await checkOnboarding(retrySession.user.id);
-          navigate(isComplete ? '/chat' : '/onboarding', { replace: true });
-          return;
         }
+      );
 
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session && !handled) {
+        handled = true;
+        subscription.unsubscribe();
         const isComplete = await checkOnboarding(session.user.id);
         navigate(isComplete ? '/chat' : '/onboarding', { replace: true });
-      } catch {
-        setError('Something went wrong.');
-        setTimeout(() => navigate('/login', { replace: true }), 2000);
       }
     };
 
-    handleCallback();
+    handleAuthCallback();
   }, [navigate]);
 
   return (
