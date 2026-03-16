@@ -1118,7 +1118,10 @@ export default function ChatDashboard() {
 
   // Conversation state
   return (
-    <div className="flex flex-col h-full">
+    <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
+      <MirrorWebcam mirrorEnabled={mirrorEnabled} />
+      <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
+        <div className="flex flex-col h-full">
       <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto"
