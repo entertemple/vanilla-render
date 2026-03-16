@@ -101,10 +101,26 @@ export default function Layout({ children }: LayoutProps) {
     if (data && !error) navigate(`/chat/${data.id}`);
   };
 
-  const deleteConversation = async (id: string, e: React.MouseEvent) => {
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const handleDeleteClick = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    await supabase.from('conversations').delete().eq('id', id);
+    setConfirmDeleteId(prev => prev === id ? null : id);
+  };
+
+  const confirmDelete = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) return;
+    await supabase.from('messages').delete().eq('conversation_id', id);
+    await supabase.from('conversations').delete().eq('id', id).eq('user_id', user.id);
+    setConversations(prev => prev.filter(c => c.id !== id));
+    setConfirmDeleteId(null);
     if (location.pathname === `/chat/${id}`) navigate('/chat');
+  };
+
+  const cancelDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setConfirmDeleteId(null);
   };
 
   const navigationItems = [
