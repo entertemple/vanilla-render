@@ -1186,6 +1186,8 @@ export default function ChatDashboard() {
       <div className="flex-shrink-0 px-6 py-4 max-w-[680px] mx-auto w-full">
         {renderChatInput()}
       </div>
+    </div>
+      </div>
     </div>);
 
 }
