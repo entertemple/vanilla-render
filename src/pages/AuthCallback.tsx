@@ -10,12 +10,26 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // Let Supabase handle the OAuth callback automatically
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
-        if (sessionError || !session) {
+
+        if (sessionError) {
           setError('Authentication failed. Please try again.');
           setTimeout(() => navigate('/login', { replace: true }), 2000);
+          return;
+        }
+
+        if (!session) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          const { data: { session: retrySession } } = await supabase.auth.getSession();
+
+          if (!retrySession) {
+            setError('Authentication failed. Please try again.');
+            setTimeout(() => navigate('/login', { replace: true }), 2000);
+            return;
+          }
+
+          const isComplete = await checkOnboarding(retrySession.user.id);
+          navigate(isComplete ? '/chat' : '/onboarding', { replace: true });
           return;
         }
 

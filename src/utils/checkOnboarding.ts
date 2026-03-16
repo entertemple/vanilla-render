@@ -11,21 +11,10 @@ export async function checkOnboarding(userId: string): Promise<boolean> {
 
   // No row exists yet
   if (error || !data) {
-    const { data: authData } = await supabase.auth.getUser();
-    const accountCreatedAt = new Date(authData?.user?.created_at ?? '');
-
-    if (accountCreatedAt < ONBOARDING_LAUNCH_DATE) {
-      await supabase.from('profiles').upsert({
-        user_id: userId,
-        onboarding_complete: true,
-      });
-      return true;
-    }
-
-    // New user — row should be created by trigger, but ensure onboarding_complete is false
-    await supabase.from('profiles').upsert({
+    await supabase.from('profiles').insert({
       user_id: userId,
       onboarding_complete: false,
+      created_at: new Date().toISOString(),
     });
     return false;
   }
