@@ -48,7 +48,7 @@ export default function Layout({ children }: LayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsTab, setSettingsTab] = useState<string | undefined>();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -80,9 +80,7 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) setSidebarOpen(false);
-      else setSidebarOpen(true);
     };
-    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);

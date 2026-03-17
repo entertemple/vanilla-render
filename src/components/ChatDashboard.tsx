@@ -379,7 +379,8 @@ function AssistantMessage({
     color: anchorColor,
     letterSpacing: '-0.02em',
     lineHeight: 1.1,
-    marginBottom: '0.75rem'
+    marginBottom: '0.75rem',
+    textAlign: 'center',
   };
 
   const bodyStyle: React.CSSProperties = {
@@ -400,7 +401,8 @@ function AssistantMessage({
     fontWeight: 400,
     color: invitationColor,
     marginTop: '1.5rem',
-    lineHeight: 1.4
+    lineHeight: 1.4,
+    textAlign: 'center',
   };
 
   const keywordWords = parsed.keywords ? parsed.keywords.split(/\s*·\s*/).slice(0, 3) : [];
@@ -433,7 +435,7 @@ function AssistantMessage({
         <div style={getBlurStyle()}>
           {parsed.anchor && <p style={anchorStyle}>{parsed.anchor}</p>}
           {parsed.keywords &&
-          <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginTop: '0.75rem', marginBottom: '2rem', fontWeight: 500 }}>
+          <p style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, marginTop: '0.75rem', marginBottom: '2rem', fontWeight: 500, textAlign: 'center' }}>
               {keywordWords.join(' · ')}
             </p>
           }
@@ -498,7 +500,7 @@ function AssistantMessage({
         }
 
         {keywordWords.length > 0 &&
-        <div style={{ marginTop: '0.75rem', marginBottom: '2rem', display: 'flex', gap: '0.5em', alignItems: 'center' }}>
+        <div style={{ marginTop: '0.75rem', marginBottom: '2rem', display: 'flex', gap: '0.5em', alignItems: 'center', justifyContent: 'center' }}>
             {keywordWords.map((word, i) =>
           <motion.span
             key={i}
@@ -671,14 +673,16 @@ export default function ChatDashboard() {
   const buttonText = isDark ? 'text-gray-900' : 'text-white';
 
   // Unified bubble system — same shape/blur, different opacity (darkened 20%)
-  const templeBubbleBg = isDark ? 'rgba(255,255,255,0.072)' : 'rgba(255,255,255,0.54)';
-  const templeBubbleBorder = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.084)';
+  // Temple bubble: 15% darker in dark mode (0.072 * 0.85 inverted → use rgba(0,0,0,0.55) approach)
+  const templeBubbleBg = isDark ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.54)';
+  const templeBubbleBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.084)';
   const userBubbleBg = isDark ? 'rgba(255,255,255,0.168)' : 'rgba(255,255,255,0.90)';
   const userBubbleBorder = isDark ? 'rgba(255,255,255,0.216)' : 'rgba(0,0,0,0.144)';
   const userTextColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)';
   const bubbleBlur = 'blur(24px) saturate(160%)';
   const bubbleRadius = '16px';
-  const bubblePadding = '1.25rem 1.5rem';
+  const templeBubblePadding = '1.875rem 1.5rem';
+  const userBubblePadding = '1.25rem 1.5rem';
 
   // Get current beat number (count of assistant messages)
   const getAssistantCount = useCallback(() => {
@@ -1239,7 +1243,7 @@ export default function ChatDashboard() {
                   backdropFilter: bubbleBlur,
                   WebkitBackdropFilter: bubbleBlur,
                   borderRadius: bubbleRadius,
-                  padding: bubblePadding,
+                  padding: userBubblePadding,
                   maxWidth: '75%'
                 }}
                 className="user-bubble">
@@ -1258,7 +1262,7 @@ export default function ChatDashboard() {
                   backdropFilter: bubbleBlur,
                   WebkitBackdropFilter: bubbleBlur,
                   borderRadius: bubbleRadius,
-                  padding: bubblePadding,
+                  padding: templeBubblePadding,
                 }}
                 className="temple-bubble">
                   <AssistantMessage
