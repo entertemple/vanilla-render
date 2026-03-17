@@ -60,7 +60,7 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
   const { theme, toggleTheme } = useTheme();
   const { display_name, avatar_url, email, refresh: refreshProfile, updateProfile } = useProfile();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<TabId>('general');
+  const [activeTab, setActiveTab] = useState<TabId>('account');
   const [language, setLanguage] = useState('en');
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
