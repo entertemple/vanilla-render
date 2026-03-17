@@ -52,6 +52,19 @@ export default function Layout({ children }: LayoutProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsTab, setSettingsTab] = useState<string | undefined>();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const handleReveal = () => {
+      setRevealed(true);
+    };
+    window.addEventListener('mousemove', handleReveal, { once: true });
+    window.addEventListener('touchstart', handleReveal, { once: true });
+    return () => {
+      window.removeEventListener('mousemove', handleReveal);
+      window.removeEventListener('touchstart', handleReveal);
+    };
+  }, []);
 
   useEffect(() => {
     if (!user) return;
