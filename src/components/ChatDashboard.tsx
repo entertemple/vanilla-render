@@ -702,34 +702,14 @@ export default function ChatDashboard() {
     }
   }, [messages, isWaiting]);
 
-  // Reveal phase timers for newest message
+  // Reset reveal states when newest message changes
   useEffect(() => {
     if (!newestMessageId) return;
-    // Clear previous timers
     revealTimersRef.current.forEach(clearTimeout);
     revealTimersRef.current = [];
-    // Reset states
-    setAnchorStaged(true);
-    setSettlePhase(false);
-    setBeat1GoDeeperVisible(false);
     setBeat1BodyRevealed(false);
     setBeat1InvitationVisible(false);
     setBeat1ToPonderVisible(false);
-
-    // Phase 3: settle at 2300ms
-    const t1 = setTimeout(() => {
-      setSettlePhase(true);
-      const t1b = setTimeout(() => setAnchorStaged(false), 600);
-      revealTimersRef.current.push(t1b);
-    }, 2300);
-    // Phase 4: Go Deeper at 2800ms
-    const t2 = setTimeout(() => setBeat1GoDeeperVisible(true), 2800);
-    revealTimersRef.current.push(t1, t2);
-
-    return () => {
-      revealTimersRef.current.forEach(clearTimeout);
-      revealTimersRef.current = [];
-    };
   }, [newestMessageId]);
 
   // Mouse tracking for specular highlight
