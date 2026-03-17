@@ -1148,7 +1148,7 @@ export default function ChatDashboard() {
           transform: 'translate(-50%, -50%)',
           textAlign: 'center',
           zIndex: 10,
-          maxWidth: '280px',
+          maxWidth: '320px',
           padding: '2rem',
           background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
           backdropFilter: 'blur(40px)',
@@ -1157,17 +1157,11 @@ export default function ChatDashboard() {
           borderRadius: '16px',
         }}
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.2"
-          style={{ margin: '0 auto 0.75rem', opacity: 0.45, color: isDark ? '#ffffff' : '#000000' }}>
-          <rect x="2" y="5" width="16" height="11" rx="2" />
-          <circle cx="10" cy="10.5" r="3" />
-          <circle cx="14.5" cy="7.5" r="0.8" fill="currentColor" />
-        </svg>
-        <p style={{ fontFamily: "'DM Sans', 'Inter', sans-serif", fontStyle: 'italic', fontWeight: 200, fontSize: '1rem', color: isDark ? '#ffffff' : '#000000' }}>
-          Temple works as a mirror.
+        <p style={{ fontFamily: "'DM Sans', 'Inter', sans-serif", fontStyle: 'italic', fontWeight: 200, fontSize: '1.5rem', color: isDark ? '#ffffff' : '#000000', textAlign: 'center' }}>
+          Temple is a mirror.
         </p>
-        <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: '0.72rem', opacity: 0.38, lineHeight: 1.7, marginTop: '0.5rem', color: isDark ? '#ffffff' : '#000000' }}>
-          Your camera is never recorded or stored.<br />It exists only while you are here.
+        <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: '0.75rem', opacity: 0.4, lineHeight: 1.8, marginTop: '0.75rem', color: isDark ? '#ffffff' : '#000000', textAlign: 'center' }}>
+          Temple respects your privacy. Your camera is used locally on your device only. Nothing is recorded, stored, or transmitted at any time.
         </p>
         <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginTop: '1.25rem' }}>
           <button onClick={handlePermissionAllow} style={{
@@ -1176,7 +1170,7 @@ export default function ChatDashboard() {
             border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'}`,
             background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
             color: isDark ? '#ffffff' : '#000000', cursor: 'pointer',
-          }}>Allow</button>
+          }}>Allow camera access</button>
           <button onClick={handlePermissionDeny} style={{
             fontFamily: "'Geist Mono', monospace", fontSize: '0.75rem', letterSpacing: '0.05em',
             padding: '0.5rem 1.25rem', borderRadius: '12px', border: 'none', background: 'transparent',
