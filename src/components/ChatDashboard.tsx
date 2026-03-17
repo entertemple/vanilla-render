@@ -1370,9 +1370,9 @@ export default function ChatDashboard() {
                           <div style={blurStyle}>
                             {parsed.body.map((sentence, i) => (
                               <p key={i} style={{
-                                fontSize: '1rem',
+                                fontSize: '0.9375rem',
                                 fontFamily: "'DM Sans', 'Inter', sans-serif",
-                                fontWeight: 600,
+                                fontWeight: 400,
                                 color: bodyColor,
                                 lineHeight: 1.9,
                                 marginBottom: '0.75rem'
