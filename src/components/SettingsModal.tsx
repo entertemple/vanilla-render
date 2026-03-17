@@ -111,11 +111,11 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
   const activeBg = theme === 'light' ? 'bg-[rgba(255,255,255,0.5)]' : 'bg-[rgba(255,255,255,0.2)]';
 
   const tabs: { id: TabId; label: string; icon: any }[] = [
-    { id: 'general', label: 'Appearance', icon: Sliders },
     { id: 'account', label: 'Account', icon: User },
     { id: 'privacy', label: 'Privacy', icon: ShieldIcon },
     { id: 'billing', label: 'Billing', icon: CreditCardIcon },
     { id: 'usage', label: 'Usage', icon: BarChartIcon },
+    { id: 'language', label: 'Language', icon: GlobeIcon },
   ];
 
   const Toggle = ({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) => (
