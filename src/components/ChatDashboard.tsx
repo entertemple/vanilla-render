@@ -482,34 +482,6 @@ function AssistantMessage({
   return (
     <div className="max-w-[680px]">
       <div style={getBlurStyle()}>
-        {parsed.anchor &&
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.4, delay: anchorDelay, ease: oracleEasing }}
-          style={anchorStyle}>
-          
-            {parsed.anchor}
-          </motion.p>
-        }
-
-        {keywordWords.length > 0 &&
-        <div style={{ marginTop: '0.75rem', marginBottom: '2rem', display: 'flex', gap: '0.5em', alignItems: 'center', justifyContent: 'center' }}>
-            {keywordWords.map((word, i) =>
-          <motion.span
-            key={i}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: kDelay + i * 0.1, ease: oracleEasing }}
-            style={{ fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', color: keywordsColor, fontWeight: 500 }}>
-            
-                {i > 0 && <span style={{ marginRight: '0.5em' }}>·</span>}
-                {word.trim()}
-              </motion.span>
-          )}
-          </div>
-        }
-
         {parsed.body.map((sentence, i) =>
         <motion.p
           key={i}
