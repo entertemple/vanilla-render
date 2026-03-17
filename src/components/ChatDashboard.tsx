@@ -702,132 +702,81 @@ export default function ChatDashboard() {
     }
   }, [messages, isWaiting]);
 
-  // Reset reveal states when newest message changes
+  // Reset and run reveal sequence when newest message changes
   useEffect(() => {
     if (!newestMessageId) return;
+
     revealTimersRef.current.forEach(clearTimeout);
     revealTimersRef.current = [];
+
     setBeat1BodyRevealed(false);
     setBeat1InvitationVisible(false);
     setBeat1ToPonderVisible(false);
+
+    const bodyTimer = setTimeout(() => setBeat1BodyRevealed(true), 300);
+    const invitationTimer = setTimeout(() => setBeat1InvitationVisible(true), 2300);
+    const toPonderTimer = setTimeout(() => setBeat1ToPonderVisible(true), 2700);
+
+    revealTimersRef.current.push(bodyTimer, invitationTimer, toPonderTimer);
+
+    return () => {
+      revealTimersRef.current.forEach(clearTimeout);
+      revealTimersRef.current = [];
+    };
   }, [newestMessageId]);
 
-  // Mouse tracking for specular highlight
-  const handleGlassMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!specularRef.current || !glassRef.current) return;
-    const rect = glassRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    specularRef.current.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(255,255,255,0.15), transparent)`;
+  const createConversationForUser = useCallback(async (messageText: string) => {
+    if (!user) return null;
+
+    const title = messageText.trim().split(/\s+/).slice(0, 4).join(' ');
+    const { data: conv, error } = await supabase
+      .from('conversations')
+      .insert({ user_id: user.id, title })
+      .select()
+      .single();
+
+    if (error || !conv) {
+      console.error('Conversation creation error:', error);
+      return null;
+    }
+
+    setCurrentConversationId(conv.id);
+    navigate(`/chat/${conv.id}`, { replace: true });
+    return conv;
+  }, [navigate, user]);
+
+  const appendAssistantMessage = useCallback((content: string, beat: number, persisted?: { id: string; created_at: string }) => {
+    const messageId = persisted?.id ?? `local-${Date.now()}`;
+    const timestamp = persisted ? new Date(persisted.created_at) : new Date();
+
+    setNewestMessageId(messageId);
+    setMessages((prev) => [...prev, {
+      id: messageId,
+      role: 'assistant' as const,
+      content,
+      timestamp,
+      beat
+    }]);
   }, []);
-
-  const handleGlassMouseLeave = useCallback(() => {
-    if (specularRef.current) {
-      specularRef.current.style.background = 'none';
-    }
-  }, []);
-
-  // Voice input handler
-  const handleVoiceInput = useCallback(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      setVoiceUnsupported(true);
-      setTimeout(() => setVoiceUnsupported(false), VOICE_UNSUPPORTED_TIMEOUT);
-      return;
-    }
-
-    if (isRecording && recognitionRef.current) {
-      recognitionRef.current.stop();
-      setIsRecording(false);
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
-
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      setInput((prev) => prev + transcript);
-      setIsRecording(false);
-    };
-
-    recognition.onerror = () => {
-      setIsRecording(false);
-    };
-
-    recognition.onend = () => {
-      setIsRecording(false);
-    };
-
-    recognitionRef.current = recognition;
-    recognition.start();
-    setIsRecording(true);
-  }, [isRecording]);
-
-  // File upload handler
-  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setAttachedFile(file);
-    }
-    // Reset input so same file can be re-selected
-    e.target.value = '';
-  }, []);
-
-  const fetchPhrases = async (userMsg: string) => {
-    try {
-      const resp = await fetch(TEMPLE_PHRASES_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
-        },
-        body: JSON.stringify({ userMessage: userMsg })
-      });
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.phrases && data.phrases.length > 0) {
-          setPhrases(data.phrases);
-        }
-      }
-    } catch (err) {
-      console.error('Phrase extraction error:', err);
-    }
-  };
 
   const handlePhraseClick = async (phrase: string) => {
     if (isWaiting || !currentConversationId || !user) return;
-
-    // Trigger body reveal
-    setBeat1BodyRevealed(false);
-    setBeat1InvitationVisible(false);
-    setBeat1ToPonderVisible(false);
-    setTimeout(() => {
-      setBeat1BodyRevealed(true);
-      const t1 = setTimeout(() => setBeat1InvitationVisible(true), 2000);
-      const t2 = setTimeout(() => setBeat1ToPonderVisible(true), 2400);
-      revealTimersRef.current.push(t1, t2);
-    }, 300);
 
     setIsWaiting(true);
 
     const beatContext = `The user has chosen to go deeper into "${phrase}". This is the thread they want to pull. Go inside that specific word or phrase only. Not the others. Do not repeat what you already said. Go one level underneath it. End your response with one single honest question about this thread specifically — the question they probably haven't asked themselves yet. Not advice. Not options. One question that requires honesty, not strategy.`;
 
     try {
-      // Remove any existing beat 2 response
       const assistantMsgs = messages.filter((m) => m.role === 'assistant');
       if (assistantMsgs.length >= 2) {
-        // Remove beat 2+ messages from state (keep only beat 1 + user messages before it)
         const beat1AssistantId = assistantMsgs[0].id;
         const beat1Idx = messages.findIndex((m) => m.id === beat1AssistantId);
         setMessages((prev) => prev.slice(0, beat1Idx + 1));
       }
 
-      const history = messages.
-      filter((m) => m.role === 'user' || m.role === 'assistant' && m.beat === 1).
-      map((m) => ({ role: m.role, content: m.content }));
+      const history = messages
+        .filter((m) => m.role === 'user' || (m.role === 'assistant' && m.beat === 1))
+        .map((m) => ({ role: m.role, content: m.content }));
 
       const resp = await fetch(TEMPLE_CHAT_URL, {
         method: 'POST',
@@ -844,25 +793,20 @@ export default function ChatDashboard() {
       const rawContent = data.content || '';
       const cleanedContent = rawContent.replace(/\*([^*]+)\*/g, '$1').replace(/\[\d+\]/g, '');
 
-      const { data: savedAiMsg } = await supabase.
-      from('messages').
-      insert({ conversation_id: currentConversationId, role: 'assistant', content: cleanedContent }).
-      select().
-      single();
+      const { data: savedAiMsg, error: saveAiError } = await supabase
+        .from('messages')
+        .insert({ conversation_id: currentConversationId, role: 'assistant', content: cleanedContent })
+        .select()
+        .single();
 
-      if (savedAiMsg) {
-        const parsed = parseStructuredResponse(cleanedContent);
-        if (parsed.invitation) setBeat2Question(parsed.invitation);
-
-        setNewestMessageId(savedAiMsg.id);
-        setMessages((prev) => [...prev, {
-          id: savedAiMsg.id,
-          role: 'assistant' as const,
-          content: savedAiMsg.content,
-          timestamp: new Date(savedAiMsg.created_at),
-          beat: 2
-        }]);
+      if (saveAiError) {
+        console.error('Beat 2 save error:', saveAiError);
       }
+
+      const parsed = parseStructuredResponse(cleanedContent);
+      if (parsed.invitation) setBeat2Question(parsed.invitation);
+
+      appendAssistantMessage(cleanedContent, 2, savedAiMsg ?? undefined);
     } catch (err) {
       console.error('Beat 2 error:', err);
     }
@@ -874,34 +818,53 @@ export default function ChatDashboard() {
     if (!messageText.trim() || isWaiting || !user) return;
 
     let activeConversationId = currentConversationId;
-
-    if (!activeConversationId) {
-      const title = messageText.trim().split(/\s+/).slice(0, 4).join(' ');
-      const { data: conv, error } = await supabase.
-      from('conversations').
-      insert({ user_id: user.id, title }).
-      select().
-      single();
-      if (error || !conv) return;
-      activeConversationId = conv.id;
-      setCurrentConversationId(conv.id);
-      navigate(`/chat/${conv.id}`, { replace: true });
-    }
-
     const userContent = messageText.trim();
     const currentBeat = getAssistantCount();
 
-    const { data: savedUserMsg } = await supabase.
-    from('messages').
-    insert({ conversation_id: activeConversationId, role: 'user', content: userContent }).
-    select().
-    single();
-
-    if (savedUserMsg) {
-      setMessages((prev) => [...prev, { id: savedUserMsg.id, role: 'user', content: savedUserMsg.content, timestamp: new Date(savedUserMsg.created_at) }]);
+    if (!activeConversationId) {
+      const conv = await createConversationForUser(userContent);
+      if (!conv) return;
+      activeConversationId = conv.id;
     }
 
-    // Track first user message for GO DEEPER card
+    let savedUserMsg: { id: string; content: string; created_at: string } | null = null;
+    let userInsertError: unknown = null;
+
+    const firstInsert = await supabase
+      .from('messages')
+      .insert({ conversation_id: activeConversationId, role: 'user', content: userContent })
+      .select()
+      .single();
+
+    savedUserMsg = firstInsert.data;
+    userInsertError = firstInsert.error;
+
+    if (firstInsert.error) {
+      console.error('User message save error:', firstInsert.error);
+      const recoveredConversation = await createConversationForUser(userContent);
+      if (recoveredConversation) {
+        activeConversationId = recoveredConversation.id;
+        const retryInsert = await supabase
+          .from('messages')
+          .insert({ conversation_id: activeConversationId, role: 'user', content: userContent })
+          .select()
+          .single();
+
+        savedUserMsg = retryInsert.data;
+        userInsertError = retryInsert.error;
+        if (retryInsert.error) {
+          console.error('User message retry save error:', retryInsert.error);
+        }
+      }
+    }
+
+    setMessages((prev) => [...prev, {
+      id: savedUserMsg?.id ?? `local-user-${Date.now()}`,
+      role: 'user',
+      content: savedUserMsg?.content ?? userContent,
+      timestamp: savedUserMsg ? new Date(savedUserMsg.created_at) : new Date()
+    }]);
+
     if (currentBeat === 0) {
       setFirstUserMessage(userContent);
     }
@@ -912,7 +875,6 @@ export default function ChatDashboard() {
       const history = messages.map((m) => ({ role: m.role, content: m.content }));
       history.push({ role: 'user', content: userContent });
 
-      // Beat context for beat 3+
       let beatContext: string | undefined;
       if (currentBeat >= 2) {
         beatContext = `This is Beat ${currentBeat + 1}. The user keeps pushing. Grow quieter. Shorter body. Fewer words. You are not withholding. You have already said the thing that matters. You are waiting.`;
@@ -932,35 +894,31 @@ export default function ChatDashboard() {
       const data = await resp.json();
       const rawContent = data.content || '';
       const cleanedContent = rawContent.replace(/\*([^*]+)\*/g, '$1').replace(/\[\d+\]/g, '');
-
       const newBeat = currentBeat + 1;
 
-      const { data: savedAiMsg } = await supabase.
-      from('messages').
-      insert({ conversation_id: activeConversationId!, role: 'assistant', content: cleanedContent }).
-      select().
-      single();
+      const { data: savedAiMsg, error: saveAiError } = await supabase
+        .from('messages')
+        .insert({ conversation_id: activeConversationId!, role: 'assistant', content: cleanedContent })
+        .select()
+        .single();
 
-      if (savedAiMsg) {
-        setNewestMessageId(savedAiMsg.id);
-        setMessages((prev) => [...prev, {
-          id: savedAiMsg.id,
-          role: 'assistant' as const,
-          content: savedAiMsg.content,
-          timestamp: new Date(savedAiMsg.created_at),
-          beat: newBeat
-        }]);
+      if (saveAiError) {
+        console.error('Assistant message save error:', saveAiError);
+      }
 
-        // After Beat 1, fetch phrases for the GO DEEPER card
-        if (newBeat === 1) {
-          fetchPhrases(userContent);
-        }
+      appendAssistantMessage(cleanedContent, newBeat, savedAiMsg ?? undefined);
 
-        // Store Beat 2 question
-        if (newBeat === 2) {
-          const parsed = parseStructuredResponse(cleanedContent);
-          if (parsed.invitation) setBeat2Question(parsed.invitation);
-        }
+      if (newBeat === 1) {
+        fetchPhrases(userContent);
+      }
+
+      if (newBeat === 2) {
+        const parsed = parseStructuredResponse(cleanedContent);
+        if (parsed.invitation) setBeat2Question(parsed.invitation);
+      }
+
+      if (userInsertError) {
+        console.warn('Message was shown locally after recovering from a save error.');
       }
     } catch (err) {
       console.error('Temple chat error:', err);
