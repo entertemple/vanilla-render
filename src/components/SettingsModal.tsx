@@ -218,7 +218,13 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* GENERAL TAB */}
             {activeTab === 'general' && (
-              <GeneralTab textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} hoverBg={hoverBg} theme={theme} Toggle={Toggle} handleToggleTheme={handleToggleTheme} notifications={notifications} handleToggleNotifications={handleToggleNotifications} language={language} handleLanguageChange={handleLanguageChange} saveToProfile={saveToProfile} />
+              <GeneralTabContent
+                theme={theme} textColor={textColor} textSecondary={textSecondary} borderColor={borderColor}
+                inputBg={inputBg} Toggle={Toggle} handleToggleTheme={handleToggleTheme}
+                notifications={notifications} handleToggleNotifications={handleToggleNotifications}
+                language={language} handleLanguageChange={handleLanguageChange}
+                user={user} saveToProfile={saveToProfile}
+              />
             )}
 
             {/* ACCOUNT TAB */}
