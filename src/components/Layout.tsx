@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Plus, Trash2, Menu, X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
@@ -52,19 +52,30 @@ export default function Layout({ children }: LayoutProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsTab, setSettingsTab] = useState<string | undefined>();
   const [profileOpen, setProfileOpen] = useState(false);
-  const [revealed, setRevealed] = useState(false);
+  const [bordersVisible, setBordersVisible] = useState(false);
+  const inactivityTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showBorders = useCallback(() => {
+    setBordersVisible(true);
+    if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+    inactivityTimer.current = setTimeout(() => {
+      setBordersVisible(false);
+    }, 3000);
+  }, []);
 
   useEffect(() => {
-    const handleReveal = () => {
-      setRevealed(true);
-    };
-    window.addEventListener('mousemove', handleReveal, { once: true });
-    window.addEventListener('touchstart', handleReveal, { once: true });
+    window.addEventListener('mousemove', showBorders);
+    window.addEventListener('touchstart', showBorders);
+    window.addEventListener('keydown', showBorders);
+    window.addEventListener('click', showBorders);
     return () => {
-      window.removeEventListener('mousemove', handleReveal);
-      window.removeEventListener('touchstart', handleReveal);
+      window.removeEventListener('mousemove', showBorders);
+      window.removeEventListener('touchstart', showBorders);
+      window.removeEventListener('keydown', showBorders);
+      window.removeEventListener('click', showBorders);
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
     };
-  }, []);
+  }, [showBorders]);
 
   useEffect(() => {
     if (!user) return;
@@ -106,17 +117,16 @@ export default function Layout({ children }: LayoutProps) {
   const hoverBg = theme === 'light' ? 'hover:bg-[rgba(255,255,255,0.15)]' : 'hover:bg-[rgba(255,255,255,0.1)]';
   const activeBg = theme === 'light' ? 'bg-[rgba(255,255,255,0.2)]' : 'bg-[rgba(255,255,255,0.15)]';
 
-  // Reveal transition styles
-  const revealTransition = 'transition-all duration-[400ms] ease-in-out';
+  // Border visibility transition styles
   const borderRevealStyle: React.CSSProperties = {
-    borderColor: revealed
+    borderColor: bordersVisible
       ? (theme === 'light' ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.08)')
       : 'transparent',
-    transition: 'border-color 400ms ease',
+    transition: 'border-color 500ms ease',
   };
   const elementRevealStyle: React.CSSProperties = {
-    opacity: revealed ? 1 : 0,
-    transition: 'opacity 400ms ease',
+    opacity: bordersVisible ? 1 : 0,
+    transition: 'opacity 500ms ease',
   };
 
   const createNewChat = async () => {
@@ -170,7 +180,7 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <>
-      <div className={`w-full h-screen flex items-center justify-center p-4 md:p-6 lg:p-8 ${revealed ? 'temple-revealed' : ''}`}>
+      <div className={`w-full h-screen flex items-center justify-center p-4 md:p-6 lg:p-8 ${bordersVisible ? 'temple-revealed' : ''}`}>
         <div className={`relative flex rounded-[32px] md:rounded-[48px] border overflow-hidden w-full h-full max-w-[1600px]`}
           style={borderRevealStyle}>
           {/* Sidebar */}
