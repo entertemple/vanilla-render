@@ -117,17 +117,16 @@ export default function Layout({ children }: LayoutProps) {
   const hoverBg = theme === 'light' ? 'hover:bg-[rgba(255,255,255,0.15)]' : 'hover:bg-[rgba(255,255,255,0.1)]';
   const activeBg = theme === 'light' ? 'bg-[rgba(255,255,255,0.2)]' : 'bg-[rgba(255,255,255,0.15)]';
 
-  // Reveal transition styles
-  const revealTransition = 'transition-all duration-[400ms] ease-in-out';
+  // Border visibility transition styles
   const borderRevealStyle: React.CSSProperties = {
-    borderColor: revealed
+    borderColor: bordersVisible
       ? (theme === 'light' ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.08)')
       : 'transparent',
-    transition: 'border-color 400ms ease',
+    transition: 'border-color 500ms ease',
   };
   const elementRevealStyle: React.CSSProperties = {
-    opacity: revealed ? 1 : 0,
-    transition: 'opacity 400ms ease',
+    opacity: bordersVisible ? 1 : 0,
+    transition: 'opacity 500ms ease',
   };
 
   const createNewChat = async () => {
