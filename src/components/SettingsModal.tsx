@@ -323,7 +323,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
               <GeneralTabContent
                 theme={theme} textColor={textColor} textSecondary={textSecondary} borderColor={borderColor}
                 inputBg={inputBg} Toggle={Toggle} handleToggleTheme={handleToggleTheme}
-                notifications={notifications} handleToggleNotifications={handleToggleNotifications}
                 language={language} handleLanguageChange={handleLanguageChange}
                 user={user} saveToProfile={saveToProfile}
               />
