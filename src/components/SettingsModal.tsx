@@ -58,11 +58,11 @@ const WaveIcon = ({ className }: { className?: string }) => (
 
 function GeneralTabContent({
   theme, textColor, textSecondary, borderColor, inputBg, Toggle, handleToggleTheme,
-  notifications, handleToggleNotifications, language, handleLanguageChange, user, saveToProfile
+  language, handleLanguageChange, user, saveToProfile
 }: {
   theme: string; textColor: string; textSecondary: string; borderColor: string; inputBg: string;
   Toggle: React.ComponentType<{ enabled: boolean; onToggle: () => void }>;
-  handleToggleTheme: () => void; notifications: boolean; handleToggleNotifications: () => void;
+  handleToggleTheme: () => void;
   language: string; handleLanguageChange: (v: string) => void; user: any; saveToProfile: (f: Record<string, any>) => Promise<void>;
 }) {
   const [atmosphereEnabled, setAtmosphereEnabled] = useState(true);
@@ -105,6 +105,16 @@ function GeneralTabContent({
             </div>
             <Toggle enabled={atmosphereEnabled} onToggle={handleToggleAtmosphere} />
           </div>
+          {/* Shader Colors sub-panel — nested under Atmosphere */}
+          {atmosphereEnabled && (
+            <div style={{
+              marginLeft: '1rem',
+              paddingTop: '0.75rem',
+              borderTop: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'}`,
+            }}>
+              <AtmospherePanel textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} theme={theme as 'light' | 'dark'} />
+            </div>
+          )}
           {/* Theme toggle */}
           <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
             <div className="flex items-center gap-3">
@@ -116,19 +126,6 @@ function GeneralTabContent({
             </div>
             <Toggle enabled={theme === 'dark'} onToggle={handleToggleTheme} />
           </div>
-        </div>
-      </div>
-      <div>
-        <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Notifications</h3>
-        <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
-          <div className="flex items-center gap-3">
-            <Bell className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />
-            <div>
-              <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Enable Notifications</p>
-              <p className={`font-['Inter',_sans-serif] text-[11px] ${textSecondary}`}>Get notified about updates</p>
-            </div>
-          </div>
-          <Toggle enabled={notifications} onToggle={handleToggleNotifications} />
         </div>
       </div>
       <div>
@@ -151,7 +148,6 @@ function GeneralTabContent({
           </select>
         </div>
       </div>
-      <AtmospherePanel textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} theme={theme as 'light' | 'dark'} />
     </>
   );
 }
