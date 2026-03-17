@@ -375,9 +375,9 @@ function AssistantMessage({
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: '1rem',
+    fontSize: '0.9375rem',
     fontFamily: "'DM Sans', 'Inter', sans-serif",
-    fontWeight: 600,
+    fontWeight: 400,
     color: bodyColor,
     lineHeight: 1.9,
     marginBottom: '0.75rem'
