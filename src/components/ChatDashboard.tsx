@@ -572,9 +572,7 @@ function AssistantMessage({
           </motion.p>
         }
       </div>
-    </>
   );
-}
 
 // ========== MAIN COMPONENT ==========
 export default function ChatDashboard() {
