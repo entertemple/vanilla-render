@@ -53,6 +53,7 @@ export default function Layout({ children }: LayoutProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsTab, setSettingsTab] = useState<string | undefined>();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [appearanceOpen, setAppearanceOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
