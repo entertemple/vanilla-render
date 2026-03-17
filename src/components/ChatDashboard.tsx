@@ -883,6 +883,12 @@ export default function ChatDashboard() {
   const handlePhraseClick = async (phrase: string) => {
     if (isWaiting || !currentConversationId || !user) return;
 
+    // Trigger body reveal
+    setBeat1BodyRevealed(true);
+    const t1 = setTimeout(() => setBeat1InvitationVisible(true), 2000);
+    const t2 = setTimeout(() => setBeat1ToPonderVisible(true), 2400);
+    revealTimersRef.current.push(t1, t2);
+
     setIsWaiting(true);
 
     const beatContext = `The user has chosen to go deeper into "${phrase}". This is the thread they want to pull. Go inside that specific word or phrase only. Not the others. Do not repeat what you already said. Go one level underneath it. End your response with one single honest question about this thread specifically — the question they probably haven't asked themselves yet. Not advice. Not options. One question that requires honesty, not strategy.`;
