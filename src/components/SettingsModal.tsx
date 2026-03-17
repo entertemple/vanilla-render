@@ -177,7 +177,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
     const load = async () => {
       const { data } = await supabase.from('profiles').select('*').eq('user_id', user.id).single();
       if (data) {
-        setNotifications((data as any).notifications_enabled ?? true);
         setLanguage((data as any).language ?? 'en');
         setDisplayName((data as any).display_name || '');
       }
