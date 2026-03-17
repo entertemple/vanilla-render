@@ -157,7 +157,7 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
   const { display_name, avatar_url, email, refresh: refreshProfile, updateProfile } = useProfile();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>('general');
-  const [notifications, setNotifications] = useState(true);
+  const [language, setLanguage] = useState('en');
   const [language, setLanguage] = useState('en');
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
