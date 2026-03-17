@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useProfile } from '../contexts/ProfileContext';
 import { supabase } from '@/integrations/supabase/client';
 import SettingsModal from './SettingsModal';
+import AppearanceModal from './AppearanceModal';
 import ProfileModal from './ProfileModal';
 import ProfilePopup from './ProfilePopup';
 import WordmarkDark from './WordmarkDark';
@@ -52,6 +53,7 @@ export default function Layout({ children }: LayoutProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsTab, setSettingsTab] = useState<string | undefined>();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [appearanceOpen, setAppearanceOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -195,7 +197,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             <div className={`flex-shrink-0 p-4 border-t ${borderColor}`}>
-              <ProfilePopup onSettingsClick={() => openSettings()} onProfileClick={() => setProfileOpen(true)} />
+              <ProfilePopup onSettingsClick={() => openSettings()} onAppearanceClick={() => setAppearanceOpen(true)} onProfileClick={() => setProfileOpen(true)} />
             </div>
           </div>
 
@@ -221,6 +223,7 @@ export default function Layout({ children }: LayoutProps) {
       </div>
 
       <SettingsModal isOpen={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsTab(undefined); }} initialTab={settingsTab} />
+      <AppearanceModal isOpen={appearanceOpen} onClose={() => setAppearanceOpen(false)} />
       <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} onEditProfile={handleEditProfile} />
     </>
   );
