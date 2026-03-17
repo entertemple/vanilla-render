@@ -223,6 +223,7 @@ export default function Layout({ children }: LayoutProps) {
       </div>
 
       <SettingsModal isOpen={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsTab(undefined); }} initialTab={settingsTab} />
+      <AppearanceModal isOpen={appearanceOpen} onClose={() => setAppearanceOpen(false)} />
       <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} onEditProfile={handleEditProfile} />
     </>
   );
