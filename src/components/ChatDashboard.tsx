@@ -1296,9 +1296,7 @@ export default function ChatDashboard() {
                       transition: 'filter 600ms ease, opacity 600ms ease'
                     };
 
-                    // Visibility: newest uses phased reveal, old messages fully visible
-                    const anchorVis = isNewest ? !anchorStaged : true;
-                    const goDeeperVis = isNewest ? beat1GoDeeperVisible : true;
+                    // Visibility: newest uses CSS animation, old messages fully visible
                     const bodyVis = isNewest ? beat1BodyRevealed : true;
                     const invVis = isNewest ? beat1InvitationVisible : true;
                     const toPonderVis = isNewest ? beat1ToPonderVisible : true;
@@ -1308,11 +1306,11 @@ export default function ChatDashboard() {
 
                     return (
                       <>
-                        {/* Anchor + Keywords — only for newest message during reveal, hidden for old messages */}
+                        {/* Anchor + Keywords — in-flow, CSS animation for newest */}
                         {isNewest && (
                           <>
                             {parsed.anchor && (
-                              <p style={{
+                              <p className="response-anchor" style={{
                                 fontSize: '3.125rem',
                                 fontFamily: "'DM Serif Display', Georgia, serif",
                                 fontWeight: 400,
@@ -1321,12 +1319,10 @@ export default function ChatDashboard() {
                                 lineHeight: 1.1,
                                 marginBottom: '0.5rem',
                                 textAlign: 'center',
-                                opacity: anchorVis ? 1 : 0,
-                                transition: 'opacity 600ms ease',
                               }}>{parsed.anchor}</p>
                             )}
                             {parsed.keywords && (
-                              <p style={{
+                              <p className="response-keywords" style={{
                                 fontSize: '0.7rem',
                                 fontFamily: "'Geist Mono', monospace",
                                 letterSpacing: '0.15em',
@@ -1335,20 +1331,14 @@ export default function ChatDashboard() {
                                 marginBottom: '0.875rem',
                                 fontWeight: 500,
                                 textAlign: 'center',
-                                opacity: anchorVis ? 1 : 0,
-                                transition: 'opacity 600ms ease',
                               }}>{parsed.keywords}</p>
                             )}
                           </>
                         )}
 
-                        {/* Go Deeper — outside bubble, below keywords */}
+                        {/* Go Deeper — in-flow, CSS animation */}
                         {showGoDeeper && (
-                          <div className="max-w-[680px] mx-auto" style={{
-                            opacity: goDeeperVis ? 1 : 0,
-                            transition: 'opacity 700ms ease',
-                            pointerEvents: goDeeperVis ? 'auto' : 'none',
-                          }}>
+                          <div className={`max-w-[680px] mx-auto ${isNewest ? 'go-deeper-reveal' : ''}`}>
                             <GoDeeperCard
                               userMessage={firstUserMessage}
                               phrases={phrases}
