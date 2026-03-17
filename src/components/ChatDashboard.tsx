@@ -593,10 +593,7 @@ export default function ChatDashboard() {
   const [isRecording, setIsRecording] = useState(false);
   const [voiceUnsupported, setVoiceUnsupported] = useState(false);
 
-  // Reveal phase states for newest message
-  const [anchorStaged, setAnchorStaged] = useState(true);
-  const [settlePhase, setSettlePhase] = useState(false);
-  const [beat1GoDeeperVisible, setBeat1GoDeeperVisible] = useState(false);
+  // Reveal phase states for newest message (no fixed positioning)
   const [beat1BodyRevealed, setBeat1BodyRevealed] = useState(false);
   const [beat1InvitationVisible, setBeat1InvitationVisible] = useState(false);
   const [beat1ToPonderVisible, setBeat1ToPonderVisible] = useState(false);
