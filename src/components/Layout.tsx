@@ -197,7 +197,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             <div className={`flex-shrink-0 p-4 border-t ${borderColor}`}>
-              <ProfilePopup onSettingsClick={() => openSettings()} onProfileClick={() => setProfileOpen(true)} />
+              <ProfilePopup onSettingsClick={() => openSettings()} onAppearanceClick={() => setAppearanceOpen(true)} onProfileClick={() => setProfileOpen(true)} />
             </div>
           </div>
 
