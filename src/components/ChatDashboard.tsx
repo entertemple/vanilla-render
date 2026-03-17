@@ -640,7 +640,7 @@ export default function ChatDashboard() {
 
   // Unified bubble system — same shape/blur, different opacity (darkened 20%)
   // Temple bubble: 15% darker in dark mode (0.072 * 0.85 inverted → use rgba(0,0,0,0.55) approach)
-  const templeBubbleBg = isDark ? 'rgba(0,0,0,0.47)' : 'rgba(255,255,255,0.54)';
+  const templeBubbleBg = isDark ? 'rgba(0,0,0,0.40)' : 'rgba(255,255,255,0.46)';
   const templeBubbleBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.084)';
   const userBubbleBg = isDark ? 'rgba(255,255,255,0.168)' : 'rgba(255,255,255,0.90)';
   const userBubbleBorder = isDark ? 'rgba(255,255,255,0.216)' : 'rgba(0,0,0,0.144)';
