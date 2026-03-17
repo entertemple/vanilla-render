@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Sun, Moon, Globe, Key, HelpCircle, FileText, Sliders, Check, User, Trash2 } from 'lucide-react';
+import { X, Globe, Key, HelpCircle, FileText, Check, User, Trash2 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProfile } from '../contexts/ProfileContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,7 +7,6 @@ import { supabase } from '@/integrations/supabase/client';
 import PrivacyTab from './settings/PrivacyTab';
 import BillingTab from './settings/BillingTab';
 import UsageTab from './settings/UsageTab';
-import AtmospherePanel from './settings/AtmospherePanel';
 
 interface SettingsModalProps {
   isOpen: boolean;
