@@ -158,7 +158,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>('general');
   const [language, setLanguage] = useState('en');
-  const [language, setLanguage] = useState('en');
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
