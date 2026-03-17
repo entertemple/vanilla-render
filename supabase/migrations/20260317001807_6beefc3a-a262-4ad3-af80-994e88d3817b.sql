@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS atmosphere_enabled boolean NOT NULL DEFAULT true;

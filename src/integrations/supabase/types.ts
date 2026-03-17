@@ -134,6 +134,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          atmosphere_enabled: boolean
           avatar_url: string | null
           created_at: string
           display_name: string | null
@@ -158,6 +159,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          atmosphere_enabled?: boolean
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
@@ -182,6 +184,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          atmosphere_enabled?: boolean
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
