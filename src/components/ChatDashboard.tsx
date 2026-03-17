@@ -850,8 +850,8 @@ export default function ChatDashboard() {
       setFirstUserMessage(userContent);
     }
 
-    setIsWaiting(true);
-
+      setIsWaiting(true);
+      setShaderState('thinking');
     try {
       const history = messages.map((m) => ({ role: m.role, content: m.content }));
       history.push({ role: 'user', content: userContent });
