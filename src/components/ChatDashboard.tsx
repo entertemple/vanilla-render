@@ -401,7 +401,8 @@ function AssistantMessage({
     fontWeight: 400,
     color: invitationColor,
     marginTop: '1.5rem',
-    lineHeight: 1.4
+    lineHeight: 1.4,
+    textAlign: 'center',
   };
 
   const keywordWords = parsed.keywords ? parsed.keywords.split(/\s*·\s*/).slice(0, 3) : [];
