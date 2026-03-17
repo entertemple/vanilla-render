@@ -905,6 +905,13 @@ export default function ChatDashboard() {
           const parsed = parseStructuredResponse(cleanedContent);
           if (parsed.invitation) setBeat2Question(parsed.invitation);
         }
+
+        // Shader state based on beat
+        if (newBeat >= 4) {
+          setShaderState('deep');
+        } else {
+          setShaderState('responding');
+        }
       }
     } catch (err) {
       console.error('Temple chat error:', err);
