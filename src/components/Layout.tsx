@@ -106,6 +106,19 @@ export default function Layout({ children }: LayoutProps) {
   const hoverBg = theme === 'light' ? 'hover:bg-[rgba(255,255,255,0.15)]' : 'hover:bg-[rgba(255,255,255,0.1)]';
   const activeBg = theme === 'light' ? 'bg-[rgba(255,255,255,0.2)]' : 'bg-[rgba(255,255,255,0.15)]';
 
+  // Reveal transition styles
+  const revealTransition = 'transition-all duration-[400ms] ease-in-out';
+  const borderRevealStyle: React.CSSProperties = {
+    borderColor: revealed
+      ? (theme === 'light' ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.08)')
+      : 'transparent',
+    transition: 'border-color 400ms ease',
+  };
+  const elementRevealStyle: React.CSSProperties = {
+    opacity: revealed ? 1 : 0,
+    transition: 'opacity 400ms ease',
+  };
+
   const createNewChat = async () => {
     if (!user) return;
     const { data, error } = await supabase.from('conversations').insert({ user_id: user.id, title: 'New Conversation' }).select().single();
