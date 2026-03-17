@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Globe, Key, HelpCircle, FileText, Check, User, Trash2 } from 'lucide-react';
+import { X, Sun, Moon, Globe, Key, HelpCircle, FileText, Sliders, Check, User, Trash2 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProfile } from '../contexts/ProfileContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import PrivacyTab from './settings/PrivacyTab';
 import BillingTab from './settings/BillingTab';
 import UsageTab from './settings/UsageTab';
+import AtmospherePanel from './settings/AtmospherePanel';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -47,20 +48,115 @@ function getInitials(name: string, email: string): string {
   return '?';
 }
 
-type TabId = 'account' | 'privacy' | 'billing' | 'usage' | 'language';
+type TabId = 'general' | 'account' | 'privacy' | 'billing' | 'usage';
 
-const GlobeIcon = ({ className }: { className?: string }) => (
+const WaveIcon = ({ className }: { className?: string }) => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-    <circle cx="8" cy="8" r="6" />
-    <path d="M2 8h12M8 2c2 2.5 2 9.5 0 12M8 2c-2 2.5-2 9.5 0 12" />
+    <path d="M2 8c1-3 3-3 4 0s3 3 4 0 3-3 4 0" />
   </svg>
 );
+
+function GeneralTabContent({
+  theme, textColor, textSecondary, borderColor, inputBg, Toggle, handleToggleTheme,
+  language, handleLanguageChange, user, saveToProfile
+}: {
+  theme: string; textColor: string; textSecondary: string; borderColor: string; inputBg: string;
+  Toggle: React.ComponentType<{ enabled: boolean; onToggle: () => void }>;
+  handleToggleTheme: () => void;
+  language: string; handleLanguageChange: (v: string) => void; user: any; saveToProfile: (f: Record<string, any>) => Promise<void>;
+}) {
+  const [atmosphereEnabled, setAtmosphereEnabled] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('profiles').select('atmosphere_enabled').eq('user_id', user.id).single()
+      .then(({ data }) => {
+        if (data) setAtmosphereEnabled((data as any).atmosphere_enabled ?? true);
+      });
+  }, [user]);
+
+  const handleToggleAtmosphere = async () => {
+    const next = !atmosphereEnabled;
+    setAtmosphereEnabled(next);
+
+    // Apply immediately
+    const shaderEl = document.querySelector('canvas[style*="position: fixed"]') as HTMLElement | null;
+    if (shaderEl) {
+      shaderEl.style.display = next ? 'block' : 'none';
+    }
+    document.body.style.background = next ? '' : (theme === 'dark' ? '#080808' : '#f5f5f3');
+
+    await saveToProfile({ atmosphere_enabled: next });
+  };
+
+  return (
+    <>
+      <div>
+        <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Appearance</h3>
+        <div className="space-y-2">
+          {/* Atmosphere toggle */}
+          <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
+            <div className="flex items-center gap-3">
+              <WaveIcon className={`w-5 h-5 ${textColor}`} />
+              <div>
+                <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Atmosphere</p>
+                <p className={`font-['Inter',_sans-serif] text-[11px] ${textSecondary}`}>Animated background shader</p>
+              </div>
+            </div>
+            <Toggle enabled={atmosphereEnabled} onToggle={handleToggleAtmosphere} />
+          </div>
+          {/* Shader Colors sub-panel — nested under Atmosphere */}
+          {atmosphereEnabled && (
+            <div style={{
+              marginLeft: '1rem',
+              paddingTop: '0.75rem',
+              borderTop: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'}`,
+            }}>
+              <AtmospherePanel textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} theme={theme as 'light' | 'dark'} />
+            </div>
+          )}
+          {/* Theme toggle */}
+          <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
+            <div className="flex items-center gap-3">
+              {theme === 'light' ? <Sun className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} /> : <Moon className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />}
+              <div>
+                <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Theme</p>
+                <p className={`font-['Inter',_sans-serif] text-[11px] ${textSecondary}`}>{theme === 'light' ? 'Light Mode' : 'Dark Mode'}</p>
+              </div>
+            </div>
+            <Toggle enabled={theme === 'dark'} onToggle={handleToggleTheme} />
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Language</h3>
+        <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
+          <div className="flex items-center gap-3">
+            <Globe className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />
+            <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Interface Language</p>
+          </div>
+          <select
+            value={language}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            className={`px-3 py-1.5 rounded-[8px] ${inputBg} border ${borderColor} ${textColor} text-[12px] focus:outline-none`}
+          >
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="ja">日本語</option>
+          </select>
+        </div>
+      </div>
+    </>
+  );
+}
 
 export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsModalProps) {
   const { theme, toggleTheme } = useTheme();
   const { display_name, avatar_url, email, refresh: refreshProfile, updateProfile } = useProfile();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<TabId>('account');
+  const [activeTab, setActiveTab] = useState<TabId>('general');
   const [language, setLanguage] = useState('en');
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -111,11 +207,11 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
   const activeBg = theme === 'light' ? 'bg-[rgba(255,255,255,0.5)]' : 'bg-[rgba(255,255,255,0.2)]';
 
   const tabs: { id: TabId; label: string; icon: any }[] = [
+    { id: 'general', label: 'Appearance', icon: Sliders },
     { id: 'account', label: 'Account', icon: User },
     { id: 'privacy', label: 'Privacy', icon: ShieldIcon },
     { id: 'billing', label: 'Billing', icon: CreditCardIcon },
     { id: 'usage', label: 'Usage', icon: BarChartIcon },
-    { id: 'language', label: 'Language', icon: GlobeIcon },
   ];
 
   const Toggle = ({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) => (
@@ -214,6 +310,16 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
           </div>
 
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            {/* GENERAL TAB */}
+            {activeTab === 'general' && (
+              <GeneralTabContent
+                theme={theme} textColor={textColor} textSecondary={textSecondary} borderColor={borderColor}
+                inputBg={inputBg} Toggle={Toggle} handleToggleTheme={handleToggleTheme}
+                language={language} handleLanguageChange={handleLanguageChange}
+                user={user} saveToProfile={saveToProfile}
+              />
+            )}
+
             {/* ACCOUNT TAB */}
             {activeTab === 'account' && (
               <>
@@ -322,30 +428,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
             {/* USAGE TAB */}
             {activeTab === 'usage' && (
               <UsageTab textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} theme={theme} />
-            )}
-
-            {/* LANGUAGE TAB */}
-            {activeTab === 'language' && (
-              <div>
-                <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Language</h3>
-                <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
-                  <div className="flex items-center gap-3">
-                    <Globe className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />
-                    <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Interface Language</p>
-                  </div>
-                  <select
-                    value={language}
-                    onChange={(e) => handleLanguageChange(e.target.value)}
-                    className={`px-3 py-1.5 rounded-[8px] ${inputBg} border ${borderColor} ${textColor} text-[12px] focus:outline-none`}
-                  >
-                    <option value="en">English</option>
-                    <option value="es">Español</option>
-                    <option value="fr">Français</option>
-                    <option value="de">Deutsch</option>
-                    <option value="ja">日本語</option>
-                  </select>
-                </div>
-              </div>
             )}
           </div>
         </div>

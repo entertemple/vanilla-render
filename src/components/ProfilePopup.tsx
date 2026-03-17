@@ -1,14 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProfile } from '../contexts/ProfileContext';
-import { Settings, LogOut, ChevronDown, ChevronRight, Zap, SlidersHorizontal } from 'lucide-react';
+import { Settings, LogOut, ChevronRight, Info, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 interface ProfilePopupProps {
   onSettingsClick?: () => void;
-  onAppearanceClick?: () => void;
   onProfileClick?: () => void;
 }
 
@@ -22,19 +21,11 @@ function getInitials(name: string, email: string): string {
   return '?';
 }
 
-const InfoIcon = ({ className }: { className?: string }) => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-    <circle cx="9" cy="9" r="7" />
-    <path d="M9 8.5v4M9 6.5v0" strokeLinecap="round" />
-  </svg>
-);
-
-export default function ProfilePopup({ onSettingsClick, onAppearanceClick, onProfileClick }: ProfilePopupProps) {
+export default function ProfilePopup({ onSettingsClick, onProfileClick }: ProfilePopupProps) {
   const { theme } = useTheme();
   const { display_name, avatar_url, email, plan } = useProfile();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [learnMoreOpen, setLearnMoreOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const initials = getInitials(display_name, email);
@@ -56,7 +47,6 @@ export default function ProfilePopup({ onSettingsClick, onAppearanceClick, onPro
     const handleClickOutside = (e: MouseEvent) => {
       if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
         setIsOpen(false);
-        setLearnMoreOpen(false);
       }
     };
     if (isOpen) document.addEventListener('mousedown', handleClickOutside);
@@ -71,7 +61,6 @@ export default function ProfilePopup({ onSettingsClick, onAppearanceClick, onPro
 
   const handleNavigate = (path: string) => {
     setIsOpen(false);
-    setLearnMoreOpen(false);
     navigate(path);
   };
 
@@ -87,6 +76,24 @@ export default function ProfilePopup({ onSettingsClick, onAppearanceClick, onPro
       )}
     </div>
   );
+
+  const menuItems = [
+    {
+      label: 'Settings',
+      icon: <Settings className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />,
+      action: () => { setIsOpen(false); onSettingsClick?.(); },
+    },
+    {
+      label: 'Learn More',
+      icon: <Info className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />,
+      action: () => handleNavigate('/learn-more'),
+    },
+    {
+      label: 'Upgrade',
+      icon: <Zap className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />,
+      action: () => handleNavigate('/pricing'),
+    },
+  ];
 
   return (
     <div className="relative w-full" ref={popupRef}>
@@ -116,69 +123,17 @@ export default function ProfilePopup({ onSettingsClick, onAppearanceClick, onPro
 
             {/* Menu Items */}
             <div className="py-1.5">
-              {/* Settings */}
-              <button
-                onClick={() => { setIsOpen(false); onSettingsClick?.(); }}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left ${textColor} text-[13px] transition-colors ${hoverBg}`}
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              >
-                <Settings className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />
-                <span className="flex-1">Settings</span>
-              </button>
-
-              {/* Appearance */}
-              <button
-                onClick={() => { setIsOpen(false); onAppearanceClick?.(); }}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left ${textColor} text-[13px] transition-colors ${hoverBg}`}
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              >
-                <SlidersHorizontal className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />
-                <span className="flex-1">Appearance</span>
-              </button>
-
-              {/* Upgrade Plan */}
-              <button
-                onClick={() => handleNavigate('/pricing')}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left ${textColor} text-[13px] transition-colors ${hoverBg}`}
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              >
-                <Zap className={`w-[18px] h-[18px] ${textSecondary}`} strokeWidth={1.5} />
-                <span className="flex-1">Upgrade Plan</span>
-              </button>
-
-              {/* Learn More — collapsible */}
-              <button
-                onClick={() => setLearnMoreOpen(!learnMoreOpen)}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left ${textColor} text-[13px] transition-colors ${hoverBg}`}
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              >
-                <InfoIcon className={`${textSecondary}`} />
-                <span className="flex-1">Learn More</span>
-                {learnMoreOpen
-                  ? <ChevronDown className={`w-3.5 h-3.5 ${textDim}`} strokeWidth={1.5} />
-                  : <ChevronRight className={`w-3.5 h-3.5 ${textDim}`} strokeWidth={1.5} />
-                }
-              </button>
-
-              {/* Learn More sub-items */}
-              {learnMoreOpen && (
-                <div>
-                  {[
-                    { label: 'About', path: '/about' },
-                    { label: 'Usage Policy', path: '/usage-policy' },
-                    { label: 'Privacy Policy', path: '/privacy-policy' },
-                  ].map(item => (
-                    <button
-                      key={item.path}
-                      onClick={() => handleNavigate(item.path)}
-                      className={`w-full flex items-center gap-3 pl-11 pr-4 py-2 text-left ${textSecondary} text-[12px] transition-colors ${hoverBg}`}
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {menuItems.map((item, i) => (
+                <button
+                  key={item.label}
+                  onClick={item.action}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-left ${textColor} text-[13px] transition-colors ${hoverBg}`}
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  {item.icon}
+                  <span className="flex-1">{item.label}</span>
+                </button>
+              ))}
             </div>
 
             <div style={{ height: 1, background: dividerBg }} />
