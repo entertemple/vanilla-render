@@ -1366,7 +1366,12 @@ export default function ChatDashboard() {
         style={{ scrollbarWidth: 'thin', scrollbarColor: isDark ? 'rgba(255,255,255,0.2) transparent' : 'rgba(0,0,0,0.2) transparent' }}>
         
         <div className="mx-auto px-8 pt-16 pb-8">
-          {messages.map((message) =>
+          {messages.map((message, msgIndex) => {
+            // Hide the very first user message — it's shown inside the Go Deeper card
+            const isFirstUserMessage = message.role === 'user' && messages.filter((m, i) => i < msgIndex && m.role === 'user').length === 0;
+            if (isFirstUserMessage) return null;
+
+            return (
           <div key={message.id}>
               {message.role === 'user' ?
             <div className="flex justify-end mb-12 max-w-[680px] mx-auto">
@@ -1416,36 +1421,38 @@ export default function ChatDashboard() {
 
                     return (
                       <>
-                        {/* Anchor — full width, no max-w constraint */}
-                        {parsed.anchor && (
-                          <p style={{
-                            fontSize: '3.125rem',
-                            fontFamily: "'DM Serif Display', Georgia, serif",
-                            fontWeight: 400,
-                            color: isDark ? '#ffffff' : '#0e0e0e',
-                            letterSpacing: '-0.02em',
-                            lineHeight: 1.1,
-                            marginBottom: '0.5rem',
-                            textAlign: 'center',
-                            opacity: anchorVis ? 1 : 0,
-                            transition: 'opacity 600ms ease',
-                          }}>{parsed.anchor}</p>
-                        )}
-
-                        {/* Keywords */}
-                        {parsed.keywords && (
-                          <p style={{
-                            fontSize: '0.7rem',
-                            fontFamily: "'Geist Mono', monospace",
-                            letterSpacing: '0.15em',
-                            textTransform: 'uppercase',
-                            color: isDark ? '#ffffff' : '#0e0e0e',
-                            marginBottom: '0.875rem',
-                            fontWeight: 500,
-                            textAlign: 'center',
-                            opacity: anchorVis ? 1 : 0,
-                            transition: 'opacity 600ms ease',
-                          }}>{parsed.keywords}</p>
+                        {/* Anchor + Keywords — only for newest message during reveal, hidden for old messages */}
+                        {isNewest && (
+                          <>
+                            {parsed.anchor && (
+                              <p style={{
+                                fontSize: '3.125rem',
+                                fontFamily: "'DM Serif Display', Georgia, serif",
+                                fontWeight: 400,
+                                color: isDark ? '#ffffff' : '#0e0e0e',
+                                letterSpacing: '-0.02em',
+                                lineHeight: 1.1,
+                                marginBottom: '0.5rem',
+                                textAlign: 'center',
+                                opacity: anchorVis ? 1 : 0,
+                                transition: 'opacity 600ms ease',
+                              }}>{parsed.anchor}</p>
+                            )}
+                            {parsed.keywords && (
+                              <p style={{
+                                fontSize: '0.7rem',
+                                fontFamily: "'Geist Mono', monospace",
+                                letterSpacing: '0.15em',
+                                textTransform: 'uppercase',
+                                color: isDark ? '#ffffff' : '#0e0e0e',
+                                marginBottom: '0.875rem',
+                                fontWeight: 500,
+                                textAlign: 'center',
+                                opacity: anchorVis ? 1 : 0,
+                                transition: 'opacity 600ms ease',
+                              }}>{parsed.keywords}</p>
+                            )}
+                          </>
                         )}
 
                         {/* Go Deeper — outside bubble, below keywords */}
@@ -1534,7 +1541,9 @@ export default function ChatDashboard() {
                 </div>
             }
             </div>
-          )}
+            );
+          })}
+
 
           {isWaiting &&
           <div className="mb-16 max-w-[680px] mx-auto">
