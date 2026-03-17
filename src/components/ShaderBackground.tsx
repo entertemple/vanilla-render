@@ -7,6 +7,8 @@ interface ShaderBackgroundProps {
   width: number;
   height: number;
   inline?: boolean;
+  /** Ref to interpolated shader state values (opacity, speedMult, warmth) */
+  shaderStateRef?: React.MutableRefObject<{ opacity: number; speedMult: number; warmth: number }>;
 }
 
 const hexToHsl = (hex: string): [number, number, number] => {
@@ -46,6 +48,7 @@ const FRAGMENT_SRC = `
   uniform float uBrightness;
   uniform float u_intensity;
   uniform float u_speed;
+  uniform float u_warmth;
 
   vec3 spectral_colour(float l) {
     float r=0.0,g=0.0,b=0.0;
@@ -94,7 +97,9 @@ const FRAGMENT_SRC = `
 
     vec3 spectralColor = spectral_colour(p.y * 50.0 + 500.0 + sin(t * 0.6));
     vec3 hsv = rgb2hsv(spectralColor);
-    hsv.x = fract(hsv.x + uHueShift);
+    // Apply warmth: shift hue toward warm (0.08) or cool (0.58) based on u_warmth
+    float warmHue = mix(0.58, 0.08, u_warmth);
+    hsv.x = fract(mix(hsv.x, warmHue, 0.3) + uHueShift);
     hsv.y = clamp(hsv.y * uSaturation, 0.0, 1.0);
     hsv.z = clamp(hsv.z * uBrightness, 0.0, 1.0);
     vec3 finalColor = hsv2rgb(hsv);
@@ -102,13 +107,12 @@ const FRAGMENT_SRC = `
   }
 `;
 
-const ShaderBackground = ({ config, theme, width, height, inline }: ShaderBackgroundProps) => {
+const ShaderBackground = ({ config, theme, width, height, inline, shaderStateRef }: ShaderBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>();
   const configRef = useRef(config);
   const themeRef = useRef(theme);
 
-  // Update refs without remounting
   useEffect(() => { configRef.current = config; }, [config]);
   useEffect(() => { themeRef.current = theme; }, [theme]);
 
@@ -158,6 +162,7 @@ const ShaderBackground = ({ config, theme, width, height, inline }: ShaderBackgr
     const briLoc = gl.getUniformLocation(program, 'uBrightness');
     const intLoc = gl.getUniformLocation(program, 'u_intensity');
     const spdLoc = gl.getUniformLocation(program, 'u_speed');
+    const warmLoc = gl.getUniformLocation(program, 'u_warmth');
 
     const buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -173,6 +178,9 @@ const ShaderBackground = ({ config, theme, width, height, inline }: ShaderBackgr
       const elapsed = now - startTime;
       const cfg = configRef.current;
       const th = themeRef.current;
+
+      // Read shader state from ref (smoothly interpolated externally)
+      const ss = shaderStateRef?.current || { opacity: 1, speedMult: 1, warmth: 0.5 };
 
       const hsl1 = hexToHsl(cfg.color1);
       const hsl2 = hexToHsl(cfg.color2);
@@ -191,12 +199,13 @@ const ShaderBackground = ({ config, theme, width, height, inline }: ShaderBackgr
       gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 
       gl.uniform2f(resLoc, width, height);
-      gl.uniform1f(timeLoc, elapsed * 0.00005);
+      gl.uniform1f(timeLoc, elapsed * 0.00005 * ss.speedMult);
       gl.uniform1f(hueLoc, hueShift);
       gl.uniform1f(satLoc, saturation);
       gl.uniform1f(briLoc, brightness);
       gl.uniform1f(intLoc, cfg.intensity);
-      gl.uniform1f(spdLoc, cfg.speed);
+      gl.uniform1f(spdLoc, cfg.speed * ss.speedMult);
+      gl.uniform1f(warmLoc, ss.warmth);
 
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       animationFrameRef.current = requestAnimationFrame(render);
