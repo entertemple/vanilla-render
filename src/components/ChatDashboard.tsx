@@ -918,9 +918,14 @@ export default function ChatDashboard() {
       const errorId = Date.now().toString();
       setNewestMessageId(errorId);
       setMessages((prev) => [...prev, { id: errorId, role: 'assistant', content: ERROR_RESPONSE, timestamp: new Date(), beat: getAssistantCount() + 1 }]);
+      setShaderState('rest');
     }
 
     setIsWaiting(false);
+    // After a delay, settle back toward rest
+    setTimeout(() => {
+      setShaderState('rest');
+    }, 8000);
   };
 
   // Permission-aware send wrapper
