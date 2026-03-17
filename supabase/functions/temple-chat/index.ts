@@ -108,10 +108,10 @@ serve(async (req) => {
 
   try {
     const { messages, beatContext } = await req.json() as { messages?: ChatMessage[]; beatContext?: string };
-    const perplexityApiKey = Deno.env.get("PERPLEXITY_API_KEY");
+    const apiKey = Deno.env.get("LOVABLE_API_KEY");
 
-    if (!perplexityApiKey) {
-      console.error("PERPLEXITY_API_KEY is not set");
+    if (!apiKey) {
+      console.error("LOVABLE_API_KEY is not set");
       return new Response(
         JSON.stringify({ error: "API key missing" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -132,34 +132,44 @@ serve(async (req) => {
       systemPrompt += `\n\n${beatContext}`;
     }
 
-    // Perplexity requires last message to be role "user"
-    // When beatContext is provided (phrase click), the last message may be "assistant"
-    // Append a synthetic user message to satisfy the API requirement
     const finalMessages = [...normalizedMessages];
     if (finalMessages.length > 0 && finalMessages[finalMessages.length - 1].role !== "user") {
       finalMessages.push({ role: "user", content: "Go deeper into this thread." });
     }
 
-    const response = await fetch("https://api.perplexity.ai/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${perplexityApiKey}`,
+        "Authorization": `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "sonar-pro",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           ...finalMessages,
         ],
         max_tokens: 1500,
-        stream: false,
       }),
     });
 
+    if (response.status === 429) {
+      return new Response(
+        JSON.stringify({ error: "Rate limit exceeded, please try again shortly." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (response.status === 402) {
+      return new Response(
+        JSON.stringify({ error: "AI credits exhausted. Please add credits in your workspace settings." }),
+        { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Perplexity API error:", response.status, errorText);
+      console.error("AI Gateway error:", response.status, errorText);
       return new Response(
         JSON.stringify({ error: "ai_error" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -168,10 +178,9 @@ serve(async (req) => {
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content;
-    const citations = data.citations || [];
 
     return new Response(
-      JSON.stringify({ content, citations }),
+      JSON.stringify({ content, citations: [] }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
