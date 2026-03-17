@@ -480,132 +480,84 @@ function AssistantMessage({
       </div>);
   }
 
-  // --- Animated render (phased reveal) ---
+  // --- Animated render (phased reveal) — simple in-flow ---
   return (
-    <>
-      {/* Phase 1-2: Fixed centered stage for anchor + keywords */}
-      {anchorStaged && (
+    <div className="max-w-[680px]">
+      {/* Anchor — fades in at 0ms */}
+      {parsed.anchor && (
+        <p className="response-anchor" style={{
+          ...anchorStyle,
+        }}>{parsed.anchor}</p>
+      )}
+      {/* Keywords — fades in at 300ms */}
+      {parsed.keywords && (
+        <p className="response-keywords" style={{
+          fontSize: '0.7rem',
+          fontFamily: "'Geist Mono', monospace",
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase' as const,
+          color: keywordsColor,
+          marginBottom: '0.875rem',
+          fontWeight: 500,
+          textAlign: 'center' as const,
+        }}>{parsed.keywords}</p>
+      )}
+
+      {/* GO DEEPER card — fades in at 800ms */}
+      {showGoDeeperCard && (
         <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 50,
-          pointerEvents: 'none',
-          transition: 'opacity 600ms ease',
-          opacity: settlePhase ? 0 : 1,
+          opacity: goDeeperVisible ? 1 : 0,
+          transition: 'opacity 700ms ease',
+          pointerEvents: goDeeperVisible ? 'auto' : 'none',
         }}>
-          {/* Anchor */}
-          {parsed.anchor && (
-            <p style={{
-              ...anchorStyle,
-              opacity: 0,
-              animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              animationDelay: '0ms',
-            }}>{parsed.anchor}</p>
-          )}
-          {/* Keywords */}
-          {parsed.keywords && (
-            <p style={{
-              fontSize: '0.7rem',
-              fontFamily: "'Geist Mono', monospace",
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase' as const,
-              color: keywordsColor,
-              fontWeight: 500,
-              textAlign: 'center' as const,
-              opacity: 0,
-              animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              animationDelay: '300ms',
-            }}>{parsed.keywords}</p>
-          )}
+          <GoDeeperCard
+            userMessage={userMessage!}
+            phrases={phrases!}
+            isDark={isDark}
+            onPhraseClick={handleAnimatedPhraseClick}
+            isNew={false}
+            animDelay={0} />
         </div>
       )}
 
-      {/* In-flow content (always in DOM for no reflow) */}
-      <div className="max-w-[680px]">
-        {/* Anchor in flow — visible after settle */}
-        {parsed.anchor && (
-          <p style={{
-            ...anchorStyle,
-            opacity: !anchorStaged ? 1 : 0,
-            transition: 'opacity 600ms ease',
-          }}>{parsed.anchor}</p>
-        )}
-        {parsed.keywords && (
-          <p style={{
-            fontSize: '0.7rem',
-            fontFamily: "'Geist Mono', monospace",
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase' as const,
-            color: keywordsColor,
-            marginBottom: '0.875rem',
-            fontWeight: 500,
-            textAlign: 'center' as const,
-            opacity: !anchorStaged ? 1 : 0,
-            transition: 'opacity 600ms ease',
-          }}>{parsed.keywords}</p>
+      {/* Body bubble — hidden until phrase click */}
+      <div style={{
+        ...getBlurStyle(),
+        opacity: bodyVisible ? 1 : 0,
+        transition: 'opacity 2000ms ease',
+      }}>
+        {parsed.body.map((sentence, i) =>
+          <p key={i} style={bodyStyle}>{sentence}</p>
         )}
 
-        {/* Body — hidden until phrase click */}
-        <div style={getBlurStyle()}>
-          {parsed.body.map((sentence, i) =>
-            <p key={i} style={{
-              ...bodyStyle,
-              opacity: bodyVisible ? 1 : 0,
-              transition: 'opacity 2000ms ease',
-            }}>{sentence}</p>
-          )}
+        {/* Invitation — after body */}
+        {parsed.invitation && (
+          <p style={{
+            ...invitationStyle,
+            opacity: invitationVisible ? 1 : 0,
+            transition: 'opacity 600ms ease',
+          }}>{parsed.invitation}</p>
+        )}
+      </div>
 
-          {/* Invitation — after body */}
-          {parsed.invitation && (
-            <p style={{
-              ...invitationStyle,
-              opacity: invitationVisible ? 1 : 0,
-              transition: 'opacity 600ms ease',
-            }}>{parsed.invitation}</p>
-          )}
+      {/* TO PONDER — after phrase click */}
+      {showGoDeeperReference && (
+        <div style={{
+          opacity: toPonderVisible ? 1 : 0,
+          transition: 'opacity 700ms ease',
+        }}>
+          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
         </div>
+      )}
 
-        {/* GO DEEPER card — Phase 4 */}
-        {showGoDeeperCard && (
-          <div style={{
-            opacity: goDeeperVisible ? 1 : 0,
-            transition: 'opacity 700ms ease',
-          }}>
-            <GoDeeperCard
-              userMessage={userMessage!}
-              phrases={phrases!}
-              isDark={isDark}
-              onPhraseClick={handleAnimatedPhraseClick}
-              isNew={false}
-              animDelay={0} />
-          </div>
-        )}
-
-        {/* TO PONDER — Phase 5, after phrase click */}
-        {showGoDeeperReference && (
-          <div style={{
-            opacity: toPonderVisible ? 1 : 0,
-            transition: 'opacity 700ms ease',
-          }}>
-            <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
-          </div>
-        )}
-
-        {showADoor && (
-          <div style={{
-            opacity: toPonderVisible ? 1 : 0,
-            transition: 'opacity 700ms ease',
-          }}>
-            <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} />
-          </div>
-        )}
+      {showADoor && (
+        <div style={{
+          opacity: toPonderVisible ? 1 : 0,
+          transition: 'opacity 700ms ease',
+        }}>
+          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} />
+        </div>
+      )}
 
         {showSharpQuestion &&
         <motion.p
