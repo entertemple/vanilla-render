@@ -417,41 +417,30 @@ function AssistantMessage({
   const showSharpQuestion = beat >= 7 && beat2Question;
 
   // === Phased reveal state (only used when isNew) ===
-  const [anchorStaged, setAnchorStaged] = useState(isNew);
   const [bodyVisible, setBodyVisible] = useState(false);
   const [invitationVisible, setInvitationVisible] = useState(false);
   const [toPonderVisible, setToPonderVisible] = useState(false);
-  const [goDeeperVisible, setGoDeeperVisible] = useState(false);
-  const [settlePhase, setSettlePhase] = useState(false);
+  const [goDeeperVisible, setGoDeeperVisible] = useState(!isNew);
 
-  // Phase timers for new messages
+  // Simple in-flow timer: go deeper fades in after anchor+keywords
   useEffect(() => {
     if (!isNew) return;
-
-    // Phase 3: settle at 2300ms (300 delay + 800 fade + 1200 hold)
-    const settleTimer = setTimeout(() => {
-      setSettlePhase(true);
-      setTimeout(() => setAnchorStaged(false), 600);
-    }, 2300);
-
-    // Phase 4: GO DEEPER at 2100ms from settle start → 2300 + 500 = 2800ms
-    const goDeeperTimer = setTimeout(() => {
-      setGoDeeperVisible(true);
-    }, 2800);
-
-    return () => {
-      clearTimeout(settleTimer);
-      clearTimeout(goDeeperTimer);
-    };
+    const t = setTimeout(() => setGoDeeperVisible(true), 800);
+    return () => clearTimeout(t);
   }, [isNew]);
 
   // Phrase click handler that triggers body reveal
   const handleAnimatedPhraseClick = useCallback((phrase: string) => {
     if (!onPhraseClick) return;
     onPhraseClick(phrase);
-    setBodyVisible(true);
-    setTimeout(() => setInvitationVisible(true), 2000);
-    setTimeout(() => setToPonderVisible(true), 2400);
+    setBodyVisible(false);
+    setInvitationVisible(false);
+    setToPonderVisible(false);
+    setTimeout(() => {
+      setBodyVisible(true);
+      setTimeout(() => setInvitationVisible(true), 2000);
+      setTimeout(() => setToPonderVisible(true), 2400);
+    }, 300);
   }, [onPhraseClick]);
 
   // --- Static render ---
