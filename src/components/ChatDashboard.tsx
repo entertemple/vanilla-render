@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Plus, ArrowUp, X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useShaderState } from '../contexts/ShaderStateContext';
+import { useRevealed } from './Layout';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'motion/react';
 import { TextShimmer } from '@/components/ui/text-shimmer';
