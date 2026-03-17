@@ -323,6 +323,30 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
             {activeTab === 'usage' && (
               <UsageTab textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} theme={theme} />
             )}
+
+            {/* LANGUAGE TAB */}
+            {activeTab === 'language' && (
+              <div>
+                <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Language</h3>
+                <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
+                  <div className="flex items-center gap-3">
+                    <Globe className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />
+                    <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Interface Language</p>
+                  </div>
+                  <select
+                    value={language}
+                    onChange={(e) => handleLanguageChange(e.target.value)}
+                    className={`px-3 py-1.5 rounded-[8px] ${inputBg} border ${borderColor} ${textColor} text-[12px] focus:outline-none`}
+                  >
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="ja">日本語</option>
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
