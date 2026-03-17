@@ -375,9 +375,9 @@ function AssistantMessage({
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: '1rem',
+    fontSize: '0.9375rem',
     fontFamily: "'DM Sans', 'Inter', sans-serif",
-    fontWeight: 600,
+    fontWeight: 400,
     color: bodyColor,
     lineHeight: 1.9,
     marginBottom: '0.75rem'
@@ -417,41 +417,30 @@ function AssistantMessage({
   const showSharpQuestion = beat >= 7 && beat2Question;
 
   // === Phased reveal state (only used when isNew) ===
-  const [anchorStaged, setAnchorStaged] = useState(isNew);
   const [bodyVisible, setBodyVisible] = useState(false);
   const [invitationVisible, setInvitationVisible] = useState(false);
   const [toPonderVisible, setToPonderVisible] = useState(false);
-  const [goDeeperVisible, setGoDeeperVisible] = useState(false);
-  const [settlePhase, setSettlePhase] = useState(false);
+  const [goDeeperVisible, setGoDeeperVisible] = useState(!isNew);
 
-  // Phase timers for new messages
+  // Simple in-flow timer: go deeper fades in after anchor+keywords
   useEffect(() => {
     if (!isNew) return;
-
-    // Phase 3: settle at 2300ms (300 delay + 800 fade + 1200 hold)
-    const settleTimer = setTimeout(() => {
-      setSettlePhase(true);
-      setTimeout(() => setAnchorStaged(false), 600);
-    }, 2300);
-
-    // Phase 4: GO DEEPER at 2100ms from settle start → 2300 + 500 = 2800ms
-    const goDeeperTimer = setTimeout(() => {
-      setGoDeeperVisible(true);
-    }, 2800);
-
-    return () => {
-      clearTimeout(settleTimer);
-      clearTimeout(goDeeperTimer);
-    };
+    const t = setTimeout(() => setGoDeeperVisible(true), 800);
+    return () => clearTimeout(t);
   }, [isNew]);
 
   // Phrase click handler that triggers body reveal
   const handleAnimatedPhraseClick = useCallback((phrase: string) => {
     if (!onPhraseClick) return;
     onPhraseClick(phrase);
-    setBodyVisible(true);
-    setTimeout(() => setInvitationVisible(true), 2000);
-    setTimeout(() => setToPonderVisible(true), 2400);
+    setBodyVisible(false);
+    setInvitationVisible(false);
+    setToPonderVisible(false);
+    setTimeout(() => {
+      setBodyVisible(true);
+      setTimeout(() => setInvitationVisible(true), 2000);
+      setTimeout(() => setToPonderVisible(true), 2400);
+    }, 300);
   }, [onPhraseClick]);
 
   // --- Static render ---
@@ -491,132 +480,84 @@ function AssistantMessage({
       </div>);
   }
 
-  // --- Animated render (phased reveal) ---
+  // --- Animated render (phased reveal) — simple in-flow ---
   return (
-    <>
-      {/* Phase 1-2: Fixed centered stage for anchor + keywords */}
-      {anchorStaged && (
+    <div className="max-w-[680px]">
+      {/* Anchor — fades in at 0ms */}
+      {parsed.anchor && (
+        <p className="response-anchor" style={{
+          ...anchorStyle,
+        }}>{parsed.anchor}</p>
+      )}
+      {/* Keywords — fades in at 300ms */}
+      {parsed.keywords && (
+        <p className="response-keywords" style={{
+          fontSize: '0.7rem',
+          fontFamily: "'Geist Mono', monospace",
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase' as const,
+          color: keywordsColor,
+          marginBottom: '0.875rem',
+          fontWeight: 500,
+          textAlign: 'center' as const,
+        }}>{parsed.keywords}</p>
+      )}
+
+      {/* GO DEEPER card — fades in at 800ms */}
+      {showGoDeeperCard && (
         <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 50,
-          pointerEvents: 'none',
-          transition: 'opacity 600ms ease',
-          opacity: settlePhase ? 0 : 1,
+          opacity: goDeeperVisible ? 1 : 0,
+          transition: 'opacity 700ms ease',
+          pointerEvents: goDeeperVisible ? 'auto' : 'none',
         }}>
-          {/* Anchor */}
-          {parsed.anchor && (
-            <p style={{
-              ...anchorStyle,
-              opacity: 0,
-              animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              animationDelay: '0ms',
-            }}>{parsed.anchor}</p>
-          )}
-          {/* Keywords */}
-          {parsed.keywords && (
-            <p style={{
-              fontSize: '0.7rem',
-              fontFamily: "'Geist Mono', monospace",
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase' as const,
-              color: keywordsColor,
-              fontWeight: 500,
-              textAlign: 'center' as const,
-              opacity: 0,
-              animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              animationDelay: '300ms',
-            }}>{parsed.keywords}</p>
-          )}
+          <GoDeeperCard
+            userMessage={userMessage!}
+            phrases={phrases!}
+            isDark={isDark}
+            onPhraseClick={handleAnimatedPhraseClick}
+            isNew={false}
+            animDelay={0} />
         </div>
       )}
 
-      {/* In-flow content (always in DOM for no reflow) */}
-      <div className="max-w-[680px]">
-        {/* Anchor in flow — visible after settle */}
-        {parsed.anchor && (
-          <p style={{
-            ...anchorStyle,
-            opacity: !anchorStaged ? 1 : 0,
-            transition: 'opacity 600ms ease',
-          }}>{parsed.anchor}</p>
-        )}
-        {parsed.keywords && (
-          <p style={{
-            fontSize: '0.7rem',
-            fontFamily: "'Geist Mono', monospace",
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase' as const,
-            color: keywordsColor,
-            marginBottom: '0.875rem',
-            fontWeight: 500,
-            textAlign: 'center' as const,
-            opacity: !anchorStaged ? 1 : 0,
-            transition: 'opacity 600ms ease',
-          }}>{parsed.keywords}</p>
+      {/* Body bubble — hidden until phrase click */}
+      <div style={{
+        ...getBlurStyle(),
+        opacity: bodyVisible ? 1 : 0,
+        transition: 'opacity 2000ms ease',
+      }}>
+        {parsed.body.map((sentence, i) =>
+          <p key={i} style={bodyStyle}>{sentence}</p>
         )}
 
-        {/* Body — hidden until phrase click */}
-        <div style={getBlurStyle()}>
-          {parsed.body.map((sentence, i) =>
-            <p key={i} style={{
-              ...bodyStyle,
-              opacity: bodyVisible ? 1 : 0,
-              transition: 'opacity 2000ms ease',
-            }}>{sentence}</p>
-          )}
+        {/* Invitation — after body */}
+        {parsed.invitation && (
+          <p style={{
+            ...invitationStyle,
+            opacity: invitationVisible ? 1 : 0,
+            transition: 'opacity 600ms ease',
+          }}>{parsed.invitation}</p>
+        )}
+      </div>
 
-          {/* Invitation — after body */}
-          {parsed.invitation && (
-            <p style={{
-              ...invitationStyle,
-              opacity: invitationVisible ? 1 : 0,
-              transition: 'opacity 600ms ease',
-            }}>{parsed.invitation}</p>
-          )}
+      {/* TO PONDER — after phrase click */}
+      {showGoDeeperReference && (
+        <div style={{
+          opacity: toPonderVisible ? 1 : 0,
+          transition: 'opacity 700ms ease',
+        }}>
+          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
         </div>
+      )}
 
-        {/* GO DEEPER card — Phase 4 */}
-        {showGoDeeperCard && (
-          <div style={{
-            opacity: goDeeperVisible ? 1 : 0,
-            transition: 'opacity 700ms ease',
-          }}>
-            <GoDeeperCard
-              userMessage={userMessage!}
-              phrases={phrases!}
-              isDark={isDark}
-              onPhraseClick={handleAnimatedPhraseClick}
-              isNew={false}
-              animDelay={0} />
-          </div>
-        )}
-
-        {/* TO PONDER — Phase 5, after phrase click */}
-        {showGoDeeperReference && (
-          <div style={{
-            opacity: toPonderVisible ? 1 : 0,
-            transition: 'opacity 700ms ease',
-          }}>
-            <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
-          </div>
-        )}
-
-        {showADoor && (
-          <div style={{
-            opacity: toPonderVisible ? 1 : 0,
-            transition: 'opacity 700ms ease',
-          }}>
-            <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} />
-          </div>
-        )}
+      {showADoor && (
+        <div style={{
+          opacity: toPonderVisible ? 1 : 0,
+          transition: 'opacity 700ms ease',
+        }}>
+          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} />
+        </div>
+      )}
 
         {showSharpQuestion &&
         <motion.p
@@ -631,11 +572,10 @@ function AssistantMessage({
           </motion.p>
         }
       </div>
-    </>
   );
 }
 
-// ========== MAIN COMPONENT ==========
+
 export default function ChatDashboard() {
   const { theme } = useTheme();
   const { user } = useAuth();
@@ -653,10 +593,7 @@ export default function ChatDashboard() {
   const [isRecording, setIsRecording] = useState(false);
   const [voiceUnsupported, setVoiceUnsupported] = useState(false);
 
-  // Reveal phase states for newest message
-  const [anchorStaged, setAnchorStaged] = useState(true);
-  const [settlePhase, setSettlePhase] = useState(false);
-  const [beat1GoDeeperVisible, setBeat1GoDeeperVisible] = useState(false);
+  // Reveal phase states for newest message (no fixed positioning)
   const [beat1BodyRevealed, setBeat1BodyRevealed] = useState(false);
   const [beat1InvitationVisible, setBeat1InvitationVisible] = useState(false);
   const [beat1ToPonderVisible, setBeat1ToPonderVisible] = useState(false);
@@ -765,34 +702,14 @@ export default function ChatDashboard() {
     }
   }, [messages, isWaiting]);
 
-  // Reveal phase timers for newest message
+  // Reset reveal states when newest message changes
   useEffect(() => {
     if (!newestMessageId) return;
-    // Clear previous timers
     revealTimersRef.current.forEach(clearTimeout);
     revealTimersRef.current = [];
-    // Reset states
-    setAnchorStaged(true);
-    setSettlePhase(false);
-    setBeat1GoDeeperVisible(false);
     setBeat1BodyRevealed(false);
     setBeat1InvitationVisible(false);
     setBeat1ToPonderVisible(false);
-
-    // Phase 3: settle at 2300ms
-    const t1 = setTimeout(() => {
-      setSettlePhase(true);
-      const t1b = setTimeout(() => setAnchorStaged(false), 600);
-      revealTimersRef.current.push(t1b);
-    }, 2300);
-    // Phase 4: Go Deeper at 2800ms
-    const t2 = setTimeout(() => setBeat1GoDeeperVisible(true), 2800);
-    revealTimersRef.current.push(t1, t2);
-
-    return () => {
-      revealTimersRef.current.forEach(clearTimeout);
-      revealTimersRef.current = [];
-    };
   }, [newestMessageId]);
 
   // Mouse tracking for specular highlight
@@ -884,10 +801,15 @@ export default function ChatDashboard() {
     if (isWaiting || !currentConversationId || !user) return;
 
     // Trigger body reveal
-    setBeat1BodyRevealed(true);
-    const t1 = setTimeout(() => setBeat1InvitationVisible(true), 2000);
-    const t2 = setTimeout(() => setBeat1ToPonderVisible(true), 2400);
-    revealTimersRef.current.push(t1, t2);
+    setBeat1BodyRevealed(false);
+    setBeat1InvitationVisible(false);
+    setBeat1ToPonderVisible(false);
+    setTimeout(() => {
+      setBeat1BodyRevealed(true);
+      const t1 = setTimeout(() => setBeat1InvitationVisible(true), 2000);
+      const t2 = setTimeout(() => setBeat1ToPonderVisible(true), 2400);
+      revealTimersRef.current.push(t1, t2);
+    }, 300);
 
     setIsWaiting(true);
 
@@ -1323,41 +1245,6 @@ export default function ChatDashboard() {
       <MirrorWebcam mirrorEnabled={mirrorEnabled} />
       {renderPermissionPrompt()}
 
-      {/* Fixed centered stage for new message anchor+keywords */}
-      {newestMessageId && anchorStaged && (() => {
-        const newestMsg = messages.find(m => m.id === newestMessageId);
-        if (!newestMsg || newestMsg.role !== 'assistant') return null;
-        const parsed = parseStructuredResponse(newestMsg.content);
-        return (
-          <div style={{
-            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            zIndex: 50, pointerEvents: 'none',
-            transition: 'opacity 600ms ease',
-            opacity: settlePhase ? 0 : 1,
-          }}>
-            {parsed.anchor && (
-              <p style={{
-                fontSize: '3.125rem', fontFamily: "'DM Serif Display', Georgia, serif",
-                fontWeight: 400, color: isDark ? '#ffffff' : '#0e0e0e',
-                letterSpacing: '-0.02em', lineHeight: 1.1, textAlign: 'center',
-                opacity: 0, animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                animationDelay: '0ms',
-              }}>{parsed.anchor}</p>
-            )}
-            {parsed.keywords && (
-              <p style={{
-                fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace",
-                letterSpacing: '0.15em', textTransform: 'uppercase',
-                color: isDark ? '#ffffff' : '#0e0e0e', fontWeight: 500, textAlign: 'center',
-                opacity: 0, animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                animationDelay: '300ms',
-              }}>{parsed.keywords}</p>
-            )}
-          </div>
-        );
-      })()}
-
       <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
         <div className="flex flex-col h-full">
       <div
@@ -1409,9 +1296,7 @@ export default function ChatDashboard() {
                       transition: 'filter 600ms ease, opacity 600ms ease'
                     };
 
-                    // Visibility: newest uses phased reveal, old messages fully visible
-                    const anchorVis = isNewest ? !anchorStaged : true;
-                    const goDeeperVis = isNewest ? beat1GoDeeperVisible : true;
+                    // Visibility: newest uses CSS animation, old messages fully visible
                     const bodyVis = isNewest ? beat1BodyRevealed : true;
                     const invVis = isNewest ? beat1InvitationVisible : true;
                     const toPonderVis = isNewest ? beat1ToPonderVisible : true;
@@ -1421,11 +1306,11 @@ export default function ChatDashboard() {
 
                     return (
                       <>
-                        {/* Anchor + Keywords — only for newest message during reveal, hidden for old messages */}
+                        {/* Anchor + Keywords — in-flow, CSS animation for newest */}
                         {isNewest && (
                           <>
                             {parsed.anchor && (
-                              <p style={{
+                              <p className="response-anchor" style={{
                                 fontSize: '3.125rem',
                                 fontFamily: "'DM Serif Display', Georgia, serif",
                                 fontWeight: 400,
@@ -1434,12 +1319,10 @@ export default function ChatDashboard() {
                                 lineHeight: 1.1,
                                 marginBottom: '0.5rem',
                                 textAlign: 'center',
-                                opacity: anchorVis ? 1 : 0,
-                                transition: 'opacity 600ms ease',
                               }}>{parsed.anchor}</p>
                             )}
                             {parsed.keywords && (
-                              <p style={{
+                              <p className="response-keywords" style={{
                                 fontSize: '0.7rem',
                                 fontFamily: "'Geist Mono', monospace",
                                 letterSpacing: '0.15em',
@@ -1448,20 +1331,14 @@ export default function ChatDashboard() {
                                 marginBottom: '0.875rem',
                                 fontWeight: 500,
                                 textAlign: 'center',
-                                opacity: anchorVis ? 1 : 0,
-                                transition: 'opacity 600ms ease',
                               }}>{parsed.keywords}</p>
                             )}
                           </>
                         )}
 
-                        {/* Go Deeper — outside bubble, below keywords */}
+                        {/* Go Deeper — in-flow, CSS animation */}
                         {showGoDeeper && (
-                          <div className="max-w-[680px] mx-auto" style={{
-                            opacity: goDeeperVis ? 1 : 0,
-                            transition: 'opacity 700ms ease',
-                            pointerEvents: goDeeperVis ? 'auto' : 'none',
-                          }}>
+                          <div className={`max-w-[680px] mx-auto ${isNewest ? 'go-deeper-reveal' : ''}`}>
                             <GoDeeperCard
                               userMessage={firstUserMessage}
                               phrases={phrases}
@@ -1493,9 +1370,9 @@ export default function ChatDashboard() {
                           <div style={blurStyle}>
                             {parsed.body.map((sentence, i) => (
                               <p key={i} style={{
-                                fontSize: '1rem',
+                                fontSize: '0.9375rem',
                                 fontFamily: "'DM Sans', 'Inter', sans-serif",
-                                fontWeight: 600,
+                                fontWeight: 400,
                                 color: bodyColor,
                                 lineHeight: 1.9,
                                 marginBottom: '0.75rem'

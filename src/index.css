@@ -240,6 +240,35 @@ input[type="range"]::-webkit-slider-thumb:hover {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes simple-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.response-anchor {
+  opacity: 0;
+  animation: simple-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0ms;
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+.response-keywords {
+  opacity: 0;
+  animation: simple-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 300ms;
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+.go-deeper-reveal {
+  opacity: 0;
+  animation: simple-fade 700ms ease forwards;
+  animation-delay: 800ms;
+}
+
 .anchor-text {
   animation: anchorReveal 1400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: 600ms;
