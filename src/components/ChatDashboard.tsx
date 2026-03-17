@@ -809,6 +809,7 @@ export default function ChatDashboard() {
       }
     } catch (err) {
       console.error('Beat 2 error:', err);
+      setShaderState('rest');
     }
 
     setIsWaiting(false);
