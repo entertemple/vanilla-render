@@ -976,7 +976,7 @@ export default function ChatDashboard() {
   };
 
   const renderChatInput = () =>
-  <div className="w-full flex flex-col items-center">
+  <div className="w-full flex flex-col items-center" style={{ opacity: revealed ? 1 : 0, transition: 'opacity 400ms ease' }}>
       {/* Attached file pill */}
       <AnimatePresence>
         {attachedFile &&
