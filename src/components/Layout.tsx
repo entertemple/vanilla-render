@@ -180,7 +180,7 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <>
-      <div className={`w-full h-screen flex items-center justify-center p-4 md:p-6 lg:p-8 ${revealed ? 'temple-revealed' : ''}`}>
+      <div className={`w-full h-screen flex items-center justify-center p-4 md:p-6 lg:p-8 ${bordersVisible ? 'temple-revealed' : ''}`}>
         <div className={`relative flex rounded-[32px] md:rounded-[48px] border overflow-hidden w-full h-full max-w-[1600px]`}
           style={borderRevealStyle}>
           {/* Sidebar */}
