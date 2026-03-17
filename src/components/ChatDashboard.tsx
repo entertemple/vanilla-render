@@ -1249,6 +1249,39 @@ export default function ChatDashboard() {
                 </div> :
 
             <div className="mb-16">
+                  {/* Anchor and Keywords — outside the bubble */}
+                  {(() => {
+                    const parsed = parseStructuredResponse(message.content);
+                    const isNew = message.id === newestMessageId;
+                    return (
+                      <>
+                        {parsed.anchor && (
+                          <p style={{
+                            fontSize: '2.5rem',
+                            fontFamily: "'DM Serif Display', Georgia, serif",
+                            fontWeight: 400,
+                            color: isDark ? '#ffffff' : '#0e0e0e',
+                            letterSpacing: '-0.02em',
+                            lineHeight: 1.1,
+                            marginBottom: '0.5rem',
+                            textAlign: 'center',
+                          }}>{parsed.anchor}</p>
+                        )}
+                        {parsed.keywords && (
+                          <p style={{
+                            fontSize: '0.7rem',
+                            fontFamily: "'Geist Mono', monospace",
+                            letterSpacing: '0.15em',
+                            textTransform: 'uppercase',
+                            color: isDark ? '#ffffff' : '#0e0e0e',
+                            marginBottom: '0.875rem',
+                            fontWeight: 500,
+                            textAlign: 'center',
+                          }}>{parsed.keywords}</p>
+                        )}
+                      </>
+                    );
+                  })()}
                   <div
                 style={{
                   background: templeBubbleBg,
