@@ -1243,7 +1243,7 @@ export default function ChatDashboard() {
                   backdropFilter: bubbleBlur,
                   WebkitBackdropFilter: bubbleBlur,
                   borderRadius: bubbleRadius,
-                  padding: bubblePadding,
+                  padding: userBubblePadding,
                   maxWidth: '75%'
                 }}
                 className="user-bubble">
