@@ -354,15 +354,6 @@ function AssistantMessage({
   phrases,
   onPhraseClick,
   beat2Question
-
-
-
-
-
-
-
-
-
 }: {content: string;theme: string;isNew: boolean;beat: number;userMessage?: string;phrases?: string[];onPhraseClick?: (phrase: string) => void;beat2Question?: string;}) {
   const parsed = parseStructuredResponse(content);
   const isDark = theme !== 'light';
@@ -391,8 +382,6 @@ function AssistantMessage({
     lineHeight: 1.9,
     marginBottom: '0.75rem'
   };
-
-  // Responsive body font size handled via className below
 
   const invitationStyle: React.CSSProperties = {
     fontSize: '1.75rem',
@@ -423,10 +412,47 @@ function AssistantMessage({
   const showGoDeeperCard = beat >= 1 && beat <= 4 && userMessage && phrases && phrases.length > 0 && onPhraseClick;
   // Show TO PONDER cultural reference card on Beats 1–4
   const showGoDeeperReference = beat >= 1 && beat <= 4 && parsed.goDeeper.title;
-  // No separate A DOOR card needed
   const showADoor = false;
   // Show sharp question on Beat 7+
   const showSharpQuestion = beat >= 7 && beat2Question;
+
+  // === Phased reveal state (only used when isNew) ===
+  const [anchorStaged, setAnchorStaged] = useState(isNew);
+  const [bodyVisible, setBodyVisible] = useState(false);
+  const [invitationVisible, setInvitationVisible] = useState(false);
+  const [toPonderVisible, setToPonderVisible] = useState(false);
+  const [goDeeperVisible, setGoDeeperVisible] = useState(false);
+  const [settlePhase, setSettlePhase] = useState(false);
+
+  // Phase timers for new messages
+  useEffect(() => {
+    if (!isNew) return;
+
+    // Phase 3: settle at 2300ms (300 delay + 800 fade + 1200 hold)
+    const settleTimer = setTimeout(() => {
+      setSettlePhase(true);
+      setTimeout(() => setAnchorStaged(false), 600);
+    }, 2300);
+
+    // Phase 4: GO DEEPER at 2100ms from settle start → 2300 + 500 = 2800ms
+    const goDeeperTimer = setTimeout(() => {
+      setGoDeeperVisible(true);
+    }, 2800);
+
+    return () => {
+      clearTimeout(settleTimer);
+      clearTimeout(goDeeperTimer);
+    };
+  }, [isNew]);
+
+  // Phrase click handler that triggers body reveal
+  const handleAnimatedPhraseClick = useCallback((phrase: string) => {
+    if (!onPhraseClick) return;
+    onPhraseClick(phrase);
+    setBodyVisible(true);
+    setTimeout(() => setInvitationVisible(true), 2000);
+    setTimeout(() => setToPonderVisible(true), 2400);
+  }, [onPhraseClick]);
 
   // --- Static render ---
   if (!isNew) {
@@ -445,11 +471,10 @@ function AssistantMessage({
           onPhraseClick={onPhraseClick!}
           isNew={false}
           animDelay={0} />
-
         }
 
-      {showGoDeeperReference &&
-        <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
+        {showGoDeeperReference &&
+          <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
         }
 
         {showADoor &&
@@ -464,82 +489,150 @@ function AssistantMessage({
           </p>
         }
       </div>);
-
   }
 
-  // --- Animated render ---
-  let delay = 0.6;
-  const anchorDelay = delay;
-  delay += 1.4;
-  const kDelay = delay + 0.4;
-  delay = kDelay + 0.4;
-  const bodyStart = delay;
-  delay += parsed.body.length * 0.2 + 0.2;
-  const invDelay = delay + 0.2;
-  delay += 0.5;
-  const cardDelay = delay;
-
+  // --- Animated render (phased reveal) ---
   return (
-    <div className="max-w-[680px]">
-      <div style={getBlurStyle()}>
-        {parsed.body.map((sentence, i) =>
-        <motion.p
-          key={i}
-          initial={{ opacity: 0, x: -4 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: bodyStart + i * 0.2, ease: oracleEasing }}
-          style={bodyStyle}>
-          
-            {sentence}
-          </motion.p>
+    <>
+      {/* Phase 1-2: Fixed centered stage for anchor + keywords */}
+      {anchorStaged && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 50,
+          pointerEvents: 'none',
+          transition: 'opacity 600ms ease',
+          opacity: settlePhase ? 0 : 1,
+        }}>
+          {/* Anchor */}
+          {parsed.anchor && (
+            <p style={{
+              ...anchorStyle,
+              opacity: 0,
+              animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              animationDelay: '0ms',
+            }}>{parsed.anchor}</p>
+          )}
+          {/* Keywords */}
+          {parsed.keywords && (
+            <p style={{
+              fontSize: '0.7rem',
+              fontFamily: "'Geist Mono', monospace",
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase' as const,
+              color: keywordsColor,
+              fontWeight: 500,
+              textAlign: 'center' as const,
+              opacity: 0,
+              animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              animationDelay: '300ms',
+            }}>{parsed.keywords}</p>
+          )}
+        </div>
+      )}
+
+      {/* In-flow content (always in DOM for no reflow) */}
+      <div className="max-w-[680px]">
+        {/* Anchor in flow — visible after settle */}
+        {parsed.anchor && (
+          <p style={{
+            ...anchorStyle,
+            opacity: !anchorStaged ? 1 : 0,
+            transition: 'opacity 600ms ease',
+          }}>{parsed.anchor}</p>
+        )}
+        {parsed.keywords && (
+          <p style={{
+            fontSize: '0.7rem',
+            fontFamily: "'Geist Mono', monospace",
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase' as const,
+            color: keywordsColor,
+            marginBottom: '0.875rem',
+            fontWeight: 500,
+            textAlign: 'center' as const,
+            opacity: !anchorStaged ? 1 : 0,
+            transition: 'opacity 600ms ease',
+          }}>{parsed.keywords}</p>
         )}
 
-        {parsed.invitation &&
+        {/* Body — hidden until phrase click */}
+        <div style={getBlurStyle()}>
+          {parsed.body.map((sentence, i) =>
+            <p key={i} style={{
+              ...bodyStyle,
+              opacity: bodyVisible ? 1 : 0,
+              transition: 'opacity 2000ms ease',
+            }}>{sentence}</p>
+          )}
+
+          {/* Invitation — after body */}
+          {parsed.invitation && (
+            <p style={{
+              ...invitationStyle,
+              opacity: invitationVisible ? 1 : 0,
+              transition: 'opacity 600ms ease',
+            }}>{parsed.invitation}</p>
+          )}
+        </div>
+
+        {/* GO DEEPER card — Phase 4 */}
+        {showGoDeeperCard && (
+          <div style={{
+            opacity: goDeeperVisible ? 1 : 0,
+            transition: 'opacity 700ms ease',
+          }}>
+            <GoDeeperCard
+              userMessage={userMessage!}
+              phrases={phrases!}
+              isDark={isDark}
+              onPhraseClick={handleAnimatedPhraseClick}
+              isNew={false}
+              animDelay={0} />
+          </div>
+        )}
+
+        {/* TO PONDER — Phase 5, after phrase click */}
+        {showGoDeeperReference && (
+          <div style={{
+            opacity: toPonderVisible ? 1 : 0,
+            transition: 'opacity 700ms ease',
+          }}>
+            <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
+          </div>
+        )}
+
+        {showADoor && (
+          <div style={{
+            opacity: toPonderVisible ? 1 : 0,
+            transition: 'opacity 700ms ease',
+          }}>
+            <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} />
+          </div>
+        )}
+
+        {showSharpQuestion &&
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: invDelay, ease: oracleEasing }}
-          style={invitationStyle}>
-          
-            {parsed.invitation}
+          className="blur-anchor-question"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            color: isDark ? '#ffffff' : '#0e0e0e'
+          }}>
+            {beat2Question}
           </motion.p>
         }
       </div>
-
-      {showGoDeeperCard &&
-      <GoDeeperCard
-        userMessage={userMessage!}
-        phrases={phrases!}
-        isDark={isDark}
-        onPhraseClick={onPhraseClick!}
-        isNew={true}
-        animDelay={cardDelay} />
-
-      }
-
-      {showGoDeeperReference &&
-      <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={true} label="TO PONDER" />
-      }
-
-      {showADoor &&
-      <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={true} />
-      }
-
-      {showSharpQuestion &&
-      <motion.p
-        className="blur-anchor-question"
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          color: isDark ? '#ffffff' : '#0e0e0e'
-        }}>
-        
-          {beat2Question}
-        </motion.p>
-      }
-    </div>);
-
+    </>
+  );
 }
 
 // ========== MAIN COMPONENT ==========
