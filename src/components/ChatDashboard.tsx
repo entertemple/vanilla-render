@@ -500,7 +500,7 @@ function AssistantMessage({
         }
 
         {keywordWords.length > 0 &&
-        <div style={{ marginTop: '0.75rem', marginBottom: '2rem', display: 'flex', gap: '0.5em', alignItems: 'center' }}>
+        <div style={{ marginTop: '0.75rem', marginBottom: '2rem', display: 'flex', gap: '0.5em', alignItems: 'center', justifyContent: 'center' }}>
             {keywordWords.map((word, i) =>
           <motion.span
             key={i}
