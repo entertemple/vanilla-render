@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Sun, Moon, Bell, Globe, Key, HelpCircle, FileText, Sliders, Check, User, Trash2 } from 'lucide-react';
+import { X, Sun, Moon, Globe, Key, HelpCircle, FileText, Sliders, Check, User, Trash2 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProfile } from '../contexts/ProfileContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -58,11 +58,11 @@ const WaveIcon = ({ className }: { className?: string }) => (
 
 function GeneralTabContent({
   theme, textColor, textSecondary, borderColor, inputBg, Toggle, handleToggleTheme,
-  notifications, handleToggleNotifications, language, handleLanguageChange, user, saveToProfile
+  language, handleLanguageChange, user, saveToProfile
 }: {
   theme: string; textColor: string; textSecondary: string; borderColor: string; inputBg: string;
   Toggle: React.ComponentType<{ enabled: boolean; onToggle: () => void }>;
-  handleToggleTheme: () => void; notifications: boolean; handleToggleNotifications: () => void;
+  handleToggleTheme: () => void;
   language: string; handleLanguageChange: (v: string) => void; user: any; saveToProfile: (f: Record<string, any>) => Promise<void>;
 }) {
   const [atmosphereEnabled, setAtmosphereEnabled] = useState(true);
@@ -105,6 +105,16 @@ function GeneralTabContent({
             </div>
             <Toggle enabled={atmosphereEnabled} onToggle={handleToggleAtmosphere} />
           </div>
+          {/* Shader Colors sub-panel — nested under Atmosphere */}
+          {atmosphereEnabled && (
+            <div style={{
+              marginLeft: '1rem',
+              paddingTop: '0.75rem',
+              borderTop: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'}`,
+            }}>
+              <AtmospherePanel textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} theme={theme as 'light' | 'dark'} />
+            </div>
+          )}
           {/* Theme toggle */}
           <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
             <div className="flex items-center gap-3">
@@ -116,19 +126,6 @@ function GeneralTabContent({
             </div>
             <Toggle enabled={theme === 'dark'} onToggle={handleToggleTheme} />
           </div>
-        </div>
-      </div>
-      <div>
-        <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Notifications</h3>
-        <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
-          <div className="flex items-center gap-3">
-            <Bell className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />
-            <div>
-              <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Enable Notifications</p>
-              <p className={`font-['Inter',_sans-serif] text-[11px] ${textSecondary}`}>Get notified about updates</p>
-            </div>
-          </div>
-          <Toggle enabled={notifications} onToggle={handleToggleNotifications} />
         </div>
       </div>
       <div>
@@ -151,7 +148,6 @@ function GeneralTabContent({
           </select>
         </div>
       </div>
-      <AtmospherePanel textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} theme={theme as 'light' | 'dark'} />
     </>
   );
 }
@@ -161,7 +157,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
   const { display_name, avatar_url, email, refresh: refreshProfile, updateProfile } = useProfile();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>('general');
-  const [notifications, setNotifications] = useState(true);
   const [language, setLanguage] = useState('en');
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -181,7 +176,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
     const load = async () => {
       const { data } = await supabase.from('profiles').select('*').eq('user_id', user.id).single();
       if (data) {
-        setNotifications((data as any).notifications_enabled ?? true);
         setLanguage((data as any).language ?? 'en');
         setDisplayName((data as any).display_name || '');
       }
@@ -230,12 +224,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
     toggleTheme();
     const newTheme = theme === 'light' ? 'dark' : 'light';
     await saveToProfile({ theme_preference: newTheme });
-  };
-
-  const handleToggleNotifications = async () => {
-    const next = !notifications;
-    setNotifications(next);
-    await saveToProfile({ notifications_enabled: next });
   };
 
   const handleLanguageChange = async (val: string) => {
@@ -327,7 +315,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
               <GeneralTabContent
                 theme={theme} textColor={textColor} textSecondary={textSecondary} borderColor={borderColor}
                 inputBg={inputBg} Toggle={Toggle} handleToggleTheme={handleToggleTheme}
-                notifications={notifications} handleToggleNotifications={handleToggleNotifications}
                 language={language} handleLanguageChange={handleLanguageChange}
                 user={user} saveToProfile={saveToProfile}
               />
