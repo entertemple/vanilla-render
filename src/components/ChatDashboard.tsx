@@ -573,8 +573,9 @@ function AssistantMessage({
         }
       </div>
   );
+}
 
-// ========== MAIN COMPONENT ==========
+
 export default function ChatDashboard() {
   const { theme } = useTheme();
   const { user } = useAuth();
