@@ -756,7 +756,7 @@ export default function ChatDashboard() {
     if (isWaiting || !currentConversationId || !user) return;
 
     setIsWaiting(true);
-
+    setShaderState('thinking');
     const beatContext = `The user has chosen to go deeper into "${phrase}". This is the thread they want to pull. Go inside that specific word or phrase only. Not the others. Do not repeat what you already said. Go one level underneath it. End your response with one single honest question about this thread specifically — the question they probably haven't asked themselves yet. Not advice. Not options. One question that requires honesty, not strategy.`;
 
     try {
