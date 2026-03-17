@@ -218,57 +218,7 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* GENERAL TAB */}
             {activeTab === 'general' && (
-              <>
-                <div>
-                  <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Appearance</h3>
-                  <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
-                    <div className="flex items-center gap-3">
-                      {theme === 'light' ? <Sun className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} /> : <Moon className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />}
-                      <div>
-                        <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Theme</p>
-                        <p className={`font-['Inter',_sans-serif] text-[11px] ${textSecondary}`}>{theme === 'light' ? 'Light Mode' : 'Dark Mode'}</p>
-                      </div>
-                    </div>
-                    <Toggle enabled={theme === 'dark'} onToggle={handleToggleTheme} />
-                  </div>
-                </div>
-                <div>
-                  <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Notifications</h3>
-                  <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
-                    <div className="flex items-center gap-3">
-                      <Bell className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />
-                      <div>
-                        <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Enable Notifications</p>
-                        <p className={`font-['Inter',_sans-serif] text-[11px] ${textSecondary}`}>Get notified about updates</p>
-                      </div>
-                    </div>
-                    <Toggle enabled={notifications} onToggle={handleToggleNotifications} />
-                  </div>
-                </div>
-                <div>
-                  <h3 className={`font-['Inter',_sans-serif] font-medium text-[14px] mb-3 ${textColor}`}>Language</h3>
-                  <div className={`flex items-center justify-between p-4 rounded-[16px] ${inputBg} border ${borderColor}`}>
-                    <div className="flex items-center gap-3">
-                      <Globe className={`w-5 h-5 ${textColor}`} strokeWidth={1.5} />
-                      <p className={`font-['Inter',_sans-serif] text-[13px] ${textColor}`}>Interface Language</p>
-                    </div>
-                    <select
-                      value={language}
-                      onChange={(e) => handleLanguageChange(e.target.value)}
-                      className={`px-3 py-1.5 rounded-[8px] ${inputBg} border ${borderColor} ${textColor} text-[12px] focus:outline-none`}
-                    >
-                      <option value="en">English</option>
-                      <option value="es">Español</option>
-                      <option value="fr">Français</option>
-                      <option value="de">Deutsch</option>
-                      <option value="ja">日本語</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Atmosphere Panel */}
-                <AtmospherePanel textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} theme={theme} />
-              </>
+              <GeneralTab textColor={textColor} textSecondary={textSecondary} borderColor={borderColor} inputBg={inputBg} hoverBg={hoverBg} theme={theme} Toggle={Toggle} handleToggleTheme={handleToggleTheme} notifications={notifications} handleToggleNotifications={handleToggleNotifications} language={language} handleLanguageChange={handleLanguageChange} saveToProfile={saveToProfile} />
             )}
 
             {/* ACCOUNT TAB */}

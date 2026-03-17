@@ -1262,7 +1262,7 @@ export default function ChatDashboard() {
                   backdropFilter: bubbleBlur,
                   WebkitBackdropFilter: bubbleBlur,
                   borderRadius: bubbleRadius,
-                  padding: bubblePadding,
+                  padding: templeBubblePadding,
                 }}
                 className="temple-bubble">
                   <AssistantMessage
