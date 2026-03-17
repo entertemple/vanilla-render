@@ -379,7 +379,8 @@ function AssistantMessage({
     color: anchorColor,
     letterSpacing: '-0.02em',
     lineHeight: 1.1,
-    marginBottom: '0.75rem'
+    marginBottom: '0.75rem',
+    textAlign: 'center',
   };
 
   const bodyStyle: React.CSSProperties = {
