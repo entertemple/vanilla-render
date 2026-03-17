@@ -653,6 +653,15 @@ export default function ChatDashboard() {
   const [isRecording, setIsRecording] = useState(false);
   const [voiceUnsupported, setVoiceUnsupported] = useState(false);
 
+  // Reveal phase states for newest message
+  const [anchorStaged, setAnchorStaged] = useState(true);
+  const [settlePhase, setSettlePhase] = useState(false);
+  const [beat1GoDeeperVisible, setBeat1GoDeeperVisible] = useState(false);
+  const [beat1BodyRevealed, setBeat1BodyRevealed] = useState(false);
+  const [beat1InvitationVisible, setBeat1InvitationVisible] = useState(false);
+  const [beat1ToPonderVisible, setBeat1ToPonderVisible] = useState(false);
+  const revealTimersRef = useRef<NodeJS.Timeout[]>([]);
+
   // Mirror / permission state
   const [mirrorEnabled, setMirrorEnabled] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
@@ -756,6 +765,36 @@ export default function ChatDashboard() {
     }
   }, [messages, isWaiting]);
 
+  // Reveal phase timers for newest message
+  useEffect(() => {
+    if (!newestMessageId) return;
+    // Clear previous timers
+    revealTimersRef.current.forEach(clearTimeout);
+    revealTimersRef.current = [];
+    // Reset states
+    setAnchorStaged(true);
+    setSettlePhase(false);
+    setBeat1GoDeeperVisible(false);
+    setBeat1BodyRevealed(false);
+    setBeat1InvitationVisible(false);
+    setBeat1ToPonderVisible(false);
+
+    // Phase 3: settle at 2300ms
+    const t1 = setTimeout(() => {
+      setSettlePhase(true);
+      const t1b = setTimeout(() => setAnchorStaged(false), 600);
+      revealTimersRef.current.push(t1b);
+    }, 2300);
+    // Phase 4: Go Deeper at 2800ms
+    const t2 = setTimeout(() => setBeat1GoDeeperVisible(true), 2800);
+    revealTimersRef.current.push(t1, t2);
+
+    return () => {
+      revealTimersRef.current.forEach(clearTimeout);
+      revealTimersRef.current = [];
+    };
+  }, [newestMessageId]);
+
   // Mouse tracking for specular highlight
   const handleGlassMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!specularRef.current || !glassRef.current) return;
@@ -843,6 +882,12 @@ export default function ChatDashboard() {
 
   const handlePhraseClick = async (phrase: string) => {
     if (isWaiting || !currentConversationId || !user) return;
+
+    // Trigger body reveal
+    setBeat1BodyRevealed(true);
+    const t1 = setTimeout(() => setBeat1InvitationVisible(true), 2000);
+    const t2 = setTimeout(() => setBeat1ToPonderVisible(true), 2400);
+    revealTimersRef.current.push(t1, t2);
 
     setIsWaiting(true);
 
@@ -1277,6 +1322,42 @@ export default function ChatDashboard() {
     <div className="chat-main-area" style={{ position: 'relative', overflow: 'hidden', height: '100%' }}>
       <MirrorWebcam mirrorEnabled={mirrorEnabled} />
       {renderPermissionPrompt()}
+
+      {/* Fixed centered stage for new message anchor+keywords */}
+      {newestMessageId && anchorStaged && (() => {
+        const newestMsg = messages.find(m => m.id === newestMessageId);
+        if (!newestMsg || newestMsg.role !== 'assistant') return null;
+        const parsed = parseStructuredResponse(newestMsg.content);
+        return (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            zIndex: 50, pointerEvents: 'none',
+            transition: 'opacity 600ms ease',
+            opacity: settlePhase ? 0 : 1,
+          }}>
+            {parsed.anchor && (
+              <p style={{
+                fontSize: '3.125rem', fontFamily: "'DM Serif Display', Georgia, serif",
+                fontWeight: 400, color: isDark ? '#ffffff' : '#0e0e0e',
+                letterSpacing: '-0.02em', lineHeight: 1.1, textAlign: 'center',
+                opacity: 0, animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                animationDelay: '0ms',
+              }}>{parsed.anchor}</p>
+            )}
+            {parsed.keywords && (
+              <p style={{
+                fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace",
+                letterSpacing: '0.15em', textTransform: 'uppercase',
+                color: isDark ? '#ffffff' : '#0e0e0e', fontWeight: 500, textAlign: 'center',
+                opacity: 0, animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                animationDelay: '300ms',
+              }}>{parsed.keywords}</p>
+            )}
+          </div>
+        );
+      })()}
+
       <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
         <div className="flex flex-col h-full">
       <div
@@ -1284,11 +1365,11 @@ export default function ChatDashboard() {
         className="flex-1 overflow-y-auto"
         style={{ scrollbarWidth: 'thin', scrollbarColor: isDark ? 'rgba(255,255,255,0.2) transparent' : 'rgba(0,0,0,0.2) transparent' }}>
         
-        <div className="max-w-[680px] mx-auto px-8 pt-16 pb-8">
+        <div className="mx-auto px-8 pt-16 pb-8">
           {messages.map((message) =>
           <div key={message.id}>
               {message.role === 'user' ?
-            <div className="flex justify-end mb-12">
+            <div className="flex justify-end mb-12 max-w-[680px] mx-auto">
                   <div
                 style={{
                   background: userBubbleBg,
@@ -1308,12 +1389,34 @@ export default function ChatDashboard() {
                 </div> :
 
             <div className="mb-16">
-                  {/* Anchor and Keywords — outside the bubble */}
                   {(() => {
                     const parsed = parseStructuredResponse(message.content);
-                    const isNew = message.id === newestMessageId;
+                    const isNewest = message.id === newestMessageId;
+                    const beat = message.beat || 1;
+                    const showGoDeeper = beat >= 1 && beat <= 4 && message.beat === 1 && firstUserMessage && phrases.length > 0;
+                    const showToPonder = beat >= 1 && beat <= 4 && parsed.goDeeper.title;
+                    const showSharpQuestion = beat >= 7 && beat2Question;
+
+                    // Blur for Beat 5+
+                    const blurStyle: React.CSSProperties = beat <= 4 ? {} : {
+                      filter: `blur(${beat === 5 ? 1.5 : beat === 6 ? 3 : 6}px)`,
+                      opacity: beat === 5 ? 0.8 : beat === 6 ? 0.5 : 0.3,
+                      transition: 'filter 600ms ease, opacity 600ms ease'
+                    };
+
+                    // Visibility: newest uses phased reveal, old messages fully visible
+                    const anchorVis = isNewest ? !anchorStaged : true;
+                    const goDeeperVis = isNewest ? beat1GoDeeperVisible : true;
+                    const bodyVis = isNewest ? beat1BodyRevealed : true;
+                    const invVis = isNewest ? beat1InvitationVisible : true;
+                    const toPonderVis = isNewest ? beat1ToPonderVisible : true;
+
+                    const bodyColor = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.7)';
+                    const invitationColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)';
+
                     return (
                       <>
+                        {/* Anchor — full width, no max-w constraint */}
                         {parsed.anchor && (
                           <p style={{
                             fontSize: '3.125rem',
@@ -1324,8 +1427,12 @@ export default function ChatDashboard() {
                             lineHeight: 1.1,
                             marginBottom: '0.5rem',
                             textAlign: 'center',
+                            opacity: anchorVis ? 1 : 0,
+                            transition: 'opacity 600ms ease',
                           }}>{parsed.anchor}</p>
                         )}
+
+                        {/* Keywords */}
                         {parsed.keywords && (
                           <p style={{
                             fontSize: '0.7rem',
@@ -1336,38 +1443,101 @@ export default function ChatDashboard() {
                             marginBottom: '0.875rem',
                             fontWeight: 500,
                             textAlign: 'center',
+                            opacity: anchorVis ? 1 : 0,
+                            transition: 'opacity 600ms ease',
                           }}>{parsed.keywords}</p>
+                        )}
+
+                        {/* Go Deeper — outside bubble, below keywords */}
+                        {showGoDeeper && (
+                          <div className="max-w-[680px] mx-auto" style={{
+                            opacity: goDeeperVis ? 1 : 0,
+                            transition: 'opacity 700ms ease',
+                            pointerEvents: goDeeperVis ? 'auto' : 'none',
+                          }}>
+                            <GoDeeperCard
+                              userMessage={firstUserMessage}
+                              phrases={phrases}
+                              isDark={isDark}
+                              onPhraseClick={handlePhraseClick}
+                              isNew={false}
+                              animDelay={0} />
+                          </div>
+                        )}
+
+                        {/* Bubble — body + invitation + To Ponder (appears on phrase click) */}
+                        <div
+                          style={{
+                            background: templeBubbleBg,
+                            border: `1px solid ${templeBubbleBorder}`,
+                            backdropFilter: bubbleBlur,
+                            WebkitBackdropFilter: bubbleBlur,
+                            borderRadius: bubbleRadius,
+                            padding: templeBubblePadding,
+                            marginTop: '1.5rem',
+                            opacity: bodyVis ? 1 : 0,
+                            transition: 'opacity 2000ms ease',
+                            pointerEvents: bodyVis ? 'auto' : 'none',
+                            maxWidth: '680px',
+                            marginLeft: 'auto',
+                            marginRight: 'auto',
+                          }}
+                          className="temple-bubble response-card">
+                          <div style={blurStyle}>
+                            {parsed.body.map((sentence, i) => (
+                              <p key={i} style={{
+                                fontSize: '1rem',
+                                fontFamily: "'DM Sans', 'Inter', sans-serif",
+                                fontWeight: 600,
+                                color: bodyColor,
+                                lineHeight: 1.9,
+                                marginBottom: '0.75rem'
+                              }}>{sentence}</p>
+                            ))}
+
+                            {parsed.invitation && (
+                              <p style={{
+                                fontSize: '1.75rem',
+                                fontFamily: "'DM Serif Display', Georgia, serif",
+                                fontStyle: 'italic',
+                                fontWeight: 400,
+                                color: invitationColor,
+                                marginTop: '1.5rem',
+                                lineHeight: 1.4,
+                                textAlign: 'left',
+                                opacity: invVis ? 1 : 0,
+                                transition: 'opacity 600ms ease',
+                              }}>{parsed.invitation}</p>
+                            )}
+                          </div>
+
+                          {showToPonder && (
+                            <div style={{
+                              opacity: toPonderVis ? 1 : 0,
+                              transition: 'opacity 700ms ease',
+                            }}>
+                              <ADoorCard goDeeper={parsed.goDeeper} isDark={isDark} isNew={false} label="TO PONDER" />
+                            </div>
+                          )}
+                        </div>
+
+                        {showSharpQuestion && (
+                          <p className="blur-anchor-question max-w-[680px] mx-auto" style={{
+                            color: isDark ? '#ffffff' : '#0e0e0e'
+                          }}>
+                            {beat2Question}
+                          </p>
                         )}
                       </>
                     );
                   })()}
-                  <div
-                style={{
-                  background: templeBubbleBg,
-                  border: `1px solid ${templeBubbleBorder}`,
-                  backdropFilter: bubbleBlur,
-                  WebkitBackdropFilter: bubbleBlur,
-                  borderRadius: bubbleRadius,
-                  padding: templeBubblePadding,
-                }}
-                className="temple-bubble">
-                  <AssistantMessage
-                content={message.content}
-                theme={theme}
-                isNew={message.id === newestMessageId}
-                beat={message.beat || 1}
-                userMessage={message.beat === 1 ? firstUserMessage : undefined}
-                phrases={message.beat === 1 ? phrases : undefined}
-                onPhraseClick={message.beat === 1 ? handlePhraseClick : undefined}
-                beat2Question={beat2Question} />
-                  </div>
                 </div>
             }
             </div>
           )}
 
           {isWaiting &&
-          <div className="mb-16 max-w-[680px]">
+          <div className="mb-16 max-w-[680px] mx-auto">
               <TextShimmer
               duration={2.5}
               className="font-['Playfair_Display'] italic text-base [--base-color:rgba(255,255,255,0.25)] [--base-gradient-color:rgba(255,255,255,0.85)]">
@@ -1387,5 +1557,6 @@ export default function ChatDashboard() {
     </div>
       </div>
     </div>);
+
 
 }
