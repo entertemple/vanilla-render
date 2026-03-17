@@ -214,16 +214,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
           </div>
 
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            {/* GENERAL TAB */}
-            {activeTab === 'general' && (
-              <GeneralTabContent
-                theme={theme} textColor={textColor} textSecondary={textSecondary} borderColor={borderColor}
-                inputBg={inputBg} Toggle={Toggle} handleToggleTheme={handleToggleTheme}
-                language={language} handleLanguageChange={handleLanguageChange}
-                user={user} saveToProfile={saveToProfile}
-              />
-            )}
-
             {/* ACCOUNT TAB */}
             {activeTab === 'account' && (
               <>
