@@ -548,6 +548,8 @@ function AssistantMessage({
 export default function ChatDashboard() {
   const { theme } = useTheme();
   const { user } = useAuth();
+  const { setShaderState } = useShaderState();
+  const revealed = useRevealed();
   const { id: conversationId } = useParams();
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
