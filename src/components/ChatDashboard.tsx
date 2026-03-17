@@ -3,8 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Plus, ArrowUp, X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
-import { useShaderState } from '../contexts/ShaderStateContext';
-import { useRevealed } from './Layout';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'motion/react';
 import { TextShimmer } from '@/components/ui/text-shimmer';
@@ -548,8 +546,6 @@ function AssistantMessage({
 export default function ChatDashboard() {
   const { theme } = useTheme();
   const { user } = useAuth();
-  const { setShaderState } = useShaderState();
-  const revealed = useRevealed();
   const { id: conversationId } = useParams();
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -756,7 +752,7 @@ export default function ChatDashboard() {
     if (isWaiting || !currentConversationId || !user) return;
 
     setIsWaiting(true);
-    setShaderState('thinking');
+
     const beatContext = `The user has chosen to go deeper into "${phrase}". This is the thread they want to pull. Go inside that specific word or phrase only. Not the others. Do not repeat what you already said. Go one level underneath it. End your response with one single honest question about this thread specifically — the question they probably haven't asked themselves yet. Not advice. Not options. One question that requires honesty, not strategy.`;
 
     try {
@@ -806,11 +802,9 @@ export default function ChatDashboard() {
           timestamp: new Date(savedAiMsg.created_at),
           beat: 2
         }]);
-        setShaderState('responding');
       }
     } catch (err) {
       console.error('Beat 2 error:', err);
-      setShaderState('rest');
     }
 
     setIsWaiting(false);
@@ -852,8 +846,8 @@ export default function ChatDashboard() {
       setFirstUserMessage(userContent);
     }
 
-      setIsWaiting(true);
-      setShaderState('thinking');
+    setIsWaiting(true);
+
     try {
       const history = messages.map((m) => ({ role: m.role, content: m.content }));
       history.push({ role: 'user', content: userContent });
@@ -907,27 +901,15 @@ export default function ChatDashboard() {
           const parsed = parseStructuredResponse(cleanedContent);
           if (parsed.invitation) setBeat2Question(parsed.invitation);
         }
-
-        // Shader state based on beat
-        if (newBeat >= 4) {
-          setShaderState('deep');
-        } else {
-          setShaderState('responding');
-        }
       }
     } catch (err) {
       console.error('Temple chat error:', err);
       const errorId = Date.now().toString();
       setNewestMessageId(errorId);
       setMessages((prev) => [...prev, { id: errorId, role: 'assistant', content: ERROR_RESPONSE, timestamp: new Date(), beat: getAssistantCount() + 1 }]);
-      setShaderState('rest');
     }
 
     setIsWaiting(false);
-    // After a delay, settle back toward rest
-    setTimeout(() => {
-      setShaderState('rest');
-    }, 8000);
   };
 
   // Permission-aware send wrapper
@@ -978,7 +960,7 @@ export default function ChatDashboard() {
   };
 
   const renderChatInput = () =>
-  <div className="w-full flex flex-col items-center" style={{ opacity: revealed ? 1 : 0, transition: 'opacity 400ms ease' }}>
+  <div className="w-full flex flex-col items-center">
       {/* Attached file pill */}
       <AnimatePresence>
         {attachedFile &&

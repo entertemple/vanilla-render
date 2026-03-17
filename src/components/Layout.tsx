@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, createContext, useContext } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Plus, Trash2, Menu, X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
@@ -11,10 +11,6 @@ import ProfileModal from './ProfileModal';
 import ProfilePopup from './ProfilePopup';
 import WordmarkDark from './WordmarkDark';
 import WordmarkLight from './WordmarkLight';
-
-// Reveal context so children (ChatDashboard) can read it
-export const RevealContext = createContext(false);
-export const useRevealed = () => useContext(RevealContext);
 
 interface Conversation {
   id: string;
@@ -59,21 +55,6 @@ export default function Layout({ children }: LayoutProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
 
-  // --- REVEAL STATE ---
-  const [revealed, setRevealed] = useState(false);
-
-  useEffect(() => {
-    const handleReveal = () => {
-      if (!revealed) setRevealed(true);
-    };
-    window.addEventListener('mousemove', handleReveal, { once: true });
-    window.addEventListener('touchstart', handleReveal, { once: true });
-    return () => {
-      window.removeEventListener('mousemove', handleReveal);
-      window.removeEventListener('touchstart', handleReveal);
-    };
-  }, []);
-
   useEffect(() => {
     if (!user) return;
     const loadConversations = async () => {
@@ -106,23 +87,13 @@ export default function Layout({ children }: LayoutProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const isDark = theme !== 'light';
+  const bgPrimary = theme === 'light' ? 'bg-[rgba(255,255,255,0.65)]' : 'bg-[rgba(26,26,28,0.18)]';
+  const bgSecondary = theme === 'light' ? 'bg-[rgba(255,255,255,0.65)]' : 'bg-[rgba(26,26,28,0.18)]';
   const textColor = theme === 'light' ? 'text-gray-900' : 'text-white';
   const textSecondary = theme === 'light' ? 'text-gray-600' : 'text-[rgba(255,255,255,0.6)]';
+  const borderColor = theme === 'light' ? 'border-[rgba(255,255,255,0.6)]' : 'border-[rgba(255,255,255,0.18)]';
   const hoverBg = theme === 'light' ? 'hover:bg-[rgba(255,255,255,0.15)]' : 'hover:bg-[rgba(255,255,255,0.1)]';
   const activeBg = theme === 'light' ? 'bg-[rgba(255,255,255,0.2)]' : 'bg-[rgba(255,255,255,0.15)]';
-
-  // --- REVEAL-DEPENDENT STYLES ---
-  const borderColor = revealed
-    ? (isDark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.6)')
-    : 'transparent';
-  const sidebarBg = revealed
-    ? (isDark ? 'rgba(26,26,28,0.18)' : 'rgba(255,255,255,0.65)')
-    : 'transparent';
-  const mainBg = revealed
-    ? (isDark ? 'rgba(26,26,28,0.18)' : 'rgba(255,255,255,0.80)')
-    : 'transparent';
-  const elementOpacity = revealed ? 1 : 0;
 
   const createNewChat = async () => {
     if (!user) return;
@@ -173,111 +144,87 @@ export default function Layout({ children }: LayoutProps) {
     openSettings('account');
   };
 
-  const transitionStyle = 'transition-all duration-[400ms] ease-in-out';
-
   return (
-    <RevealContext.Provider value={revealed}>
-      <>
-        <div className="w-full h-screen flex items-center justify-center p-4 md:p-6 lg:p-8">
+    <>
+      <div className="w-full h-screen flex items-center justify-center p-4 md:p-6 lg:p-8">
+        <div className={`relative flex rounded-[32px] md:rounded-[48px] border ${borderColor} overflow-hidden w-full h-full max-w-[1600px]`}>
+          {/* Sidebar */}
           <div
-            className={`relative flex rounded-[32px] md:rounded-[48px] overflow-hidden w-full h-full max-w-[1600px] ${transitionStyle}`}
-            style={{ border: `1px solid ${borderColor}` }}
+            className={`backdrop-blur-[64px] backdrop-filter ${bgPrimary} border-r ${borderColor} flex flex-col transition-all duration-300 ease-in-out ${sidebarOpen ? 'w-[200px] md:w-[240px] lg:w-[280px]' : 'w-0'}`}
+            style={{ overflow: 'hidden' }}
           >
-            {/* Sidebar */}
-            <div
-              className={`backdrop-blur-[64px] backdrop-filter flex flex-col ${transitionStyle} ${sidebarOpen ? 'w-[200px] md:w-[240px] lg:w-[280px]' : 'w-0'}`}
-              style={{ overflow: 'hidden', background: sidebarBg, borderRight: `1px solid ${borderColor}` }}
-            >
-              <div className={`flex-shrink-0 p-4 space-y-3 ${transitionStyle}`} style={{ borderBottom: `1px solid ${borderColor}`, opacity: elementOpacity }}>
-                <button onClick={createNewChat} className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] ${hoverBg} ${transitionStyle}`}
-                  style={{ border: `1px solid ${borderColor}`, opacity: elementOpacity }}>
-                  <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
-                  <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[13px] tracking-[-0.22px] uppercase`}>New Chat</span>
-                </button>
-              </div>
-
-              <div className={`flex-shrink-0 p-2 ${transitionStyle}`} style={{ borderBottom: `1px solid ${borderColor}`, opacity: elementOpacity }}>
-                {navigationItems.map((item) => {
-                  const active = isActive(item.path);
-                  return (
-                    <button key={item.path} onClick={() => navigate(item.path)}
-                      className={`w-full flex items-center gap-2 px-3 py-2 mb-1 rounded-[12px] transition-all duration-200 ease-out ${active ? `${activeBg}` : hoverBg}`}
-                      style={{ border: active ? `1px solid ${borderColor}` : '1px solid transparent', opacity: elementOpacity }}>
-                      <span className={`${textColor} opacity-60`}>{item.icon}</span>
-                      <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px]`}>{item.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-2" style={{ scrollbarWidth: 'thin', scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent', opacity: elementOpacity, transition: 'opacity 400ms ease' }}>
-                <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[11px] tracking-[0.1em] uppercase px-3 py-2`}>Recents</div>
-                {conversations.map((conv) => (
-                  <div key={conv.id}>
-                    <div onClick={() => navigate(`/chat/${conv.id}`)}
-                      className={`group relative flex items-center gap-2 px-3 py-2.5 mb-0.5 rounded-[12px] cursor-pointer transition-colors ${location.pathname === `/chat/${conv.id}` ? `${activeBg}` : hoverBg}`}
-                      style={{ border: location.pathname === `/chat/${conv.id}` ? `1px solid ${borderColor}` : '1px solid transparent' }}>
-                      <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px] flex-1 min-w-0`}
-                        style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', wordBreak: 'keep-all' }}>{conv.title}</span>
-                      <button onClick={(e) => handleDeleteClick(conv.id, e)} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                        <Trash2 className={`w-3 h-3 ${textSecondary} hover:text-red-400`} strokeWidth={1.5} />
-                      </button>
-                    </div>
-                    {confirmDeleteId === conv.id && (
-                      <div className="px-3 py-1.5 mb-1 flex items-center gap-2">
-                        <span className={`font-['Geist_Mono',_monospace] text-[0.72rem] ${textSecondary}`}>Delete?</span>
-                        <button onClick={cancelDelete} className={`font-['Geist_Mono',_monospace] text-[0.72rem] ${textSecondary} hover:opacity-80`}>Cancel</button>
-                        <button onClick={(e) => confirmDelete(conv.id, e)} className="font-['Geist_Mono',_monospace] text-[0.72rem] text-red-400 hover:text-red-300">Delete</button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <div className={`flex-shrink-0 p-4 ${transitionStyle}`} style={{ borderTop: `1px solid ${borderColor}`, opacity: elementOpacity }}>
-                <ProfilePopup onSettingsClick={() => openSettings()} onAppearanceClick={() => setAppearanceOpen(true)} onProfileClick={() => setProfileOpen(true)} />
-              </div>
+            <div className={`flex-shrink-0 p-4 border-b ${borderColor} space-y-3`}>
+              <button onClick={createNewChat} className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] border ${borderColor} ${hoverBg} transition-colors`}>
+                <Plus className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />
+                <span className={`font-['Geist_Mono',_monospace] ${textColor} text-[13px] tracking-[-0.22px] uppercase`}>New Chat</span>
+              </button>
             </div>
 
-            {/* Main Content */}
-            <div className={`flex-1 flex flex-col backdrop-blur-[64px] backdrop-filter ${transitionStyle}`} style={{ background: mainBg }}>
-              <div className={`flex-shrink-0 px-4 md:px-6 py-4 flex items-center justify-between ${transitionStyle}`} style={{ borderBottom: `1px solid ${borderColor}` }}>
-                <button onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className={`w-8 h-8 rounded-[12px] flex items-center justify-center ${hoverBg} transition-all duration-200 ease-out hover:scale-110 hover:rotate-90`}
-                  style={{ opacity: elementOpacity, transition: 'opacity 400ms ease' }}>
-                  {sidebarOpen ? <X className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} /> : <Menu className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />}
-                </button>
-                <div className="flex-1 flex items-center justify-center">
-                  <button onClick={() => navigate('/chat')} className="rounded-[12px] p-2 outline-none focus:outline-none focus:ring-0 border-none"
-                    style={{
-                      opacity: 0,
-                      animation: 'wordmark-fade 1000ms ease forwards',
-                      animationDelay: '300ms',
-                    }}>
-                    {theme === 'light' ? <WordmarkLight className="w-auto h-5 object-contain" /> : <WordmarkDark className="w-auto h-5 object-contain" />}
+            <div className={`flex-shrink-0 p-2 border-b ${borderColor}`}>
+              {navigationItems.map((item) => {
+                const active = isActive(item.path);
+                return (
+                  <button key={item.path} onClick={() => navigate(item.path)}
+                    className={`w-full flex items-center gap-2 px-3 py-2 mb-1 rounded-[12px] transition-all duration-200 ease-out ${active ? `${activeBg} border ${borderColor}` : hoverBg}`}>
+                    <span className={`${textColor} opacity-60`}>{item.icon}</span>
+                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px]`}>{item.label}</span>
                   </button>
+                );
+              })}
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-2" style={{ scrollbarWidth: 'thin', scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent' }}>
+              <div className={`font-['Geist_Mono',_monospace] ${textSecondary} text-[11px] tracking-[0.1em] uppercase px-3 py-2`}>Recents</div>
+              {conversations.map((conv) => (
+                <div key={conv.id}>
+                  <div onClick={() => navigate(`/chat/${conv.id}`)}
+                    className={`group relative flex items-center gap-2 px-3 py-2.5 mb-0.5 rounded-[12px] cursor-pointer transition-colors ${location.pathname === `/chat/${conv.id}` ? `${activeBg} border ${borderColor}` : hoverBg}`}>
+                    <span className={`font-['Inter',_sans-serif] ${textColor} text-[13px] flex-1 min-w-0`}
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', wordBreak: 'keep-all' }}>{conv.title}</span>
+                    <button onClick={(e) => handleDeleteClick(conv.id, e)} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                      <Trash2 className={`w-3 h-3 ${textSecondary} hover:text-red-400`} strokeWidth={1.5} />
+                    </button>
+                  </div>
+                  {confirmDeleteId === conv.id && (
+                    <div className="px-3 py-1.5 mb-1 flex items-center gap-2">
+                      <span className={`font-['Geist_Mono',_monospace] text-[0.72rem] ${textSecondary}`}>Delete?</span>
+                      <button onClick={cancelDelete} className={`font-['Geist_Mono',_monospace] text-[0.72rem] ${textSecondary} hover:opacity-80`}>Cancel</button>
+                      <button onClick={(e) => confirmDelete(conv.id, e)} className="font-['Geist_Mono',_monospace] text-[0.72rem] text-red-400 hover:text-red-300">Delete</button>
+                    </div>
+                  )}
                 </div>
-                <div className="w-8" />
+              ))}
+            </div>
+
+            <div className={`flex-shrink-0 p-4 border-t ${borderColor}`}>
+              <ProfilePopup onSettingsClick={() => openSettings()} onAppearanceClick={() => setAppearanceOpen(true)} onProfileClick={() => setProfileOpen(true)} />
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className={`flex-1 flex flex-col backdrop-blur-[64px] backdrop-filter`} style={{ background: theme === 'light' ? 'rgba(255,255,255,0.80)' : 'rgba(26,26,28,0.18)' }}>
+            <div className={`flex-shrink-0 px-4 md:px-6 py-4 border-b ${borderColor} flex items-center justify-between`}>
+              <button onClick={() => setSidebarOpen(!sidebarOpen)}
+                className={`w-8 h-8 rounded-[12px] flex items-center justify-center ${hoverBg} transition-all duration-200 ease-out hover:scale-110 hover:rotate-90`}>
+                {sidebarOpen ? <X className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} /> : <Menu className={`w-4 h-4 ${textColor}`} strokeWidth={1.5} />}
+              </button>
+              <div className="flex-1 flex items-center justify-center">
+                <button onClick={() => navigate('/chat')} className="rounded-[12px] p-2 outline-none focus:outline-none focus:ring-0 border-none">
+                  {theme === 'light' ? <WordmarkLight className="w-auto h-5 object-contain" /> : <WordmarkDark className="w-auto h-5 object-contain" />}
+                </button>
               </div>
-              <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent' }}>
-                {children}
-              </div>
+              <div className="w-8" />
+            </div>
+            <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: theme === 'light' ? 'rgba(0,0,0,0.2) transparent' : 'rgba(255, 255, 255, 0.2) transparent' }}>
+              {children}
             </div>
           </div>
         </div>
+      </div>
 
-        <SettingsModal isOpen={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsTab(undefined); }} initialTab={settingsTab} />
-        <AppearanceModal isOpen={appearanceOpen} onClose={() => setAppearanceOpen(false)} />
-        <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} onEditProfile={handleEditProfile} />
-
-        {/* Wordmark fade keyframes */}
-        <style>{`
-          @keyframes wordmark-fade {
-            from { opacity: 0; }
-            to   { opacity: 1; }
-          }
-        `}</style>
-      </>
-    </RevealContext.Provider>
+      <SettingsModal isOpen={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsTab(undefined); }} initialTab={settingsTab} />
+      <AppearanceModal isOpen={appearanceOpen} onClose={() => setAppearanceOpen(false)} />
+      <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} onEditProfile={handleEditProfile} />
+    </>
   );
 }
