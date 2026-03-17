@@ -1245,41 +1245,6 @@ export default function ChatDashboard() {
       <MirrorWebcam mirrorEnabled={mirrorEnabled} />
       {renderPermissionPrompt()}
 
-      {/* Fixed centered stage for new message anchor+keywords */}
-      {newestMessageId && anchorStaged && (() => {
-        const newestMsg = messages.find(m => m.id === newestMessageId);
-        if (!newestMsg || newestMsg.role !== 'assistant') return null;
-        const parsed = parseStructuredResponse(newestMsg.content);
-        return (
-          <div style={{
-            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            zIndex: 50, pointerEvents: 'none',
-            transition: 'opacity 600ms ease',
-            opacity: settlePhase ? 0 : 1,
-          }}>
-            {parsed.anchor && (
-              <p style={{
-                fontSize: '3.125rem', fontFamily: "'DM Serif Display', Georgia, serif",
-                fontWeight: 400, color: isDark ? '#ffffff' : '#0e0e0e',
-                letterSpacing: '-0.02em', lineHeight: 1.1, textAlign: 'center',
-                opacity: 0, animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                animationDelay: '0ms',
-              }}>{parsed.anchor}</p>
-            )}
-            {parsed.keywords && (
-              <p style={{
-                fontSize: '0.7rem', fontFamily: "'Geist Mono', monospace",
-                letterSpacing: '0.15em', textTransform: 'uppercase',
-                color: isDark ? '#ffffff' : '#0e0e0e', fontWeight: 500, textAlign: 'center',
-                opacity: 0, animation: 'presence-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                animationDelay: '300ms',
-              }}>{parsed.keywords}</p>
-            )}
-          </div>
-        );
-      })()}
-
       <div className="chat-interface-layer" style={{ position: 'relative', zIndex: 2, height: '100%' }}>
         <div className="flex flex-col h-full">
       <div
