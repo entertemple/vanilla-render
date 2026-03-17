@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useProfile } from '../contexts/ProfileContext';
 import { supabase } from '@/integrations/supabase/client';
 import SettingsModal from './SettingsModal';
+import AppearanceModal from './AppearanceModal';
 import ProfileModal from './ProfileModal';
 import ProfilePopup from './ProfilePopup';
 import WordmarkDark from './WordmarkDark';
