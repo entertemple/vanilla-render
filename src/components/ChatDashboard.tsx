@@ -801,10 +801,15 @@ export default function ChatDashboard() {
     if (isWaiting || !currentConversationId || !user) return;
 
     // Trigger body reveal
-    setBeat1BodyRevealed(true);
-    const t1 = setTimeout(() => setBeat1InvitationVisible(true), 2000);
-    const t2 = setTimeout(() => setBeat1ToPonderVisible(true), 2400);
-    revealTimersRef.current.push(t1, t2);
+    setBeat1BodyRevealed(false);
+    setBeat1InvitationVisible(false);
+    setBeat1ToPonderVisible(false);
+    setTimeout(() => {
+      setBeat1BodyRevealed(true);
+      const t1 = setTimeout(() => setBeat1InvitationVisible(true), 2000);
+      const t2 = setTimeout(() => setBeat1ToPonderVisible(true), 2400);
+      revealTimersRef.current.push(t1, t2);
+    }, 300);
 
     setIsWaiting(true);
 
