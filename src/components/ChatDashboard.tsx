@@ -1541,7 +1541,9 @@ export default function ChatDashboard() {
                 </div>
             }
             </div>
-          )}
+            );
+          })}
+
 
           {isWaiting &&
           <div className="mb-16 max-w-[680px] mx-auto">
