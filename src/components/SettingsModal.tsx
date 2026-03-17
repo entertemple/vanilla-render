@@ -227,12 +227,6 @@ export default function SettingsModal({ isOpen, onClose, initialTab }: SettingsM
     await saveToProfile({ theme_preference: newTheme });
   };
 
-  const handleToggleNotifications = async () => {
-    const next = !notifications;
-    setNotifications(next);
-    await saveToProfile({ notifications_enabled: next });
-  };
-
   const handleLanguageChange = async (val: string) => {
     setLanguage(val);
     await saveToProfile({ language: val });
