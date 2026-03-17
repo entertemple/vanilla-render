@@ -806,6 +806,7 @@ export default function ChatDashboard() {
           timestamp: new Date(savedAiMsg.created_at),
           beat: 2
         }]);
+        setShaderState('responding');
       }
     } catch (err) {
       console.error('Beat 2 error:', err);
