@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Sun, Moon, Bell, Globe, Key, HelpCircle, FileText, Sliders, Check, User, Trash2 } from 'lucide-react';
+import { X, Sun, Moon, Globe, Key, HelpCircle, FileText, Sliders, Check, User, Trash2 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProfile } from '../contexts/ProfileContext';
 import { useAuth } from '../contexts/AuthContext';
